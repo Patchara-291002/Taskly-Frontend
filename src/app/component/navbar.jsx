@@ -10,8 +10,6 @@ export default function Navbar() {
 
     const pathName = usePathname();
 
-    const navbarStyle = "max-w-[300px] w-[100%] bg-[#FF6200] rounded-r-[20px] px-[30px]";
-
     const list_page = [
         {
             name: "Dashboard",
@@ -41,8 +39,8 @@ export default function Navbar() {
     ]
 
     return (
-        <div className={navbarStyle}>
-            <div className='mt-[30px] mb-[40px] flex justify-center items-center'>
+        <div className="max-w-[300px] w-[100%] bg-[#FF6200] rounded-r-[20px] px-[30px] min-h-screen">
+            <div className='mt-[30px] mb-[40px] flex flex-cols justify-center items-center'>
                 <p
                     className='font-bold text-[48px] leading-[48px] text-white'
                 >
@@ -56,8 +54,8 @@ export default function Navbar() {
                         <Link key={index} href={page.link}>
                             <button
                                 className={isActive 
-                                    ? 'w-[100%] flex justify-start items-center pl-[46px] bg-white h-[75px] gap-[10px] rounded-[15px]' 
-                                    : 'w-[100%] flex justify-start items-center pl-[46px] h-[75px] gap-[10px] rounded-[15px]'}
+                                    ? 'w-full flex justify-start items-center pl-[46px] h-[75px] gap-[10px] rounded-[15px] bg-white' 
+                                    : 'w-full flex justify-start items-center pl-[46px] h-[75px] gap-[10px] rounded-[15px]'}
                             >
                                 {react.cloneElement(page.icon, { color: isActive ? '#FF6200' : '#FFFFFF' })}
                                 <h2

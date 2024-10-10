@@ -15,15 +15,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className=''>
+    <html lang="en" className='no-scrollbar'>
       <body
-        className={`${poppins.className} bg-[#F7F7F7] w-100% min-h-dvh`}
+        className={`${poppins.className} bg-[#F7F7F7]`}
       >
-        <div className='flex w-[100%]'>
+        <div className='flex flex-row w-[100%]'>
           <Navbar />
           <div className='w-[100%]'>
             <Header />
-            {children}
+            <div className='px-[30px]'>
+              {children}
+            </div>
           </div>
         </div>
       </body>
