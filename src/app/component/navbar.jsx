@@ -44,7 +44,7 @@ export default function Navbar() {
         <div className={navbarStyle}>
             <div className='mt-[30px] mb-[40px] flex justify-center items-center'>
                 <p
-                    className='font-bold text-[48px] text-white'
+                    className='font-bold text-[48px] leading-[48px] text-white'
                 >
                     TASKLY
                 </p>

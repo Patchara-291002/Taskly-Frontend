@@ -19,9 +19,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${poppins.className} bg-[#F7F7F7] w-100% min-h-dvh`}
       >
-        <div className='flex w-[100%] min-h-dvh'>
+        <div className='flex w-[100%]'>
           <Navbar />
-          <div className='w-screen'>
+          <div className='w-[100%]'>
             <Header />
             {children}
           </div>
