@@ -1,6 +1,6 @@
 "use client";
 
-import { TasklyIcon, DashboardIcon } from "@/app/component/icon/layoutIcon"
+import { TasklyIcon, DashboardIcon } from "@/app/component/icon/LayoutIcon"
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from "react";
