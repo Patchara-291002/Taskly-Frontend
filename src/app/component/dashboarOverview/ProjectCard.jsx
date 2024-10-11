@@ -2,28 +2,8 @@
 
 import React, { useState } from 'react'
 
-export default function ProjectCard() {
+export default function ProjectCard({projectName, day, month, usersProfile, percent}) {
 
-  const [projectName, setProjectName] = useState("");
-  const [day , setDate] = useState(0)
-  const [month, setMonth] = useState("");
-  const [user, setUser] = useState([
-    {
-      userName: "John",
-      userProfile: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-    }
-  ])
-  const [percent, setPercent] = useState(70);
-
-  const data = {
-    name: name,
-    day: day,
-    month: month,
-    user: [userName,userProfile],
-    percent: percent,
-  }
-
-  
   const ProgressBar = () => {
 
     return (
@@ -32,7 +12,7 @@ export default function ProjectCard() {
       >
         <div
           className={`absolute h-full bg-primaryorange rounded-full`}
-          style={{ width: `${data.percent}%` }}
+          style={{ width: `${percent}%` }}
         />
       </div>
     )
@@ -51,7 +31,7 @@ export default function ProjectCard() {
           <p
             className='text-[14px] font-medium'
           >
-            {"Production"}
+            {projectName}
           </p>
           <div
             className='w-[30px] h-[30px] bg-primaryorange rounded-[8px] flex flex-col justify-center items-center'
@@ -59,28 +39,23 @@ export default function ProjectCard() {
             <p
               className='text-[8px] font-bold text-white'
             >
-              {30}
+              {day}
             </p>
             <p
               className='text-[8px] font-bold text-white'
             >
-              {"Sep"}
+              {month}
             </p>
           </div>
         </div>
         <div
           className='flex -space-x-2.5'
         >
-          <div
-            className='w-[20px] h-[20px] rounded-full overflow-hidden'
-          >
-            <img src={data.user.userProfile} />
-          </div>
-          <div
-            className='w-[20px] h-[20px] rounded-full overflow-hidden'
-          >
-            <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-          </div>
+           {usersProfile.map((profile, index) => (
+            <div key={index} className='w-[20px] h-[20px] rounded-full overflow-hidden'>
+              <img src={profile} alt={`User ${index}`} />
+            </div>
+          ))}
         </div>
       </div>
       <div
