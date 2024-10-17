@@ -14,38 +14,38 @@ export default function Navbar() {
         {
             name: "Dashboard",
             link: "/",
-            icon: <DashboardIcon w='25' h='25'/>
+            icon: <DashboardIcon w='22' h='22'/>
         },
         {
             name: "Project",
             link: "/project",
-            icon: <DashboardIcon w='25' h='25' />
+            icon: <DashboardIcon w='22' h='22' />
         },
         {
             name: "Activity",
             link: "/activity",
-            icon: <DashboardIcon w='25' h='25' />
+            icon: <DashboardIcon w='22' h='22' />
         },
         {
             name: "Study Planner",
             link: "/study",
-            icon: <DashboardIcon w='25' h='25' />
+            icon: <DashboardIcon w='22' h='22' />
         },
         {
             name: "Help",
             link: "/help",
-            icon: <DashboardIcon w='25' h='25' />
+            icon: <DashboardIcon w='22' h='22' />
         }
     ]
 
     return (
-        <div className="max-w-[300px] w-[100%] bg-[#FF6200] rounded-r-[20px] px-[30px] min-h-screen">
+        <div className="max-w-[260px] w-[100%] bg-[#FF6200] rounded-r-[20px] px-[25px] min-h-screen">
             <div className='mt-[30px] mb-[40px] flex flex-cols justify-center items-center'>
-                <p
-                    className='font-bold text-[48px] leading-[48px] text-white'
+                <h2
+                    className='font-black text-[36px] leading-[36px] text-white'
                 >
                     TASKLY
-                </p>
+                </h2>
             </div>
             <div className='flex flex-col gap-[10px]'>
                 {list_page.map((page, index) => {

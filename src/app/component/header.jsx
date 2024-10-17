@@ -15,7 +15,7 @@ export default function header() {
   return (
     <div className='w-[100%] pt-[30px] pb-[40px] px-[30px] flex justify-between'>
       <h1
-        className='text-black font-semibold leading-[48px]'
+        className='text-primaryorange font-semibold leading-[32px]'
       >
         Dashboard
       </h1>
