@@ -1,6 +1,6 @@
 "use client";
 
-import { TasklyIcon, DashboardIcon } from "@/app/component/icon/LayoutIcon"
+import { TasklyIcon, DashboardIcon, ProjectIcon, StudyIcon, ActivityIcon, HelpIcon, LogoutIcon } from "@/app/component/icon/LayoutIcon"
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from "react";
@@ -19,23 +19,28 @@ export default function Navbar() {
         {
             name: "Project",
             link: "/project",
-            icon: <DashboardIcon w='22' h='22' />
+            icon: <ProjectIcon w='22' h='22' />
         },
         {
             name: "Activity",
             link: "/activity",
-            icon: <DashboardIcon w='22' h='22' />
+            icon: <ActivityIcon w='22' h='22' />
         },
         {
             name: "Study Planner",
             link: "/study",
-            icon: <DashboardIcon w='22' h='22' />
+            icon: <StudyIcon w='22' h='22' />
         },
         {
             name: "Help",
             link: "/help",
-            icon: <DashboardIcon w='22' h='22' />
-        }
+            icon: <HelpIcon w='22' h='22' />
+        },
+        {
+            name: "Logout",
+            link: "/logout",
+            icon: <LogoutIcon w='22' h='22' />
+        },
     ]
 
     return (

@@ -34,23 +34,23 @@ export default function header() {
           }
           <button
             onClick={toggleSearch}
-            className="bg-[#FF6200] w-[50px] min-w-[50px] h-[50px] flex justify-center items-center rounded-full "
+            className="bg-[#FF6200] w-[40px] min-w-[40px] h-[40px] flex justify-center items-center rounded-full "
           >
-            <SearchIcon w='16' h='16' />
+            <SearchIcon w='12' h='12' />
           </button>
         </div>
         <Link href='/'>
           <div
-            className="bg-[#FF6200] w-[50px] h-[50px] flex justify-center items-center rounded-full "
+            className="bg-[#FF6200] w-[40px] h-[40px] flex justify-center items-center rounded-full "
           >
-            <CalendarIcon w='16' h='16' />
+            <CalendarIcon w='12' h='12' />
           </div>
         </Link>
         <Link href='/'>
           <div
-            className="bg-[#FF6200] w-[50px] h-[50px] flex justify-center items-center rounded-full "
+            className="bg-[#FF6200] w-[40px] h-[40px] flex justify-center items-center rounded-full "
           >
-            <NotificationIcon w='16' h='16' />
+            <NotificationIcon w='12' h='12' />
           </div>
         </Link>
       </div>

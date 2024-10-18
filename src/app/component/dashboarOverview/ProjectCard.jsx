@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 
-export default function ProjectCard({projectName, day, month, usersProfile, percent}) {
+export default function ProjectCard({projectName, day, month, usersProfile, percent, maxWidth}) {
 
   const ProgressBar = () => {
 
@@ -20,7 +20,8 @@ export default function ProjectCard({projectName, day, month, usersProfile, perc
 
   return (
     <div
-      className='w-[200px] h-[160px] bg-white rounded-[15px] p-[15px] flex flex-col justify-between'
+      className='w-full h-[160px] bg-white rounded-[15px] p-[15px] flex flex-col justify-between'
+      style={{maxWidth: `${maxWidth}px`}}
     >
       <div
         className='w-full'

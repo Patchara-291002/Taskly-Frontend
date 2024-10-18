@@ -123,6 +123,7 @@ export default function ProjectOveriew() {
                                     month={project.month}
                                     usersProfile={project.usersProfile}
                                     percent={project.percent}
+                                    maxWidth={200}
                                 />
                             ))}
                         </div>
