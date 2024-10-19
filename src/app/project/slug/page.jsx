@@ -2,13 +2,12 @@
 
 import React, { useState } from 'react'
 import { AddUserIcon } from '@/app/component/icon/GlobalIcon'
-import { PlusIcon } from '@/app/component/icon/GlobalIcon'
 import { NewButton } from '@/app/component/GlobalComponent'
+import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core'
 
 export default function page() {
 
     const [isUserHover, setIsUserHover] = useState(false)
-    const [isNewHover, setIsNewHover] = useState(false)
 
     const project = {
         projectName: "Production",
@@ -25,6 +24,46 @@ export default function page() {
                 name: "Patrick",
                 image: "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
             },
+        ],
+        board: [
+            {
+                role: "Designer",
+                tasks: [
+                    {
+                        taskId: "001",
+                        taskName: "Design Wireframes",
+                        state: "In Progress",
+                        priority: 3,
+                        dueDate: "2024-10-30"
+                    },
+                    {
+                        taskId: "002",
+                        taskName: "Create Logo",
+                        state: "Todo",
+                        priority: 2,
+                        dueDate: "2024-11-05"
+                    }
+                ]
+            },
+            {
+                role: "Developer",
+                tasks: [
+                    {
+                        taskId: "003",
+                        taskName: "Develop Frontend",
+                        state: "Todo",
+                        priority: 5,
+                        dueDate: "2024-11-10"
+                    },
+                    {
+                        taskId: "004",
+                        taskName: "Setup Backend API",
+                        state: "Todo",
+                        priority: 4,
+                        dueDate: "2024-11-12"
+                    }
+                ]
+            }
         ]
     }
 
@@ -56,7 +95,9 @@ export default function page() {
 
             <ProjectView />
 
-            <ProjectBoard isNewHover={isNewHover} setIsNewHover={setIsNewHover}/>
+            <DndContext onDragEnd={(event) => console.log(event)}>
+                <ProjectBoard board={project.board} />
+            </DndContext>
 
         </div>
     )
@@ -72,15 +113,61 @@ const ProjectView = () => {
     )
 }
 
-const ProjectBoard = ({isNewHover, setIsNewHover}) => {
+const Draggable = ({ id, children }) => {
+    const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
+
+    const style = {
+        transform: `translate3d(${transform?.x ?? 0}px, ${transform?.y ?? 0}px, 0)`,
+    };
+
+    return (
+        <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+            {children}
+        </div>
+    );
+};
+
+const Droppable = ({ id, children }) => {
+    const { setNodeRef } = useDroppable({ id });
+    return (
+        <div ref={setNodeRef}>
+            {children}
+        </div>
+    );
+};
+
+const ProjectBoard = ({ board }) => {
     return (
         <div
-            className=''
+            className='flex flex-col gap-[20px]'
         >
-            <NewButton 
-                onClick={() => {}}
-                buttonText='New'
-            />
+            <div>
+                <NewButton
+                    onClick={() => { }}
+                    buttonText='New'
+                />
+            </div>
+            <DndContext
+                onDragEnd={(event) => {
+                    const { active, over } = event;
+                    if (active.id !== over.id) {
+                        // Handle the logic for updating the board array
+                    }
+                }}
+            >
+                <div className="board-container">
+                    {board.map((column) => (
+                        <Droppable key={column.role} id={column.role}>
+                            <h3>{column.role}</h3>
+                            {column.tasks.map((task) => (
+                                <Draggable key={task.taskId} id={task.taskId}>
+                                    <div className="task-card">{task.taskName}</div>
+                                </Draggable>
+                            ))}
+                        </Droppable>
+                    ))}
+                </div>
+            </DndContext>
         </div>
     )
 }
