@@ -10,7 +10,7 @@ import "swiper/css/pagination";
 import { LeftArrowIcon, RightArrowIcon } from '../icon/DashboardIcon'
 import { useRef } from 'react';
 
-export default function ProjectOveriew() {
+export default function ProjectOverview() {
 
     const swiperRef = useRef();
 
@@ -82,7 +82,7 @@ export default function ProjectOveriew() {
 
     return (
         <div
-            className='max-w-[632px] max-h-[202px] min-h-min w-full h-full'
+            className='max-h-[202px] min-h-min w-full h-full'
         >
             <div
                 className='w-full flex flex-row justify-between mb-[20px]'

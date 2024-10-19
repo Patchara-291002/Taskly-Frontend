@@ -21,9 +21,9 @@ export default function RootLayout({ children }) {
       >
         <div className='flex flex-row w-[100%]'>
           <Navbar />
-          <div className='w-[100%]'>
+          <div className='w-full'>
             <Header />
-            <div className='px-[30px]'>
+            <div className='px-[30px] w-full'>
               {children}
             </div>
           </div>
