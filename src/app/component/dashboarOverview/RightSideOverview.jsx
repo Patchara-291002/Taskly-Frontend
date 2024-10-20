@@ -1,5 +1,6 @@
 import React from 'react'
-import ProfileOverview from './dashboarOverview/ProfileOverview'
+import ProfileOverview from './Profile/ProfileOverview'
+import ClassOverview from './ClassToDay/ClassOverview'
 
 export default function RightSideOverview() {
     return (
@@ -8,9 +9,13 @@ export default function RightSideOverview() {
                 max-w-[420px]
                 min-w-[360px]
                 w-full
+                flex
+                flex-col
+                gap-[40px]
             "
         >
             <ProfileOverview />
+            <ClassOverview />
         </div>
     )
 }

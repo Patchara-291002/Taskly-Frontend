@@ -1,6 +1,6 @@
-import LeftSideOverview from "./component/LeftSideOverview";
+import LeftSideOverview from "./component/dashboarOverview/LeftSideOverview";
 import Header from "./component/header";
-import RightSideOverview from "./component/RightSideOverview";
+import RightSideOverview from "./component/dashboarOverview/RightSideOverview";
 
 export default function page() {
   return (
@@ -9,7 +9,6 @@ export default function page() {
         w-full
         flex
         gap-[60px]
-        pb-[20px]
       "
     >
       <LeftSideOverview />

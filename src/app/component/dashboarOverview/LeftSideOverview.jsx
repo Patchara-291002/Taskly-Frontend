@@ -1,6 +1,7 @@
 import React from 'react'
-import BannerOverview from './dashboarOverview/BannerOverview'
-import ProjectOverview from './dashboarOverview/ProjectOverview'
+import BannerOverview from './Banner/BannerOverview'
+import ProjectOverview from './Project/ProjectOverview'
+import TaskOverview from './Task/TaskOverview'
 
 export default function LeftSideOverview() {
     return (
@@ -11,6 +12,7 @@ export default function LeftSideOverview() {
         >
             <BannerOverview />
             <ProjectOverview />
+            <TaskOverview />
         </div>
     )
 }

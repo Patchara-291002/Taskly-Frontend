@@ -7,7 +7,7 @@ import { Navigation, Pagination, Mousewheel, Keyboard } from 'swiper/modules';
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { LeftArrowIcon, RightArrowIcon } from '../icon/DashboardIcon'
+import { LeftArrowIcon, RightArrowIcon } from '../../icon/DashboardIcon'
 import { useRef } from 'react';
 
 export default function ProjectOverview() {

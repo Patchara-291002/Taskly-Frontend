@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { EditIcon } from '../icon/GlobalIcon'
+import { EditIcon } from '../../icon/GlobalIcon'
 
 export default function ProfileOverview() {
   return (

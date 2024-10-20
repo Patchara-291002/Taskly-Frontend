@@ -28,9 +28,9 @@ export default function header() {
           {
             isSearchActive
               ? <input type="text" placeholder="Search here"
-                className="input w-full max-w-xs bg-white focus:outline-none rounded-[15px] transition-transform duration-200 ease-in opacity-100 translate-x-[0px] scale-100 " />
+                className="input w-[300px] h-[40px] bg-white focus:outline-none rounded-[15px] transition-transform duration-200 ease-in opacity-100 translate-x-[0px] scale-100 " />
               : <input type="text" placeholder="Search here"
-                className="input w-full max-w-xs bg-white focus:outline-none rounded-[15px] transition-transform duration-200 ease-in opacity-30 translate-x-[100px] scale-x-0" />
+                className="input w-[300px] h-[40px] bg-white focus:outline-none rounded-[15px] transition-transform duration-200 ease-in opacity-30 translate-x-[100px] scale-x-0" />
           }
           <button
             onClick={toggleSearch}

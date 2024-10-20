@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Image from 'next/image';
 import { PlusIcon } from '../component/icon/GlobalIcon'
 import { NewButton } from '../component/GlobalComponent';
-import ProjectCard from '../component/dashboarOverview/ProjectCard';
+import ProjectCard from '../component/dashboarOverview/Project/ProjectCard';
 
 export default function page() {
 
