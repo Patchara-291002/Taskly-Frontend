@@ -8,8 +8,6 @@ import ProjectCard from '../component/dashboarOverview/ProjectCard';
 
 export default function page() {
 
-  const [isHover, setIsHover] = useState(false);
-
   const projects = [
     {
       projectName: "Project 1",
@@ -121,18 +119,118 @@ export default function page() {
         'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
       ]
     },
+    {
+      projectName: "Project 2",
+      day: 29,
+      month: "Sep",
+      percent: 40,
+      usersProfile: [
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+      ]
+    },
+    {
+      projectName: "Project 2",
+      day: 29,
+      month: "Sep",
+      percent: 40,
+      usersProfile: [
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+      ]
+    },
+    {
+      projectName: "Project 2",
+      day: 29,
+      month: "Sep",
+      percent: 40,
+      usersProfile: [
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+      ]
+    },
+    {
+      projectName: "Project 2",
+      day: 29,
+      month: "Sep",
+      percent: 40,
+      usersProfile: [
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+      ]
+    },
+    {
+      projectName: "Project 2",
+      day: 29,
+      month: "Sep",
+      percent: 40,
+      usersProfile: [
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+      ]
+    },
+    {
+      projectName: "Project 2",
+      day: 29,
+      month: "Sep",
+      percent: 40,
+      usersProfile: [
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+      ]
+    },
+    {
+      projectName: "Project 2",
+      day: 29,
+      month: "Sep",
+      percent: 40,
+      usersProfile: [
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+      ]
+    },
+    {
+      projectName: "Project 2",
+      day: 29,
+      month: "Sep",
+      percent: 40,
+      usersProfile: [
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+      ]
+    },
+    {
+      projectName: "Project 2",
+      day: 29,
+      month: "Sep",
+      percent: 40,
+      usersProfile: [
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+      ]
+    },
+    {
+      projectName: "Project 2",
+      day: 29,
+      month: "Sep",
+      percent: 40,
+      usersProfile: [
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
+        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+      ]
+    },
   ];
 
   return (
     <div
-      className=''
+      className='relative w-full z-0'
     >
       <NewButton
         onClick={() => { }}
         buttonText='New'
       />
       <div
-        className='grid grid-cols-[repeat(auto-fill,minmax(268px,1fr))] gap-[15px] mt-[20px]'
+        className='grid grid-cols-[repeat(auto-fill,minmax(268px,1fr))] gap-[15px] mt-[20px] z-10'
       >
         {
           projects.map((project, index) => (
@@ -143,19 +241,15 @@ export default function page() {
               month={project.month}
               usersProfile={project.usersProfile}
               percent={project.percent}
-              maxWidth={268}
+              maxWidth={350}
             />
           ))
         }
       </div>
       <div
-        className='w-full flex justify-end relative'
+        className='fixed -z-10 bottom-0 -right-0'
       >
-        <div
-          className='absolute -right-12'
-        >
-          <Image width={351} height={328} src='/Image/projectcharacter.png' />
-        </div>
+        <Image width={351} height={328} alt='project' priority={false} src='/Image/projectcharacter.png' />
       </div>
     </div>
   )

@@ -19,13 +19,22 @@ export default function RootLayout({ children }) {
       <body
         className={`${poppins.className} bg-[#F7F7F7]`}
       >
-        <div className='flex flex-row w-[100%]'>
-          <Navbar />
-          <div className='w-full'>
+        <div className='flex flex-row w-full'>
+          <div
+            className="w-[260px]"
+          >
+            <Navbar />
+          </div>
+          <div
+            className="
+              w-full
+              px-[30px]
+              overflow-hidden
+              pb-[20px]
+            "
+          >
             <Header />
-            <div className='px-[30px] w-full'>
-              {children}
-            </div>
+            {children}
           </div>
         </div>
       </body>

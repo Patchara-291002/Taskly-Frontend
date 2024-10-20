@@ -10,8 +10,16 @@ export const PlusIcon = ({ w, h, color }) => {
 
 export const AddUserIcon = ({ w, h, color }) => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" width={w} height={h}  fill="currentColor" viewBox="0 0 24 24">
-            <path fill={color} fill-rule="evenodd" d="M9 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H7Zm8-1a1 1 0 0 1 1-1h1v-1a1 1 0 1 1 2 0v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-1h-1a1 1 0 0 1-1-1Z" clip-rule="evenodd" />
+        <svg xmlns="http://www.w3.org/2000/svg" width={w} height={h} fill="currentColor" viewBox="0 0 24 24">
+            <path fill={color} fillRule="evenodd" d="M9 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H7Zm8-1a1 1 0 0 1 1-1h1v-1a1 1 0 1 1 2 0v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-1h-1a1 1 0 0 1-1-1Z" clipRule="evenodd" />
+        </svg>
+    )
+}
+
+export const EditIcon = ({ w, h, color }) => {
+    return (
+        <svg width={w} height={h} viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 15.4286H18V16.7143H0V15.4286ZM15.0429 4.5C15.5571 3.98571 15.5571 3.21429 15.0429 2.7L12.7286 0.385714C12.2143 -0.128571 11.4429 -0.128571 10.9286 0.385714L1.28571 10.0286V14.1429H5.4L15.0429 4.5ZM11.8286 1.28571L14.1429 3.6L12.2143 5.52857L9.9 3.21429L11.8286 1.28571ZM2.57143 12.8571V10.5429L9 4.11429L11.3143 6.42857L4.88571 12.8571H2.57143Z" fill={color} />
         </svg>
     )
 }

@@ -52,8 +52,10 @@ export default function BannerOverview() {
         >
             <Image 
                 src='/Image/dashboard.png'
+                alt='Banner'
                 width={396}
                 height={227}
+                priority={false}
             />
         </div>
     </div>

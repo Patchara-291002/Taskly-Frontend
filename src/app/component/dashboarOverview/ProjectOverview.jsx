@@ -82,7 +82,7 @@ export default function ProjectOverview() {
 
     return (
         <div
-            className='max-h-[202px] min-h-min w-full h-full'
+            className='max-h-[202px] min-h-min w-full h-full mt-[68px]'
         >
             <div
                 className='w-full flex flex-row justify-between mb-[20px]'
@@ -114,7 +114,7 @@ export default function ProjectOverview() {
             >
                 {chunkedProjects.map((group, index) => (
                     <SwiperSlide key={index}>
-                        <div className='w-full h-full flex gap-[15px]'>
+                        <div className='w-full h-full grid grid-cols-3 gap-[15px]'>
                             {group.map((project, i) => (
                                 <ProjectCard
                                     key={i}
@@ -123,7 +123,7 @@ export default function ProjectOverview() {
                                     month={project.month}
                                     usersProfile={project.usersProfile}
                                     percent={project.percent}
-                                    maxWidth={200}
+                                    maxWidth={350}
                                 />
                             ))}
                         </div>

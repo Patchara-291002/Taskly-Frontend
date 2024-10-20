@@ -1,29 +1,19 @@
-import BannerOverview from "./component/dashboarOverview/BannerOverview";
-import ProjectOverview from "./component/dashboarOverview/ProjectOverview";
+import LeftSideOverview from "./component/LeftSideOverview";
+import Header from "./component/header";
+import RightSideOverview from "./component/RightSideOverview";
 
 export default function page() {
   return (
     <div
       className="
         w-full
+        flex
+        gap-[60px]
+        pb-[20px]
       "
     >
-      <div
-        className="
-            max-w-[700px]
-          "
-      >
-        <div>
-          <BannerOverview />
-        </div>
-        <div
-          className="
-            mt-[68px]
-          "
-        >
-          <ProjectOverview />
-        </div>
-      </div>
+      <LeftSideOverview />
+      <RightSideOverview />
     </div>
   );
 }
