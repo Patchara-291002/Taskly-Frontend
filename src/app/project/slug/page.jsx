@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { AddUserIcon } from '@/app/component/icon/GlobalIcon'
 import { NewButton } from '@/app/component/GlobalComponent'
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core'
+import GrantChart from '../component/GrantChart'
 
 export default function page() {
 
@@ -92,7 +93,7 @@ export default function page() {
                     <AddUserIcon w={14} h={14} color={isUserHover ? 'white' : '#FF6200'} />
                 </button>
             </div>
-
+            
             <ProjectView />
 
             <DndContext onDragEnd={(event) => console.log(event)}>
@@ -106,9 +107,9 @@ export default function page() {
 const ProjectView = () => {
     return (
         <div
-            className='w-full h-[330px] bg-[#E2E5F2] rounded-[15px]'
+            className='w-full h-[400px]'
         >
-
+           <GrantChart />
         </div>
     )
 }
