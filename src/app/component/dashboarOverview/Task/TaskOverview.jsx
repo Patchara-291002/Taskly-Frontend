@@ -48,8 +48,6 @@ export default function TaskOverview() {
         },
     ]
 
-    console.log(tasks)
-
     return (
         <div
             className='w-full h-[353px] flex flex-col gap-[15px] mt-[40px] overflow-hidden'
@@ -63,14 +61,16 @@ export default function TaskOverview() {
                     Task Overview
                 </p>
             </div>
-            <div>
+            <div
+                className='w-full h-[315px]'
+            >
                 <Swiper
                     slidesPerView={4}
                     direction='vertical'
                     spaceBetween={10}
                     mousewheel={true}
                     modules={[Mousewheel]}
-                    className="mySwiper w-full h-[315px]"
+                    className="mySwiper w-full h-full"
                 >
                     {tasks.map((task, index) => (
                         <SwiperSlide key={index}>
