@@ -1,7 +1,7 @@
 import "./globals.css";
 import Navbar from "@/app/component/navbar"
 import Header from "@/app/component/header"
-import { Poppins } from '@next/font/google';
+import { Poppins } from 'next/font/google';
 
 const poppins = Poppins({
   subsets: ['latin'],
