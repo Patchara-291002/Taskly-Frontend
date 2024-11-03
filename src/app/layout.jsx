@@ -2,6 +2,7 @@ import "./globals.css";
 import Navbar from "@/app/component/navbar"
 import Header from "@/app/component/header"
 import { Poppins } from 'next/font/google';
+import ReduxProvider from "./component/ReduxProvider";
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -14,29 +15,23 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
   return (
     <html lang="en" className='no-scrollbar'>
       <body
         className={`${poppins.className} bg-[#F7F7F7]`}
       >
-        <div className='flex flex-row w-full'>
-          <div
-            className="w-[260px]"
-          >
-            <Navbar />
+        <ReduxProvider>
+          <div className='flex flex-row w-full'>
+            <div className="w-[260px]">
+              <Navbar />
+            </div>
+            <div className="w-full px-[30px] overflow-hidden pb-[20px]">
+              <Header />
+              {children}
+            </div>
           </div>
-          <div
-            className="
-              w-full
-              px-[30px]
-              overflow-hidden
-              pb-[20px]
-            "
-          >
-            <Header />
-            {children}
-          </div>
-        </div>
+        </ReduxProvider>
       </body>
     </html>
   );

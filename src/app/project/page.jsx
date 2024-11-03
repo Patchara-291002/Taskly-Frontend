@@ -11,7 +11,7 @@ export default function page() {
   const projects = [
     {
       projectName: "Project 1",
-      day: 30,
+      day: 20,
       month: "Sep",
       percent: 70,
       usersProfile: [
