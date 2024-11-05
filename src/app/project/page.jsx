@@ -1,105 +1,49 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
-import { PlusIcon } from '../component/icon/GlobalIcon'
 import { NewButton } from '../component/GlobalComponent';
 import ProjectCard from '../component/dashboarOverview/Project/ProjectCard';
+import { fetchProjectsByUserId } from '@/api/project';
+import { useSelector } from 'react-redux';
 
 export default function page() {
 
-  const projects = [
-    {
-      projectName: "Project 1",
-      day: 20,
-      month: "Sep",
-      percent: 70,
-      usersProfile: [
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-      ]
-    },
-    {
-      projectName: "Project 2",
-      day: 29,
-      month: "Sep",
-      percent: 40,
-      usersProfile: [
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-      ]
-    },
-    {
-      projectName: "Project 2",
-      day: 29,
-      month: "Sep",
-      percent: 40,
-      usersProfile: [
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-      ]
-    },
-    {
-      projectName: "Project 2",
-      day: 29,
-      month: "Sep",
-      percent: 40,
-      usersProfile: [
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-      ]
-    },
-    {
-      projectName: "Project 2",
-      day: 29,
-      month: "Sep",
-      percent: 40,
-      usersProfile: [
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-      ]
-    },
-    {
-      projectName: "Project 2",
-      day: 29,
-      month: "Sep",
-      percent: 40,
-      usersProfile: [
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-      ]
-    },
-    {
-      projectName: "Project 2",
-      day: 29,
-      month: "Sep",
-      percent: 40,
-      usersProfile: [
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-      ]
-    },
-    {
-      projectName: "Project 2",
-      day: 29,
-      month: "Sep",
-      percent: 40,
-      usersProfile: [
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-      ]
-    },
-    {
-      projectName: "Project 2",
-      day: 29,
-      month: "Sep",
-      percent: 40,
-      usersProfile: [
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-        'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-      ]
-    },
-  ];
+  const user = useSelector((state) => state.user)
+  const userId = user._id
+
+  const [projects, setProjects] = useState([])
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const getProjects = async () => {
+      try {
+        const data = await fetchProjectsByUserId(userId)
+        console.log(data)
+        setProjects(data)
+      } catch (error) {
+        console.error('Error loading projects:', error);
+      }
+    }
+
+    getProjects();
+  }, [userId])
+
+
+  const formatDay = (dateString) => {
+    const date = new Date(dateString);
+    return date.getDate(); // คืนค่าเป็นตัวเลขของวัน
+  };
+
+  const formatMonth = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('default', { month: 'short' }); 
+  };
+
+  const getUsersProfilePictures = (users) => {
+    return users.map(user => user.userId.profilePicture);
+  };
 
   return (
     <div
@@ -117,10 +61,10 @@ export default function page() {
             <ProjectCard
               key={index}
               projectName={project.projectName}
-              day={project.day}
-              month={project.month}
-              usersProfile={project.usersProfile}
-              percent={project.percent}
+              day={formatDay(project.startDate)}
+              month={formatMonth(project.startDate)}
+              usersProfile={getUsersProfilePictures(project.users)}
+              percent={project.progress}
               maxWidth={350}
             />
           ))

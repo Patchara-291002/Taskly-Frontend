@@ -3,6 +3,8 @@ import Navbar from "@/app/component/navbar"
 import Header from "@/app/component/header"
 import { Poppins } from 'next/font/google';
 import ReduxProvider from "./component/ReduxProvider";
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 const poppins = Poppins({
   subsets: ['latin'],
