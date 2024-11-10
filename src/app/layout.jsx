@@ -2,9 +2,7 @@ import "./globals.css";
 import Navbar from "@/app/component/navbar"
 import Header from "@/app/component/header"
 import { Poppins } from 'next/font/google';
-import ReduxProvider from "./component/ReduxProvider";
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import { UserProvider } from '@/context/UserContext';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -23,7 +21,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${poppins.className} bg-[#F7F7F7]`}
       >
-        <ReduxProvider>
+        <UserProvider>
           <div className='flex flex-row w-full'>
             <div className="w-[260px]">
               <Navbar />
@@ -33,7 +31,7 @@ export default function RootLayout({ children }) {
               {children}
             </div>
           </div>
-        </ReduxProvider>
+        </UserProvider>
       </body>
     </html>
   );

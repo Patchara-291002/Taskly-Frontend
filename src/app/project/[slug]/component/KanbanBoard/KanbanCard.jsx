@@ -1,19 +1,19 @@
 import React from 'react'
 import { CalendarIcon, ClockIcon } from '@/app/component/icon/DashboardIcon'
 
-export default function KanbanCard({ title, detail, tag, priority, dueDate, startDate, users, color, dueTime, status }) {
+export default function KanbanCard({ title, detail, tag, priority, dueDate, startDate, assignees, color, dueTime, status }) {
 
-    function limitWords(text, wordLimit) {
-        const words = text.split(" ");
-        if (words.length > wordLimit) {
-            return words.slice(0, wordLimit).join(" ") + "...";
-        }
-        return text;
-    }
+    // function limitWords(text, wordLimit) {
+    //     const words = text.split(" ");
+    //     if (words.length > wordLimit) {
+    //         return words.slice(0, wordLimit).join(" ") + "...";
+    //     }
+    //     return text;
+    // }
 
     return (
         <div
-            className='min-w-[230px] rounded-[15px] bg-white p-[15px] flex flex-col justify-between gap-[5px]'
+            className='max-w-[260px] rounded-[15px] bg-white p-[15px] flex flex-col justify-between gap-[5px]'
         >
             <div
                 className='w-full flex justify-between items-center'
@@ -46,12 +46,13 @@ export default function KanbanCard({ title, detail, tag, priority, dueDate, star
                     </div>
                 </div>
                 <div
-                    className='flex justify-center items-center py-[3px] px-[6px] bg-primaryorange rounded-[15px]'
+                    className='flex justify-center items-center py-[3px] px-[6px] rounded-[15px]'
+                    style={{background: color}}
                 >
                     <p
                         className='text-[8px] text-white text-nowrap'
                     >
-                        {status}
+                        {tag}
                     </p>
                 </div>
             </div>
@@ -61,9 +62,9 @@ export default function KanbanCard({ title, detail, tag, priority, dueDate, star
                 <div
                     className='flex -space-x-2.5'
                 >
-                    {users.map((user, index) => (
+                    {assignees.map((user, index) => (
                         <div key={index} className='w-[20px] h-[20px] rounded-full overflow-hidden'>
-                            <img src={user.profile} alt={`User ${index}`} />
+                            <img src={user.profilePicture} alt={`User ${index}`} />
                         </div>
                     ))}
                 </div>

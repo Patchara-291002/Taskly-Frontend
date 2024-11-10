@@ -1,17 +1,14 @@
 'use client'
 
 import React from 'react'
-import { useSelector } from 'react-redux';
 import { EditIcon } from '../../icon/GlobalIcon';
-import Image from 'next/image';
+import { useUser } from '@/context/UserContext';
 
 export default function ProfileOverview() {
-    const user = useSelector((state) => state.user);
 
-    const profile = user.profilePicture;
+    const { user } = useUser();
 
-    console.log(user)
-
+    
     return (
         <div className='w-full h-[198px] flex flex-col justify-between'>
             <div className='flex justify-between'>
@@ -22,7 +19,7 @@ export default function ProfileOverview() {
             </div>
             <div className='flex flex-col justify-center items-center gap-[20px]'>
                 <div className='w-[85px] h-[85px] rounded-full overflow-hidden'>
-                    <img src={user.profilePicture} alt="Profile"/>
+                    <img src={user && user.profilePicture} alt="Profile" referrerPolicy="no-referrer"/>
                 </div>
                 <div className='flex flex-col items-center'>
                     <p className='text-[14px] font-medium'>{user?.displayName || 'User Name'}</p>

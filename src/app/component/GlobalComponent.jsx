@@ -1,4 +1,4 @@
-import React,{ useState } from 'react'
+import React, { useState } from 'react'
 import { PlusIcon } from './icon/GlobalIcon'
 
 export const NewButton = ({ onClick, buttonText = "New" }) => {
@@ -50,3 +50,23 @@ export const AddUserButton = ({ onClick, buttonText = "New" }) => {
         </button>
     )
 }
+
+export const BlurBackground = ({ children, isOpen, onClose }) => {
+    if (!isOpen) return null
+
+    return (
+        <div
+            className='fixed inset-0 flex items-center justify-center z-10'
+            onClick={onClose}
+        >
+            <div 
+                className='absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm'
+            ></div>
+            <div className='relative z-20'
+                onClick={(e) => e.stopPropagation()}
+            >
+                {children}
+            </div>
+        </div>
+    );
+};

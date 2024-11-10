@@ -4,13 +4,18 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import { NewButton } from '../component/GlobalComponent';
 import ProjectCard from '../component/dashboarOverview/Project/ProjectCard';
-import { fetchProjectsByUserId } from '@/api/project';
-import { useSelector } from 'react-redux';
+
+import { useUser } from '@/context/UserContext';
+import NewProject from './component/NewProject';
+
+//API///////////////////////////////////////////////////
+import { fetchProjectsByUserId, createProject } from '@/api/project';
+import Link from 'next/link';
 
 export default function page() {
 
-  const user = useSelector((state) => state.user)
-  const userId = user._id
+  const { user } = useUser();
+  const userId = user && user._id
 
   const [projects, setProjects] = useState([])
 
@@ -33,24 +38,41 @@ export default function page() {
 
   const formatDay = (dateString) => {
     const date = new Date(dateString);
-    return date.getDate(); // คืนค่าเป็นตัวเลขของวัน
+    return date.getDate();
   };
 
   const formatMonth = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleString('default', { month: 'short' }); 
+    return date.toLocaleString('default', { month: 'short' });
   };
 
   const getUsersProfilePictures = (users) => {
     return users.map(user => user.userId.profilePicture);
   };
 
+  ///////////////////////////////////////////////////
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [startDate, setStartDate] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [projectName, setProjectName] = useState("")
+
+  const handleCreateProject = async () => {
+    try {
+      const newProject = await createProject(projectName, startDate, dueDate);
+      setIsOpen(false);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error creating project:', error);
+    }
+  }
   return (
     <div
       className='relative w-full z-0'
     >
       <NewButton
-        onClick={() => { }}
+        onClick={() => setIsOpen(true)}
         buttonText='New'
       />
       <div
@@ -58,15 +80,19 @@ export default function page() {
       >
         {
           projects.map((project, index) => (
-            <ProjectCard
+            <Link
               key={index}
-              projectName={project.projectName}
-              day={formatDay(project.startDate)}
-              month={formatMonth(project.startDate)}
-              usersProfile={getUsersProfilePictures(project.users)}
-              percent={project.progress}
-              maxWidth={350}
-            />
+              href={`/project/${project._id}`}
+            >
+              <ProjectCard
+                projectName={project.projectName}
+                day={formatDay(project.dueDate)}
+                month={formatMonth(project.dueDate)}
+                usersProfile={getUsersProfilePictures(project.users)}
+                percent={project.progress}
+                maxWidth={350}
+              />
+            </Link>
           ))
         }
       </div>
@@ -75,6 +101,19 @@ export default function page() {
       >
         <Image width={351} height={328} alt='project' priority={false} src='/Image/projectcharacter.png' />
       </div>
+      {isOpen && (
+        <NewProject
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          dueDate={dueDate}
+          setDueDate={setDueDate}
+          projectName={projectName}
+          setProjectName={setProjectName}
+          onSubmit={handleCreateProject}
+        />
+      )}
     </div>
   )
 }

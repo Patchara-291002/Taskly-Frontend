@@ -1,10 +1,11 @@
 import Image from 'next/image';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useUser } from '@/context/UserContext';
 
 export default function BannerOverview() {
-    const user = useSelector((state) => state.user);
-    const name = user.displayName ? user.displayName.split(' ')[0] : 'User';
+    
+    const { user } = useUser();
+    const name = user && user.displayName ? user.displayName.split(' ')[0] : 'User';
 
     return (
         <div className='w-full h-[170px] bg-primaryorange rounded-[15px] px-[30px] py-[40px] relative'>
