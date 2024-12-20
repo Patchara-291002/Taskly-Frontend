@@ -8,6 +8,10 @@ import { usePathname } from 'next/navigation';
 import { NewButton } from '@/app/component/GlobalComponent'
 import NewStatus from './component/NewStatus'
 import { useUser } from '@/context/UserContext';
+import lottie from "lottie-web";
+import { defineElement } from "@lordicon/element";
+
+defineElement(lottie.loadAnimation);
 //API///////////////////////////////////////////
 import { fetchProjectByProjectId } from '@/api/project'
 import { createStatus } from '@/api/status'
@@ -19,6 +23,8 @@ export default function page() {
 
     const { user } = useUser();
     const userId = user && user._id
+
+    const [isDelete, setIsDelete] = useState(false);
 
     const [project, setProject] = useState(null);
     const pathname = usePathname();
@@ -131,11 +137,35 @@ export default function page() {
                 className='w-full touch-none'
             >
                 <div
-                    className='mb-[25px] ml-[25px]'
+                    className='pb-[25px] pl-[25px] flex justify-between  w-full '
                 >
-                    <NewButton
-                        onClick={() => setIsOpenNewStatus(true)}
-                    />
+                    <div>
+                        <NewButton
+                            onClick={() => setIsOpenNewStatus(true)}
+                        />
+                    </div>
+                    <div
+                        className='flex gap-[10px]'
+                    >
+                        {isDelete && (
+                            <lord-icon
+                                src="https://cdn.lordicon.com/lomfljuq.json"
+                                trigger="in"
+                                delay="500"
+                                state="in-check"
+                                colors="primary:#27C400"
+                                style={{ width: 25, height: 25 }}
+                                onClick={() => setIsDelete(false)}
+                            />
+                        )}
+                        <lord-icon
+                            src="https://cdn.lordicon.com/skkahier.json"
+                            trigger="hover"
+                            colors={isDelete ? 'primary:#FF0000' : 'primary:#000000'}
+                            style={{ width: 25, height: 25 }}
+                            onClick={() => setIsDelete(true)}
+                        />
+                    </div>
                 </div>
                 {project && <Board initialProjectData={project} setIsOpenNewTask={setIsOpenNewTask} setStatusId={setStatusId} handleOpenNewTask={handleOpenNewTask} />}
             </div>
