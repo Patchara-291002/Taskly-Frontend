@@ -1,6 +1,4 @@
 import "./globals.css";
-import Navbar from "@/app/component/navbar"
-import Header from "@/app/component/header"
 import { Poppins } from 'next/font/google';
 import { UserProvider } from '@/context/UserContext';
 
@@ -22,15 +20,7 @@ export default function RootLayout({ children }) {
         className={`${poppins.className} bg-[#F7F7F7]`}
       >
         <UserProvider>
-          <div className='flex flex-row w-full'>
-            <div className="w-[260px]">
-              <Navbar />
-            </div>
-            <div className="w-full px-[30px] overflow-hidden pb-[20px]">
-              <Header />
-              {children}
-            </div>
-          </div>
+          {children}
         </UserProvider>
       </body>
     </html>
