@@ -6,17 +6,19 @@ import PopUp from './component/PopUp';
 export default function LoginPage() {
 
   const [opendPopUp, setOpendPopUp] = useState(false)
-  // make variable string to store defalt value "" then create function to change this value ex. sign in , sign up 
-  // create function in popup to check value and reponse data according to value 
+  const [popUpType, setPopUpType] = useState('');
 
-  const getStart = () => {
+  const getStart = (type) => {
+    setPopUpType(type);
     setOpendPopUp(true);
+    console.log(type);
   }
 
   const closePopUp = () => {
     setOpendPopUp(false);
+    setPopUpType('');
   }
-
+  
   return (
     <div
       className='w-full min-h-dvh flex items-center'
@@ -53,7 +55,7 @@ export default function LoginPage() {
           >
             <button
               className='bg-primaryorange w-[160px] py-[8px] rounded-[8px] font-semibold text-[14px] text-white'
-              onClick={getStart}
+              onClick={() => getStart('signUp')}
             >
               Get Started
             </button>
@@ -71,7 +73,7 @@ export default function LoginPage() {
         Taskly
       </p>
 
-      { opendPopUp && <PopUp closePopUp={closePopUp} />}
+      { opendPopUp && <PopUp closePopUp={closePopUp} type={popUpType} setType={setPopUpType} />}
 
     </div>
   );
