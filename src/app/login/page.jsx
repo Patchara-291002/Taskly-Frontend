@@ -1,9 +1,19 @@
 'use client'
 
-import React, { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
 import PopUp from './component/PopUp';
 
 export default function LoginPage() {
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const token = searchParams.get('token');
+    if (token) {
+      setOpendPopUp(true);
+    }
+  }, [searchParams])
 
   const [opendPopUp, setOpendPopUp] = useState(false)
   const [popUpType, setPopUpType] = useState('');
@@ -18,7 +28,7 @@ export default function LoginPage() {
     setOpendPopUp(false);
     setPopUpType('');
   }
-  
+
   return (
     <div
       className='w-full min-h-dvh flex items-center'
@@ -73,7 +83,7 @@ export default function LoginPage() {
         Taskly
       </p>
 
-      { opendPopUp && <PopUp closePopUp={closePopUp} type={popUpType} setType={setPopUpType} />}
+      {opendPopUp && <PopUp closePopUp={closePopUp} type={popUpType} setType={setPopUpType} />}
 
     </div>
   );

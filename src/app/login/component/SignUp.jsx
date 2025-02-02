@@ -1,3 +1,6 @@
+import { registerWithEmail } from "@/api/auth";
+import { useState } from "react";
+
 export default function SignUp({ setType }) {
 
     const signUpData = [
@@ -5,11 +8,6 @@ export default function SignUp({ setType }) {
             name: "google",
             link: "",
             label: "Sign up with Google"
-        },
-        {
-            name: "facebook",
-            link: "",
-            label: "Sign up with Facebook"
         },
         {
             name: "email",

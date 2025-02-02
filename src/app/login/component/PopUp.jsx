@@ -1,12 +1,24 @@
-import React from 'react'
+import { useSearchParams } from 'next/navigation';
 import { CrossIcon } from '@/app/home/component/icon/GlobalIcon'
-import { LeftArrowIcon } from '@/app/home/component/icon/DashboardIcon';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import SignUpEmail from './SignUpEmail';
 import SignUpSent from './SignUpSent';
+import VerifyEmail from './VerifyEmail';
+import { useEffect, useState } from 'react';
 
 export default function PopUp({ type, closePopUp, setType }) {
+    const searchParams = useSearchParams();
+    const [verifytToken, setVerifyToken] = useState("");
+
+    useEffect(() => {
+        const token = searchParams.get('token');
+        if (token) {
+            setVerifyToken(token);
+            setType('verifyEmail');
+            console.log(token)
+        }
+    }, [searchParams, setType])
 
     const renderContent = () => {
         switch (type) {
@@ -18,12 +30,13 @@ export default function PopUp({ type, closePopUp, setType }) {
                 return <SignUpEmail setType={setType} />
             case 'signUpSent':
                 return <SignUpSent setType={setType} closePopUp={closePopUp} />
+            case 'verifyEmail':
+                return <VerifyEmail setType={setType} closePopUp={closePopUp} verifytToken={verifytToken} />
             default:
                 return <></>
         }
         
     }
-    setType('signUpSent');
     return (
         <div
             className='fixed inset-0 bg-black/60 backdrop-blur-[2px] z-10'
