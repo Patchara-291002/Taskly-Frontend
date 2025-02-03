@@ -6,6 +6,7 @@ import SignUpEmail from './SignUpEmail';
 import SignUpSent from './SignUpSent';
 import VerifyEmail from './VerifyEmail';
 import { useEffect, useState } from 'react';
+import SignInEmail from './SignInEmail';
 
 export default function PopUp({ type, closePopUp, setType }) {
     const searchParams = useSearchParams();
@@ -32,6 +33,8 @@ export default function PopUp({ type, closePopUp, setType }) {
                 return <SignUpSent setType={setType} closePopUp={closePopUp} />
             case 'verifyEmail':
                 return <VerifyEmail setType={setType} closePopUp={closePopUp} verifytToken={verifytToken} />
+            case 'signInEmail':
+                return <SignInEmail setType={setType} />
             default:
                 return <></>
         }

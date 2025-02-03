@@ -1,11 +1,11 @@
 import Image from 'next/image';
 import React from 'react';
-import { useUser } from '@/context/UserContext';
+import { useAuth } from "@/context/AuthContext";
 
 export default function BannerOverview() {
     
-    const { user } = useUser();
-    const name = user && user.displayName ? user.displayName.split(' ')[0] : 'User';
+    const { user } = useAuth();
+    const name = user ? user.name.split(' ')[0] : 'User';
 
     return (
         <div className='w-full h-[170px] bg-primaryorange rounded-[15px] px-[30px] py-[40px] relative'>

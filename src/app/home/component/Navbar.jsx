@@ -36,11 +36,11 @@ export default function Navbar() {
             link: "/home/help",
             icon: <HelpIcon w='22' h='22' />
         },
-        {
-            name: "Logout",
-            link: "/home/logout",
-            icon: <LogoutIcon w='22' h='22' />
-        },
+        // {
+        //     name: "Logout",
+        //     link: "/home/logout",
+        //     icon: <LogoutIcon w='22' h='22' />
+        // },
     ]
 
     return (

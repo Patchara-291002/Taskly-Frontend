@@ -2,12 +2,13 @@
 
 import React from 'react'
 import { EditIcon } from '../../icon/GlobalIcon';
-import { useUser } from '@/context/UserContext';
+import { useAuth } from "@/context/AuthContext";
 
 export default function ProfileOverview() {
 
-    const { user } = useUser();
+    const { user } = useAuth();
 
+    const Avatar  = "https://avatars.githubusercontent.com/u/119255542?s=48&v=4"
     
     return (
         <div className='w-full h-[198px] flex flex-col justify-between'>
@@ -19,12 +20,12 @@ export default function ProfileOverview() {
             </div>
             <div className='flex flex-col justify-center items-center gap-[20px]'>
                 <div className='w-[85px] h-[85px] rounded-full overflow-hidden'>
-                    <img src={user && user.profilePicture} alt="Profile" referrerPolicy="no-referrer"/>
+                    {user && <img src={user.profile ? user.profile : Avatar} alt="Profile" referrerPolicy="no-referrer"/> }
                 </div>
-                <div className='flex flex-col items-center'>
-                    <p className='text-[14px] font-medium'>{user?.displayName || 'User Name'}</p>
-                    {/* <p className='text-[12px] font-normal text-[#707070]'>{user?.username || '@username'}</p> */}
-                </div>
+                {/* <div className='flex flex-col items-center'>
+                    <p className='text-[14px] font-medium'>{'User Name'}</p>
+                    <p className='text-[12px] font-normal text-[#707070]'>{user?.username || '@username'}</p>
+                </div> */}
             </div>
         </div>
     )

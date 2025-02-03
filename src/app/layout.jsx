@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Poppins } from 'next/font/google';
-import { UserProvider } from '@/context/UserContext';
+import { AuthProvider } from "@/context/AuthContext";
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -19,9 +19,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${poppins.className} bg-[#F7F7F7]`}
       >
-        <UserProvider>
+        <AuthProvider>
           {children}
-        </UserProvider>
+        </AuthProvider>
       </body>
     </html>
   );
