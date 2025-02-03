@@ -1,10 +1,13 @@
 "use client"
 
 import Link from "next/link"
-import { SearchIcon, CalendarIcon, NotificationIcon } from "./icon/LayoutIcon"
+import { SearchIcon, CalendarIcon, NotificationIcon, LogoutIcon } from "./icon/LayoutIcon"
 import { useState } from "react"
+import { useAuth } from "@/context/AuthContext";
 
 export default function header() {
+
+  const { handleLogout } = useAuth();
 
   const [isSearchActive, setIsSearchActive] = useState(false);
 
@@ -51,6 +54,14 @@ export default function header() {
             className="bg-[#FF6200] w-[40px] h-[40px] flex justify-center items-center rounded-full "
           >
             <NotificationIcon w='12' h='12' />
+          </div>
+        </Link>
+        <Link href='/'>
+          <div
+            onClick={handleLogout}
+            className="bg-[#FF6200] w-[40px] h-[40px] flex justify-center items-center rounded-full "
+          >
+            <LogoutIcon w='12' h='12' color={'#ffffff'} />
           </div>
         </Link>
       </div>

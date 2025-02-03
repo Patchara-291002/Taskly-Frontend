@@ -1,15 +1,13 @@
+import { API_BASE_URL } from "@/api/config"
+import Link from "next/link"
+
 export default function SignIn({ setType, handelClick }) {
 
     const signInData = [
         {
             name: "google",
-            link: "",
+            link: `${API_BASE_URL}/auth/google`,
             label: "Sign in with Google"
-        },
-        {
-            name: "facebook",
-            link: "",
-            label: "Sign in with Facebook"
         },
         {
             name: "email",
@@ -17,6 +15,17 @@ export default function SignIn({ setType, handelClick }) {
             label: "Sign in with Email"
         }
     ]
+
+    const handleSingInOptions = (name) => {
+        if (name === 'email') {
+            setType('signInEmail')
+        } 
+        else if (name === 'google') {
+            return
+        } else {
+            return
+        }
+    }
 
     return (
         <div
@@ -31,16 +40,18 @@ export default function SignIn({ setType, handelClick }) {
                 className='flex flex-col gap-[1rem]'
             >
                 {signInData.map((data, index) => (
-                    <div
+                    <Link
                         key={index}
-                        className='w-[280px] h-[44px] flex justify-center items-center border-[1px] border-black rounded-full'
+                        onClick={() => handleSingInOptions(data.name)}
+                        href={data.link}
+                        className='w-[280px] h-[44px] flex justify-center items-center border-[1px] border-black rounded-full cursor-pointer'
                     >
                         <p
                             className=''
                         >
                             {data.label}
                         </p>
-                    </div>
+                    </Link>
                 ))}
             </div>
             <div
