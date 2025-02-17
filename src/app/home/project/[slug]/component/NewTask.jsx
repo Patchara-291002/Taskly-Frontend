@@ -1,8 +1,8 @@
 import React from 'react';
-import { BlurBackground } from '@/app/component/GlobalComponent';
+import { BlurBackground } from '@/app/home/component/GlobalComponent';
 import { Input, DatePicker, TimePicker } from 'rsuite';
 import "rsuite/dist/rsuite-no-reset.min.css";
-import { CrossIcon } from '@/app/component/icon/GlobalIcon';
+import { CrossIcon } from '@/app/home/component/icon/GlobalIcon';
 
 export default function NewTask({ isOpenNewTask, setIsOpenNewTask, task, setTask, statusId, onSubmit }) {
 

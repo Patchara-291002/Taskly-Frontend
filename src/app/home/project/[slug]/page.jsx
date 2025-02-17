@@ -1,34 +1,46 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { AddUserIcon } from '@/app/component/icon/GlobalIcon'
+import React, { useEffect, useState, useRef } from 'react'
+import { AddUserIcon } from '@/app/home/component/icon/GlobalIcon'
 import GrantChart from './component/GrantChart'
 import Board from './component/KanbanBoard/Board'
 import { usePathname } from 'next/navigation';
-import { NewButton } from '@/app/component/GlobalComponent'
+import { NewButton } from '@/app/home/component/GlobalComponent'
 import NewStatus from './component/NewStatus'
-import { useUser } from '@/context/UserContext';
 import lottie from "lottie-web";
 import { defineElement } from "@lordicon/element";
+import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
+import { Navigation, Pagination, Mousewheel, Keyboard } from 'swiper/modules';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 defineElement(lottie.loadAnimation);
 //API///////////////////////////////////////////
 import { fetchProjectByProjectId } from '@/api/project'
 import { createStatus } from '@/api/status'
-import NewTask from './NewTask'
+import NewTask from './component/NewTask'
 import { createTask } from '@/api/task'
 
 
 export default function page() {
 
-    const { user } = useUser();
-    const userId = user && user._id
+    const swiperRef = useRef();
+    const handlePrev = () => {
+        swiperRef.current?.slidePrev();
+    };
+    const handleNext = () => {
+        swiperRef.current?.slideNext();
+    };
+
 
     const [isDelete, setIsDelete] = useState(false);
 
     const [project, setProject] = useState(null);
     const pathname = usePathname();
     const projectId = pathname.split('/').pop();
+
+    console.log(projectId)
 
     useEffect(() => {
         if (!projectId) return
@@ -37,6 +49,7 @@ export default function page() {
             try {
                 const projectData = await fetchProjectByProjectId(projectId)
                 setProject(projectData);
+                console.log(projectData)
             } catch (error) {
                 console.error('Failed to load project:', error);
             }
@@ -60,8 +73,6 @@ export default function page() {
         }
     }
 
-    console.log(project)
-
     const [isOpenNewTask, setIsOpenNewTask] = useState(false);
     const [statusId, setStatusId] = useState("");
     const [task, setTask] = useState({
@@ -75,7 +86,7 @@ export default function page() {
         dueDate: null,
         startTime: null,
         dueTime: null,
-        assignees: [userId]
+        assignees: []
     })
 
     const handleCreateTask = async () => {
@@ -100,7 +111,7 @@ export default function page() {
         }));
     }, [statusId]);
 
-    console.log(statusId)
+    // console.log(statusId)
     return (
         <div
             className='w-full flex flex-col gap-[20px] z-0 relative'
@@ -113,7 +124,7 @@ export default function page() {
                 >
                     {project && project.users.map((user, index) => (
                         <div key={index} className='w-[26px] h-[26px] rounded-full overflow-hidden'>
-                            <img src={user.userId?.profilePicture} alt={user.displayName} />
+                            <img src={user.userId.profile} alt={user.name} />
                         </div>
                     ))}
                 </div>
@@ -128,7 +139,7 @@ export default function page() {
             </div>
 
             <div
-                className='w-full h-[400px]'
+                className='w-full h-[400px] bg-white rounded-[15px] p-[10px] border-[1px] border-grayBorder'
             >
                 {project && <GrantChart project={project} />}
             </div>
@@ -136,39 +147,60 @@ export default function page() {
             <div
                 className='w-full touch-none'
             >
-                <div
-                    className='pb-[25px] pl-[25px] flex justify-between  w-full '
+                <Swiper
+                    onSwiper={(swiper => (swiperRef.current = swiper))}
+                    className='mySwiper'
                 >
-                    <div>
-                        <NewButton
-                            onClick={() => setIsOpenNewStatus(true)}
-                        />
-                    </div>
-                    <div
-                        className='flex gap-[10px]'
-                    >
-                        {isDelete && (
-                            <lord-icon
-                                src="https://cdn.lordicon.com/lomfljuq.json"
-                                trigger="in"
-                                delay="500"
-                                state="in-check"
-                                colors="primary:#27C400"
-                                style={{ width: 25, height: 25 }}
-                                onClick={() => setIsDelete(false)}
-                            />
-                        )}
-                        <lord-icon
-                            src="https://cdn.lordicon.com/skkahier.json"
-                            trigger="hover"
-                            colors={isDelete ? 'primary:#FF0000' : 'primary:#000000'}
-                            style={{ width: 25, height: 25 }}
-                            onClick={() => setIsDelete(true)}
-                        />
-                    </div>
-                </div>
-                {project && <Board initialProjectData={project} setIsOpenNewTask={setIsOpenNewTask} setStatusId={setStatusId} handleOpenNewTask={handleOpenNewTask} />}
+                    <SwiperSlide>
+                        <div>
+                            <div
+                                className='pb-[25px] flex justify-between  w-full '
+                            >
+                                <div>
+                                    <NewButton
+                                        onClick={() => setIsOpenNewStatus(true)}
+                                    />
+                                </div>
+                                <div
+                                    className='flex gap-[10px]'
+                                >
+                                    {isDelete && (
+                                        <lord-icon
+                                            src="https://cdn.lordicon.com/lomfljuq.json"
+                                            trigger="in"
+                                            delay="500"
+                                            state="in-check"
+                                            colors="primary:#27C400"
+                                            style={{ width: 25, height: 25 }}
+                                            onClick={() => setIsDelete(false)}
+                                        />
+                                    )}
+                                    <lord-icon
+                                        src="https://cdn.lordicon.com/skkahier.json"
+                                        trigger="hover"
+                                        colors={isDelete ? 'primary:#FF0000' : 'primary:#000000'}
+                                        style={{ width: 25, height: 25 }}
+                                        onClick={() => setIsDelete(true)}
+                                    />
+                                </div>
+                            </div>
+                            <div
+                                className='w-full min-h-[300px] p-[10px] rounded-[15px] border-[1px] border-grayBorder touch-none'
+                            >
+                                {project && <Board initialProjectData={project} setIsOpenNewTask={setIsOpenNewTask} setStatusId={setStatusId} handleOpenNewTask={handleOpenNewTask} />}
+                            </div>
+                        </div>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <h1>
+                            Hi
+                        </h1>
+                    </SwiperSlide>
+                </Swiper>
+
             </div>
+
+
             {isOpenNewStatus && (
                 <NewStatus
                     setStatusName={setStatusName}

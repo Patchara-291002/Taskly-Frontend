@@ -1,5 +1,5 @@
 import React from 'react'
-import { CalendarIcon, ClockIcon } from '@/app/component/icon/DashboardIcon'
+import { CalendarIcon, ClockIcon } from '@/app/home/component/icon/DashboardIcon'
 
 export default function KanbanCard({ title, detail, tag, priority, dueDate, startDate, assignees, color, dueTime, status }) {
 
@@ -13,7 +13,7 @@ export default function KanbanCard({ title, detail, tag, priority, dueDate, star
 
     return (
         <div
-            className='max-w-[260px] rounded-[15px] bg-white p-[15px] flex flex-col justify-between gap-[5px]'
+            className='max-w-[260px] rounded-[15px] bg-white p-[15px] border-[1px] border-grayBorder flex flex-col justify-between gap-[5px]'
         >
             <div
                 className='w-full flex justify-between items-center'
@@ -21,7 +21,7 @@ export default function KanbanCard({ title, detail, tag, priority, dueDate, star
                 <div
                     className='flex items-center gap-[8px]'
                 >
-                    <div
+                    {/* <div
                         className='w-[8px] h-[8px] rounded-full'
                         style={{ background: 
                            priority === 3
@@ -32,7 +32,7 @@ export default function KanbanCard({ title, detail, tag, priority, dueDate, star
                            ? "#18AC00"
                            : "FFFFFF"
                         }}
-                    />
+                    /> */}
                     <div
                         className=''
                     >
@@ -64,7 +64,7 @@ export default function KanbanCard({ title, detail, tag, priority, dueDate, star
                 >
                     {assignees.map((user, index) => (
                         <div key={index} className='w-[20px] h-[20px] rounded-full overflow-hidden'>
-                            <img src={user.profilePicture} alt={`User ${index}`} />
+                            <img src={user.profile} alt={`User ${index}`} />
                         </div>
                     ))}
                 </div>

@@ -63,7 +63,7 @@ export default function GrantChart({ project }) {
 
     const data = {
         datasets: [{
-            label: 'My First Dataset',
+            // label: 'My First Dataset',
             data: dataTask,
             backgroundColor: backgroundColors,
             borderSkipped: false,

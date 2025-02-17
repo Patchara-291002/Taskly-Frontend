@@ -1,4 +1,4 @@
-import { BlurBackground } from '@/app/component/GlobalComponent'
+import { BlurBackground } from '@/app/home/component/GlobalComponent'
 import { Input } from 'rsuite';
 import "rsuite/dist/rsuite-no-reset.min.css";
 

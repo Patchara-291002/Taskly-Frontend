@@ -1,16 +1,18 @@
 import axios from "axios";
 import { API_BASE_URL } from "./config";
 
-export const fetchProjectsByUserId = async (userId) => {
-    return axios.get(`${API_BASE_URL}/project/user/${userId}`, {
-        withCredentials: true,
-    })
-        .then(response => response.data)
-        .catch(error => {
-            console.log('Error fetching projects by user ID:', error);
-            throw error;
+// ✅ เปลี่ยน API ให้ไม่ต้องใช้ userId ใน URL
+export const fetchProjectsByUser = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/project/`, {
+            withCredentials: true
         })
-}
+        return response.data
+    } catch (error) {
+        console.log('Error fetch project', error);
+        throw error;
+    }
+};
 
 export const createProject = async (projectName, startDate, dueDate) => {
     return axios.post(`${API_BASE_URL}/project/create`, {
@@ -19,27 +21,31 @@ export const createProject = async (projectName, startDate, dueDate) => {
         dueDate
     }, {
         withCredentials: true,
-    })
-}
+    });
+};
 
 export const fetchProjectByProjectId = async (projectId) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/project/${projectId}`, {
             withCredentials: true
-        })
-        return response.data
+        });
+        return response.data;
     } catch (error) {
         console.error("Error fetching project by ID:", error);
         throw error;
     }
-}
+};
 
-// export const updateTaskStatus = async (taskId, newStatusId) => {
-//     try {
-//         const response = await axios.put(`${API_BASE_URL}/update/status/${taskId}`, { statusId: newStatusId });
-//         return response.data;
-//     } catch (error) {
-//         console.error('Error updating task status:', error);
-//         throw error;
-//     }
-// };
+// ✅ เพิ่ม API สำหรับเพิ่มผู้ใช้เข้า Project
+export const addUserToProject = async (projectId, role) => {
+    return axios.post(`${API_BASE_URL}/project/${projectId}/add-user`, {
+        role, // ✅ ไม่ต้องส่ง userId เพราะ Backend ใช้ req.userId
+    }, {
+        withCredentials: true,
+    })
+    .then(response => response.data)
+    .catch(error => {
+        console.error("Error adding user to project:", error);
+        throw error;
+    });
+};

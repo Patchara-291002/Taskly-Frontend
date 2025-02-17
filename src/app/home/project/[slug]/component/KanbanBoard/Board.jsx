@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { DndContext, closestCenter, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
-import { PlusIcon } from '@/app/component/icon/GlobalIcon';
+import { PlusIcon } from '@/app/home/component/icon/GlobalIcon';
 import { formatToDate } from '@/utils/dateUtils';
 import KanbanCard from './KanbanCard';
-import { BlurBackground } from '@/app/component/GlobalComponent';
+import { BlurBackground } from '@/app/home/component/GlobalComponent';
 
 /// API ///
 import { updateTaskStatus } from '@/api/task';

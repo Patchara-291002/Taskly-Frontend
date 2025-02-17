@@ -4,27 +4,19 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import { NewButton } from '../component/GlobalComponent';
 import ProjectCard from '../component/dashboarOverview/Project/ProjectCard';
-
-import { useUser } from '@/context/UserContext';
 import NewProject from './component/NewProject';
-
-//API///////////////////////////////////////////////////
-import { fetchProjectsByUserId, createProject } from '@/api/project';
+import { fetchProjectsByUser, createProject } from '@/api/project';
 import Link from 'next/link';
 
 export default function page() {
 
-  const { user } = useUser();
-  const userId = user && user._id
-
   const [projects, setProjects] = useState([])
 
   useEffect(() => {
-    if (!userId) return;
 
     const getProjects = async () => {
       try {
-        const data = await fetchProjectsByUserId(userId)
+        const data = await fetchProjectsByUser()
         console.log(data)
         setProjects(data)
       } catch (error) {
@@ -33,7 +25,7 @@ export default function page() {
     }
 
     getProjects();
-  }, [userId])
+  }, [])
 
 
   const formatDay = (dateString) => {
@@ -46,9 +38,9 @@ export default function page() {
     return date.toLocaleString('default', { month: 'short' });
   };
 
-  const getUsersProfilePictures = (users) => {
-    return users.map(user => user.userId.profilePicture);
-  };
+  // const getUsersProfilePictures = (users) => {
+  //   return users.map(user => user.userId.profilePicture);
+  // };
 
   ///////////////////////////////////////////////////
 
@@ -82,13 +74,13 @@ export default function page() {
           projects.map((project, index) => (
             <Link
               key={index}
-              href={`/project/${project._id}`}
+              href={`/home/project/${project._id}`}
             >
               <ProjectCard
                 projectName={project.projectName}
                 day={formatDay(project.dueDate)}
                 month={formatMonth(project.dueDate)}
-                usersProfile={getUsersProfilePictures(project.users)}
+                usersProfile={project.users.map(user => user.userId.profile)}
                 percent={project.progress}
                 maxWidth={350}
               />
@@ -96,11 +88,11 @@ export default function page() {
           ))
         }
       </div>
-      <div
+      {/* <div
         className='fixed -z-10 bottom-0 -right-0'
       >
         <Image width={351} height={328} alt='project' priority={false} src='/Image/projectcharacter.png' />
-      </div>
+      </div> */}
       {isOpen && (
         <NewProject
           isOpen={isOpen}
