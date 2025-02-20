@@ -110,7 +110,7 @@ export default function GrantChart({ project }) {
 
     return (
         <div
-            className='w-full  h-full'
+            className='w-full h-[400px] bg-white rounded-[15px] p-[10px] border-[1px] border-grayBorder'
         // style={{ height: `${chartHeight}px`}}
         >
             <Bar data={data} options={options} />
