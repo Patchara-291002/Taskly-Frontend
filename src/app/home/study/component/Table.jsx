@@ -2,25 +2,7 @@ import { extractFormattedDate } from '@/utils/dateUtils'
 import { PlusIcon } from '../../component/icon/GlobalIcon'
 
 export default function Table({ assignmentData }) {
-
-  const heading = [
-    {
-      title: "name of assignment",
-    },
-    {
-      title: "course",
-    },
-    {
-      title: "description",
-    },
-    {
-      title: "status",
-    },
-    {
-      title: "due date",
-    },
-  ]
-
+  
   const emptyTable = () => {
     return (
       <tr

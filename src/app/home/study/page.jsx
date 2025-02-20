@@ -9,7 +9,7 @@ export default function page() {
 
   const [coursesData, setCoursesData] = useState([]);
   const [assignmentData, setAssignmentData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {

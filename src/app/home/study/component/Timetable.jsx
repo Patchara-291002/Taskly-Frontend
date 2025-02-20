@@ -1,10 +1,14 @@
 import React from "react";
 
-// แปลงเวลา "HH:MM" => จำนวนนาที
+
 function timeToMinutes(timeStr) {
+  if (!timeStr || typeof timeStr !== "string") {
+      return 0;
+  }
   const [h, m] = timeStr.split(":");
   return parseInt(h, 10) * 60 + parseInt(m, 10);
 }
+
 
 // หา minHour, maxHour (default 9-17)
 function getMinMaxHour(schedule) {

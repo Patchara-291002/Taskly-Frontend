@@ -2,18 +2,11 @@
 
 import React, { useEffect, useState, useRef } from 'react'
 import GrantChart from './component/GrantChart/GrantChart'
-import Board from './component/KanbanBoard/Board'
 import { usePathname } from 'next/navigation';
-import { NewButton } from '@/app/home/component/GlobalComponent'
 import NewStatus from './component/NewStatus'
-import lottie from "lottie-web";
-import { defineElement } from "@lordicon/element";
-import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
-import { Navigation, Pagination, Mousewheel, Keyboard } from 'swiper/modules';
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-//API///////////////////////////////////////////
 import { fetchProjectByProjectId } from '@/api/project'
 import { createStatus } from '@/api/status'
 import NewTask from './component/NewTask'
