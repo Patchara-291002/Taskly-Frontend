@@ -373,7 +373,7 @@ export const PrjRolePicker = ({ selectedRole, roleOptions, onChange }) => {
                             key={role.name}
                             className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
                             onClick={() => {
-                                onChange(role);
+                                onChange(role.roleId);
                                 setOpenRole(false);
                             }}
                         >

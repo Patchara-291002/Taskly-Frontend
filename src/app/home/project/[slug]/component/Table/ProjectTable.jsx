@@ -22,6 +22,7 @@ export default function ProjectTable({ project }) {
             )
         );
     };
+    
     // Code จาก Component ตัวอย่าง
     // ✅ ใช้ useCallback เพื่ออัปเดต API อัตโนมัติ
     const updateTaskData = useCallback(async (task) => {
@@ -146,7 +147,7 @@ export default function ProjectTable({ project }) {
                                         <PrjRolePicker
                                             selectedRole={project?.roles.find(r => r.roleId === task.roleId)}
                                             roleOptions={project.roles}
-                                            onChange={(newRole) => handleChange(task._id, "roleId", newRole.roleId)}
+                                            onChange={(newRole) => handleChange(task._id, "roleId", newRole)}
                                         />
                                     </td>
 

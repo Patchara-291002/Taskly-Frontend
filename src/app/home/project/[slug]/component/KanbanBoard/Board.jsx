@@ -278,18 +278,11 @@ export default function Board({
       <DragOverlay>
         {activeItem ? (
           activeItem.type === "task" ? (
-            <KanbanCard
-              title={activeItem.data.taskName}
-              detail={activeItem.data.detail}
-              tag={activeItem.data.tag}
-              priority={activeItem.data.priority}
-              color={activeItem.data.color}
-              startDate={formatToDate(activeItem.data.startDate)}
-              dueDate={formatToDate(activeItem.data.dueDate)}
-              dueTime={activeItem.data.dueTime}
-              assignees={activeItem.data.assignees}
-              roleId={activeItem.data.roleId}
-            />
+            <div
+              className="w-[260px] h-[100px] rounded-[15px] bg-white p-[15px] border-[1px] border-grayBorder"
+            >
+
+            </div>
           ) : (
             <div className="max-w-[300px] w-full flex-1 border-r-2 px-[30px]">
               <div className="flex justify-between items-center w-full">

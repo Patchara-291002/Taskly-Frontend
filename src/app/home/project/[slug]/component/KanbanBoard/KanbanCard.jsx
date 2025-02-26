@@ -15,8 +15,6 @@ export default function KanbanCard({
   role
 }) {
 
-  console.log('assignee :', assignees)
-
   return (
     <div className="max-w-[260px] min-h-[100px] rounded-[15px] bg-white p-[15px] border-[1px] border-grayBorder flex flex-col gap-[5px]">
       <div className="w-full flex justify-between items-center">
@@ -35,9 +33,9 @@ export default function KanbanCard({
           </div>
           <div
             className="flex justify-center items-center py-[3px] px-[6px] rounded-[15px]"
-            style={{ background: role.color }}
+            style={{ background: role?.color || "#D6D6D6" }}
           >
-            <p className="text-[8px]">{role.name}</p>
+            <p className="text-[8px]">{role?.name || "no role"}</p>
           </div>
         </div>
       </div>
@@ -45,11 +43,13 @@ export default function KanbanCard({
       <div className="flex -space-x-2.5">
         {assignees?.map((user, i) => (
           <div key={i} className="w-[20px] h-[20px] rounded-full overflow-hidden">
-            <img src={user.profile} alt="Profile" />
+            {/* <img src={user.profile} alt="Profile" /> */}
           </div>
         ))}
       </div>
-      <div>
+      <div
+        className="mt-auto"
+      >
         <div className="flex items-center gap-[5px]">
           <CalendarIcon w={12} h={12} color="#FF6200" />
           <p className="text-[10px] text-[#1F1E1D]">{dueDate}</p>

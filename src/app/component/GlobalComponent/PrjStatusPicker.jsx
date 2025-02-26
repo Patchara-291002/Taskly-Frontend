@@ -44,7 +44,7 @@ export default function PrjStatusPicker({ statusOptions, selectedStatus, onChang
             {openStatus && (
                 <ul
                     ref={dropdownRef}
-                    className="fixed bg-white border border-gray-300 rounded-lg shadow-md w-40 p-2 z-[1000]"
+                    className="absolute bg-white border border-gray-300 rounded-lg shadow-md w-40 p-2 z-[1000]"
                 >
                     {statusOptions.map((s) => (
                         <li

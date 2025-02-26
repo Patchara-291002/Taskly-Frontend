@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import GrantChart from './component/GrantChart/GrantChart'
+import GranttChart from './component/Dashboard/Granttchart'
 import { usePathname } from 'next/navigation';
 import NewStatus from './component/NewStatus'
 import { fetchProjectByProjectId } from '@/api/project'
@@ -17,7 +17,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import ProjectTable from './component/Table/ProjectTable';
 import StatusAndRolePicker from './component/StatusAndRolePicker';
-import Kanban from './component/Kanban/Kanban';
 
 
 
@@ -48,7 +47,7 @@ export default function page() {
         assignees: []
     })
 
-    const [activeTab, setActiveTab] = useState("kanban");
+    const [activeTab, setActiveTab] = useState("dashboard");
     const swiperRef = useRef(null);
 
     const handleTabClick = (index) => {
@@ -58,21 +57,24 @@ export default function page() {
         }
     };
 
+
+    const loadProject = async () => {
+        try {
+            const projectData = await fetchProjectByProjectId(projectId)
+            setProject(projectData);
+        } catch (error) {
+            console.error('Failed to load project:', error);
+        }
+    }
+
     useEffect(() => {
         if (!projectId) return
-
-        const loadProject = async () => {
-            try {
-                const projectData = await fetchProjectByProjectId(projectId)
-                setProject(projectData);
-                console.log(projectData)
-            } catch (error) {
-                console.error('Failed to load project:', error);
-            }
-        }
         loadProject();
-        console.log(project)
     }, [projectId])
+
+    useEffect(() => {
+        loadProject();
+    }, [activeTab])
 
 
     // const handleNewStatusSubmit = async () => {
@@ -109,6 +111,8 @@ export default function page() {
     //         statusId: statusId
     //     }));
     // }, [statusId]);
+
+    console.log(project)
     return (
         <div
             className='w-full flex flex-col gap-[20px] z-0 relative'
@@ -179,7 +183,7 @@ export default function page() {
                             case "dashboard":
                                 return (
                                     <div>
-                                        {/* {project && <GrantChart project={project} />} */}
+                                        {project && <GranttChart project={project} />}
                                     </div>
                                 )
                             default:

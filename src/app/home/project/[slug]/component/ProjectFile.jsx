@@ -88,6 +88,7 @@ export default function ProjectFile({ project }) {
                     return (
                         <div
                             className="w-full h-[70px] flex justify-between items-center p-[10px] border-grayBorder border-[1px] rounded-[15px]"
+                            key={file._id}
                         >
                             <Link
                                 href={file.fileAddress}

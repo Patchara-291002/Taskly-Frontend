@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NewButton } from "@/app/home/component/GlobalComponent";
 
 // คุณอาจมี prop: setIsOpenNewStatus, setIsOpenNewTask, handleOpenNewTask ฯลฯ
@@ -14,6 +14,7 @@ export default function KanbanBoard({
     handleOpenNewTask
 }) {
     const [isDelete, setIsDelete] = useState(false);
+    
 
     return (
         <div className="w-full touch-none">
