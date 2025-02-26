@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
-import { uploadFileToCourse } from "@/api/course";
+import { uploadFileToProject } from "@/api/project";
 import Link from "next/link";
 
-export default function CourseFile({ course }) {
+export default function ProjectFile({ project }) {
 
     const [files, setFiles] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
@@ -15,10 +15,10 @@ export default function CourseFile({ course }) {
 
     const handleFiles = async (selectedFiles) => {
 
-        const courseId = course._id
+        const projectId = project._id
 
-        if (!courseId) {
-            console.error("❌ ไม่มี courseId");
+        if (!projectId) {
+            console.error
             return;
         }
 
@@ -30,8 +30,7 @@ export default function CourseFile({ course }) {
             try {
                 await Promise.all(
                     newFiles.map(async (file) => {
-                        await uploadFileToCourse(courseId, file);
-                        console.log(`✅ Uploaded: ${file.name}`);
+                        await uploadFileToProject(projectId, file);
                     })
                 );
                 window.location.reload();
@@ -85,7 +84,7 @@ export default function CourseFile({ course }) {
             <div
                 className="flex flex-col gap-[10px]"
             >
-                {course && course.files.map((file) => {
+                {project && project.files.map((file) => {
                     return (
                         <div
                             className="w-full h-[70px] flex justify-between items-center p-[10px] border-grayBorder border-[1px] rounded-[15px]"

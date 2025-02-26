@@ -4,7 +4,7 @@ import { extractFormattedDate } from '@/utils/dateUtils'
 import { useEffect, useState } from 'react'
 import { PlusIcon } from '../../component/icon/GlobalIcon'
 import Link from 'next/link'
-import { CreateCourse } from '@/api/course'
+import { createCourse } from '@/api/course'
 import { useRouter } from "next/navigation";
 
 const CourseCard = ({ course }) => {
@@ -14,7 +14,7 @@ const CourseCard = ({ course }) => {
     >
       <div
         className={`w-full h-[134px]`}
-        style={{ backgroundColor: `${course.courseColor}` }}
+        style={{ backgroundColor: `${course.courseColor || "#FF6200"}` }}
       >
 
       </div>
@@ -51,7 +51,7 @@ const AddCourseCard = () => {
     const defaultCourseName = "New Course"
     const createCourse = async () => {
       try {
-        const data = await CreateCourse(defaultCourseName);
+        const data = await createCourse(defaultCourseName);
         console.log(data._id)
         router.push(`/home/study/${data._id}`);
       } catch (err) {
@@ -67,7 +67,7 @@ const AddCourseCard = () => {
   return (
     <div
       onClick={HandleCreateCourse}
-      className="w-full h-[210px] flex justify-center items-center rounded-[15px] border-[1px] border-grayBorder"
+      className="w-full h-[210px] flex justify-center items-center rounded-[15px] border-[1px] border-grayBorder cursor-pointer"
     >
       { loading ? <h1>loading</h1> : <PlusIcon w={25} h={25} color={'#FF6200'} /> }
     </div>

@@ -28,7 +28,6 @@ export default function page() {
       try {
         const data = await fetchAssignment();
         setAssignmentData(data);
-        console.log(data)
       } catch (err) {
         setError(err);
       } finally {
@@ -50,7 +49,7 @@ export default function page() {
       >
         <Course coursesData={coursesData} />
         <Timetable coursesData={coursesData} />
-        <Table assignmentData={assignmentData} />
+        {/* <Table assignmentData={assignmentData} /> */}
       </div>
     </>
   )

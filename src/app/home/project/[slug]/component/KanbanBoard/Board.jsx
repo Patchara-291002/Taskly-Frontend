@@ -1,267 +1,304 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { DndContext, closestCenter, DragOverlay } from '@dnd-kit/core';
-import { SortableContext, useSortable } from '@dnd-kit/sortable';
-import { PlusIcon } from '@/app/home/component/icon/GlobalIcon';
-import { formatToDate } from '@/utils/dateUtils';
-import KanbanCard from './KanbanCard';
-import { BlurBackground } from '@/app/home/component/GlobalComponent';
+import React, { useState, useEffect } from "react";
+import {
+  DndContext,
+  closestCenter,
+  DragOverlay
+} from "@dnd-kit/core";
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
+import { PlusIcon } from "@/app/home/component/icon/GlobalIcon";
+import { formatToDate } from "@/utils/dateUtils";
+import KanbanCard from "./KanbanCard";
 
-/// API ///
-import { updateTaskStatus } from '@/api/task';
-import { updateStatusPosition } from '@/api/status';
-import { fetchProjectByProjectId } from '@/api/project';
+import { updateTaskStatus } from "@/api/task";
+import { updateStatusPosition } from "@/api/status";
+import { fetchProjectByProjectId } from "@/api/project";
 
-function SortableTask({ task }) {
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-        id: `task-${task._id}`,
-    });
+/* --------------------------------------------------
+   ไฟล์นี้แทนของเดิม, แต่ tasks แยกใน projectData.tasks
+   columns = projectData.statuses
+   tasks   = projectData.tasks
+-------------------------------------------------- */
 
-    const style = {
-        transform: `translate3d(${transform?.x ?? 0}px, ${transform?.y ?? 0}px, 0)`,
-        transition: transition ?? 'transform 250ms ease',
-        opacity: isDragging ? 0 : 1, // Hide the original item when dragging
-    };
+// Render Task
+function SortableTask({ task, projectData }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
+    id: `task-${task._id}`
+  });
 
-    return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-            <KanbanCard
-                title={task.taskName}
-                detail={task.detail}
-                tag={task.tag}
-                priority={task.priority}
-                color={task.color}
-                startDate={formatToDate(task.startDate)}
-                dueDate={formatToDate(task.dueDate)}
-                dueTime={task.dueTime}
-                assignees={task.assignees}
-            />
-        </div>
-    );
+  const style = {
+    transform: `translate3d(${transform?.x ?? 0}px, ${transform?.y ?? 0}px, 0)`,
+    transition: transition ?? "transform 250ms ease",
+    opacity: isDragging ? 0 : 1
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <KanbanCard
+        title={task.taskName}
+        detail={task.detail}
+        tag={task.tag}
+        priority={task.priority}
+        color={task.color}
+        startDate={formatToDate(task.startDate)}
+        dueDate={formatToDate(task.dueDate)}
+        dueTime={task.dueTime}
+        assignees={task.assignees}
+        role={projectData.roles.find(r => r.roleId === task.roleId)}
+      />
+    </div>
+  );
 }
 
-function SortableColumn({ column, handleOpenNewTask }) {
+// Render Column
+function SortableColumn({ column, tasksInColumn, handleOpenNewTask, projectData }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
+    id: `column-${column._id}`
+  });
 
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-        id: `column-${column._id}`,
-    });
+  const style = {
+    transform: `translate3d(${transform?.x ?? 0}px, ${transform?.y ?? 0}px, 0)`,
+    transition: transition ?? "transform 250ms ease",
+    opacity: isDragging ? 0 : 1
+  };
 
-    const style = {
-        transform: `translate3d(${transform?.x ?? 0}px, ${transform?.y ?? 0}px, 0)`,
-        transition: transition ?? 'transform 250ms ease',
-        opacity: isDragging ? 0 : 1, 
-    };
-
-
-    return (
-        <div
-            ref={setNodeRef}
-            style={style}
-
-            className="max-w-[300px] w-full flex-1 border-r-2 px-[30px]"
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="max-w-[300px] w-full flex-1 border-r-2 px-[30px]"
+    >
+      <div className="flex justify-between items-center w-full">
+        <p {...attributes} {...listeners} className="cursor-grab">
+          {column.statusName}
+        </p>
+        {/* <button
+          className="w-[18px] h-[18px] flex justify-center items-center border-primaryorange border rounded-full"
+          onClick={() => handleOpenNewTask(column._id)}
         >
-            <div className="flex justify-between items-center w-full">
-                <p
-                    {...attributes}
-                    {...listeners}
-                    className="cursor-grab"
-                >
-                    {column.statusName}
-                </p>
-                <button
-                    className="w-[18px] h-[18px] flex justify-center items-center border-primaryorange border rounded-full"
-                    onClick={() => handleOpenNewTask(column._id)}
-                >
-                    <PlusIcon color="#FF6200" w="8px" h="8px" />
-                </button>
-            </div>
+          <PlusIcon color="#FF6200" w="8px" h="8px" />
+        </button> */}
+      </div>
 
-            <SortableContext items={column.tasks.map((task) => `task-${task._id}`)}>
-                <div className="w-full mt-[20px] flex flex-col gap-[10px]">
-                    {column.tasks.map((task) => (
-                        <SortableTask key={task._id} task={task} />
-                    ))}
-                </div>
-            </SortableContext>
+      {/* Render Tasks ในคอลัมน์นี้ */}
+      <SortableContext
+        items={tasksInColumn.map((task) => `task-${task._id}`)}
+      >
+        <div className="w-full mt-[20px] flex flex-col gap-[10px]">
+          {tasksInColumn.map((task) => (
+            <SortableTask key={task._id} task={task} projectData={projectData} />
+          ))}
         </div>
-    );
+      </SortableContext>
+    </div>
+  );
 }
 
-export default function Board({ initialProjectData, setStatusId, handleOpenNewTask }) {
-    const [projectData, setProjectData] = useState(initialProjectData);
-    const [activeId, setActiveId] = useState(null);
-    const [activeItem, setActiveItem] = useState(null);
+/* --------------------------------------------------
+   Board Component หลัก
+-------------------------------------------------- */
+export default function Board({
+  initialProjectData,
+  setStatusId,
+  handleOpenNewTask
+}) {
+  const [projectData, setProjectData] = useState(initialProjectData);
+  const [activeId, setActiveId] = useState(null);
+  const [activeItem, setActiveItem] = useState(null);
 
-    const loadProjectData = async () => {
+  // โหลดข้อมูลล่าสุดจาก Backend
+  const loadProjectData = async () => {
+    try {
+      const projectId = initialProjectData._id;
+      const latestData = await fetchProjectByProjectId(projectId);
+      setProjectData(latestData);
+    } catch (error) {
+      console.error("Failed to load project:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadProjectData();
+  }, []);
+
+  // เริ่ม drag
+  const handleDragStart = (event) => {
+    const { active } = event;
+    setActiveId(active.id);
+
+    if (active.id.startsWith("task-")) {
+      const taskId = active.id.replace("task-", "");
+      // หา task จาก projectData.tasks
+      const task = projectData.tasks.find((t) => t._id === taskId);
+      setActiveItem({ type: "task", data: task });
+    } else if (active.id.startsWith("column-")) {
+      const columnId = active.id.replace("column-", "");
+      const column = projectData.statuses.find((c) => c._id === columnId);
+      setActiveItem({ type: "column", data: column });
+    }
+  };
+
+  // สิ้นสุด drag
+  const handleDragEnd = async (event) => {
+    const { active, over } = event;
+    setActiveId(null);
+    setActiveItem(null);
+
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    // ทำ deep copy
+    const newProjectData = JSON.parse(JSON.stringify(projectData));
+
+    // -------------------
+    // ถ้าเป็น TASK
+    if (activeId.startsWith("task-")) {
+      const taskId = activeId.replace("task-", "");
+
+      // 1) เอา task ต้นทาง
+      const sourceTaskIndex = newProjectData.tasks.findIndex(
+        (t) => t._id === taskId
+      );
+      if (sourceTaskIndex === -1) return;
+      const movedTask = newProjectData.tasks[sourceTaskIndex];
+
+      // 2) ย้ายไป Column
+      if (overId.startsWith("column-")) {
+        const targetColumnId = overId.replace("column-", "");
+        movedTask.statusId = targetColumnId;
+      } else if (overId.startsWith("task-")) {
+        // วางลงบน Task => หา Task นั้นอยู่ Column ไหน
+        const targetTaskId = overId.replace("task-", "");
+        const targetTask = newProjectData.tasks.find((t) => t._id === targetTaskId);
+        if (!targetTask) {
+          console.warn("Target task not found");
+        } else {
+          movedTask.statusId = targetTask.statusId;
+        }
+      }
+
+      setProjectData(newProjectData);
+
+      // Call updateTaskStatus
+      try {
+        await updateTaskStatus(movedTask._id, movedTask.statusId);
+      } catch (error) {
+        console.error("Failed to move task", error);
+        await loadProjectData(); // revert
+      }
+
+    }
+    // -------------------
+    // ถ้าเป็น COLUMN
+    else if (activeId.startsWith("column-")) {
+      const columnId = activeId.replace("column-", "");
+      const overColumnId = overId.replace("column-", "");
+
+      const oldIndex = newProjectData.statuses.findIndex(
+        (col) => col._id === columnId
+      );
+      const newIndex = newProjectData.statuses.findIndex(
+        (col) => col._id === overColumnId
+      );
+
+      if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+        // reorder columns local
+        const [movedColumn] = newProjectData.statuses.splice(oldIndex, 1);
+        newProjectData.statuses.splice(newIndex, 0, movedColumn);
+
+        // update position
+        newProjectData.statuses.forEach((col, i) => {
+          col.position = i + 1;
+        });
+
+        setProjectData(newProjectData);
+
         try {
-            const projectId = initialProjectData._id;
-            const latestData = await fetchProjectByProjectId(projectId);
-            setProjectData(latestData);
+          const statusId = columnId;
+          const projectId = initialProjectData._id;
+          const position = newIndex + 1;
+
+          await updateStatusPosition(statusId, projectId, position);
+          console.log("Position updated for column:", statusId, " => ", position);
         } catch (error) {
-            console.error('Failed to load project:', error);
+          console.error("Failed to update column position", error);
+          await loadProjectData(); // revert
         }
-    };
+      }
+    }
+  };
 
-    useEffect(() => {
-        loadProjectData();
-    }, []);
-
-    const handleDragStart = (event) => {
-        const { active } = event;
-        setActiveId(active.id);
-
-        if (active.id.startsWith('task-')) {
-            const taskId = active.id.replace('task-', '');
-            const task = projectData.status
-                .flatMap((column) => column.tasks)
-                .find((task) => task._id === taskId);
-            setActiveItem({ type: 'task', data: task });
-        } else if (active.id.startsWith('column-')) {
-            const columnId = active.id.replace('column-', '');
-            const column = projectData.status.find((column) => column._id === columnId);
-            setActiveItem({ type: 'column', data: column });
-        }
-    };
-
-    const handleDragEnd = async (event) => {
-        const { active, over } = event;
-        setActiveId(null);
-        setActiveItem(null);
-
-        if (!over) return;
-
-        const activeId = active.id;
-        const overId = over.id;
-
-        // Create a deep copy to avoid mutating state directly
-        const newProjectData = JSON.parse(JSON.stringify(projectData));
-
-        if (activeId.startsWith('task-')) {
-            const taskId = activeId.replace('task-', '');
-
-            const sourceColumn = newProjectData.status.find((column) =>
-                column.tasks.some((task) => task._id === taskId)
+  return (
+    <DndContext
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
+      {/* Render columns as a SortableContext */}
+      <SortableContext
+        items={projectData.statuses.map((column) => `column-${column._id}`)}
+      >
+        <div className="w-full flex">
+          {projectData.statuses.map((column) => {
+            // หา tasks ใน column นี้
+            const tasksInColumn = projectData.tasks.filter(
+              (t) => t.statusId === column._id
             );
-            const taskIndex = sourceColumn.tasks.findIndex((task) => task._id === taskId);
-            const [movedTask] = sourceColumn.tasks.splice(taskIndex, 1);
+            return (
+              <SortableColumn
+                key={column._id}
+                column={column}
+                tasksInColumn={tasksInColumn}
+                setStatusId={setStatusId}
+                handleOpenNewTask={handleOpenNewTask}
+                projectData={projectData}
+              />
+            );
+          })}
+        </div>
+      </SortableContext>
 
-            if (overId.startsWith('column-')) {
-                const targetColumnId = overId.replace('column-', '');
-                const targetColumn = newProjectData.status.find((column) => column._id === targetColumnId);
-                targetColumn.tasks.push(movedTask);
-
-                // Update the task's status ID
-                movedTask.statusId = targetColumnId;
-            } else if (overId.startsWith('task-')) {
-                const targetTaskId = overId.replace('task-', '');
-                const targetColumn = newProjectData.status.find((column) =>
-                    column.tasks.some((task) => task._id === targetTaskId)
-                );
-                if (targetColumn && targetColumn.tasks) {
-                    const targetTaskIndex = targetColumn.tasks.findIndex((task) => task._id === targetTaskId);
-            
-                    // Check if targetTaskIndex is valid
-                    if (targetTaskIndex !== -1) {
-                        targetColumn.tasks.splice(targetTaskIndex, 0, movedTask);
-            
-                        // Update the task's status ID
-                        movedTask.statusId = targetColumn._id;
-                    } else {
-                        console.warn("Target task index not found in target column.");
-                    }
-                } else {
-                    console.warn("Target column not found or does not contain tasks.");
-                }
-            }
-
-            setProjectData(newProjectData);
-
-            try {
-                await updateTaskStatus(taskId, movedTask.statusId);
-            } catch (error) {
-                console.error('Failed to move task', error);
-                await loadProjectData(); // Revert to server state on error
-            }
-        } else if (activeId.startsWith('column-')) {
-            const columnId = activeId.replace('column-', '');
-            const overColumnId = overId.replace('column-', '');
-
-            const oldIndex = newProjectData.status.findIndex((column) => column._id === columnId);
-            const newIndex = newProjectData.status.findIndex((column) => column._id === overColumnId);
-
-            if (oldIndex !== newIndex) {
-                const [movedColumn] = newProjectData.status.splice(oldIndex, 1);
-                newProjectData.status.splice(newIndex, 0, movedColumn);
-
-                // Update positions for all columns
-                newProjectData.status.forEach((column, index) => {
-                    column.position = index + 1; // +1 to avoid starting from 0 if necessary
-                });
-
-                setProjectData(newProjectData);
-
-                try {
-                    const statusId = columnId;
-                    const projectId = initialProjectData._id;
-                    const position = newIndex + 1; // Adjust position to match updated array index
-
-                    console.log("Updating position with:", { statusId, projectId, position });
-                    await updateStatusPosition(statusId, projectId, position);
-                    console.log('Position updated successfully');
-                } catch (error) {
-                    console.error('Failed to update column position', error);
-                    await loadProjectData(); // Revert to server state on error
-                }
-            }
-        }
-    };
-
-    return (
-        <DndContext
-            collisionDetection={closestCenter}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-        >
-            <SortableContext items={projectData.status.map((column) => `column-${column._id}`)}>
-                <div className="w-full flex">
-                    {projectData.status.map((column) => (
-                        <SortableColumn 
-                            key={column._id} 
-                            column={column} 
-                            setStatusId={setStatusId}
-                            handleOpenNewTask={handleOpenNewTask}
-                        />
-                    ))}
-                </div>
-            </SortableContext>
-
-            <DragOverlay>
-                {activeItem ? (
-                    activeItem.type === 'task' ? (
-                        <KanbanCard
-                            title={activeItem.data.taskName}
-                            detail={activeItem.data.detail}
-                            tag={activeItem.data.tag}
-                            priority={activeItem.data.priority}
-                            color={activeItem.data.color}
-                            startDate={formatToDate(activeItem.data.startDate)}
-                            dueDate={formatToDate(activeItem.data.dueDate)}
-                            dueTime={activeItem.data.dueTime}
-                            assignees={activeItem.data.assignees}
-                        />
-                    ) : (
-                        <div className="max-w-[300px] w-full flex-1 border-r-2 px-[30px] bg-white">
-                            <div className="flex justify-between items-center w-full">
-                                <p>{activeItem.data.statusName}</p>
-                                <button className="w-[18px] h-[18px] flex justify-center items-center border-primaryorange border rounded-full">
-                                    <PlusIcon color="#FF6200" w="8px" h="8px" />
-                                </button>
-                            </div>
-                        </div>
-                    )
-                ) : null}
-            </DragOverlay>
-        </DndContext>
-    );
+      <DragOverlay>
+        {activeItem ? (
+          activeItem.type === "task" ? (
+            <KanbanCard
+              title={activeItem.data.taskName}
+              detail={activeItem.data.detail}
+              tag={activeItem.data.tag}
+              priority={activeItem.data.priority}
+              color={activeItem.data.color}
+              startDate={formatToDate(activeItem.data.startDate)}
+              dueDate={formatToDate(activeItem.data.dueDate)}
+              dueTime={activeItem.data.dueTime}
+              assignees={activeItem.data.assignees}
+              roleId={activeItem.data.roleId}
+            />
+          ) : (
+            <div className="max-w-[300px] w-full flex-1 border-r-2 px-[30px]">
+              <div className="flex justify-between items-center w-full">
+                <p>{activeItem.data.statusName}</p>
+              </div>
+            </div>
+          )
+        ) : null}
+      </DragOverlay>
+    </DndContext>
+  );
 }

@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import Image from 'next/image';
 import { NewButton } from '../component/GlobalComponent';
 import ProjectCard from '../component/dashboarOverview/Project/ProjectCard';
 import NewProject from './component/NewProject';
@@ -37,12 +36,6 @@ export default function page() {
     const date = new Date(dateString);
     return date.toLocaleString('default', { month: 'short' });
   };
-
-  // const getUsersProfilePictures = (users) => {
-  //   return users.map(user => user.userId.profilePicture);
-  // };
-
-  ///////////////////////////////////////////////////
 
   const [isOpen, setIsOpen] = useState(false);
 

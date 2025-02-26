@@ -6,6 +6,7 @@ import { fetchCourseById } from '@/api/course';
 import CourseInfo from './component/CourseInfo';
 import CourseFile from './component/CourseFile';
 import CourseHeader from './component/CourseHeader';
+import CourseTable from './component/CourseTable';
 export default function page() {
 
     const pathname = usePathname();
@@ -40,11 +41,12 @@ export default function page() {
                 Subject Description
             </p>
             <div
-                className='w-full flex gap-[30px]'
+                className='w-full h-[280px] flex gap-[30px]'
             >
                 <CourseInfo course={course} />
-                <CourseFile />
+                <CourseFile course={course} />
             </div>
+            <CourseTable course={course} />
         </div>
     )
 }

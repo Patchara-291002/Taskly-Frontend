@@ -1,11 +1,15 @@
+import { createContent, updateCourseById } from '@/api/course';
+import { DayPicker, TimePicker } from '@/app/component/GlobalComponent';
 import { PlusIcon } from '@/app/home/component/icon/GlobalIcon';
-import { useState } from 'react'
-import { DatePicker, Stack } from 'rsuite';
-
+import { useState, useEffect, useCallback } from 'react';
 
 export default function CourseInfo({ course }) {
-
-    const [coursePayload, setCoursePayload] = useState(course);
+    const [coursePayload, setCoursePayload] = useState(course || []);
+    useEffect(() => {
+        if (course) {
+            setCoursePayload(course);
+        }
+    }, [course]);
 
     const handleChange = (key, value) => {
         setCoursePayload(prev => ({
@@ -14,45 +18,48 @@ export default function CourseInfo({ course }) {
         }));
     };
 
+    const handleContentChange = (index, key, value) => {
+        setCoursePayload(prev => {
+            const updatedContents = [...prev.contents];
+            updatedContents[index][key] = value;
+            return { ...prev, contents: updatedContents };
+        });
+    };
+
+    const updateCourse = useCallback(async () => {
+        if (!coursePayload._id) return;
+        try {
+            await updateCourseById(coursePayload._id, coursePayload);
+        } catch (error) {
+            console.error("❌ Failed to update course:", error);
+        }
+    }, [coursePayload]);
+
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            updateCourse();
+        }, 1000);
+        return () => clearTimeout(delay);
+    }, [updateCourse]);
+
     return (
-        <div
-            className='w-full bg-white z-1 overflow-y-scroll p-[10px] rounded-[15px] border-[1px] border-grayBorder'
-        >
+        <div className='w-full z-10 bg-white p-[10px] rounded-[15px] border-[1px] border-grayBorder overflow-y-auto'>
             <table className="table-auto w-full">
                 <colgroup>
                     <col className='w-[250px]' />
                     <col className='w-auto' />
                 </colgroup>
                 <tbody>
-                    <TableRow
-                        label="Subject Code"
-                        value={coursePayload?.courseCode || "Empty"}
-                        onChange={(val) => handleChange("courseCode", val)}
-                    />
-                    <TableRow
-                        label="Instructor"
-                        value={course?.instructor?.name || "Empty"}
-                        onChange={(val) => handleChange("instructorName", val)}
-                    />
-                    <TableRow
-                        label="Location"
-                        value={course?.location || "Empty"}
-                        onChange={(val) => handleChange("location", val)}
-                    />
-                    <TableSchedule
-                        label="Schedule"
-                        day={course?.day || "day"}
-                        onChange={(val) => handleChange("day", val)}
-                    />
-                    <TableRow
-                        label="Links"
-                        value={course?.links?.length ? <a href={course.links[0]}>View</a> : "Empty"}
-                    />
-                    <NewLink />
+                    <TableRow label="Subject Code" value={coursePayload.courseCode || ""} onChange={(val) => handleChange("courseCode", val)} />
+                    <TableRow label="Instructor" value={coursePayload.instructorName || ""} onChange={(val) => handleChange("instructorName", val)} />
+                    <TableRow label="Location" value={coursePayload.location || ""} onChange={(val) => handleChange("location", val)} />
+                    <TableSchedule label="Schedule" day={coursePayload.day} startTime={coursePayload.startTime} endTime={coursePayload.endTime} onChange={handleChange} />
+                    <TableContent contents={coursePayload.contents || []} onContentChange={handleContentChange} />
+                    <NewLink courseId={coursePayload._id} />
                 </tbody>
             </table>
         </div>
-    )
+    );
 }
 
 function TableRow({ label, value, onChange }) {
@@ -71,71 +78,80 @@ function TableRow({ label, value, onChange }) {
     );
 }
 
-function TableSchedule({ label, day, onChange }) {
-    const [selectedDay, setSelectedDay] = useState(day);
-    const [open, setOpen] = useState(false);
-
-    const days = [
-        "Monday",
-        "Tuesday",
-        "Wednesday", // *แก้ไข Wensday เป็น Wednesday*
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-    ];
-
+function TableSchedule({ label, day, startTime, endTime, onChange }) {
     return (
         <tr className="border-grayBorder border-b-[1px]">
-            <td className="p-[10px] font-medium text-[14px] text-[#5F5F5F]">
-                {label}
-            </td>
+            <td className="p-[10px] font-medium text-[14px] text-[#5F5F5F]">{label}</td>
             <td className="p-[10px] font-normal text-[14px] text-[#5F5F5F] border-l-[1px] border-grayBorder">
-                <div className="w-full flex gap-[15px]">
-                    <div
-                        className='relative'
-                    >
-                        <button
-                            className="bg-white border-[1px] border-grayBorder px-[6px] min-h-0 h-[25px]"
-                            onClick={() => setOpen(!open)}
-                        >
-                            {selectedDay}
-                        </button>
-
-                        {open && (
-                            <ul className="absolute left-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-md w-52 p-2 z-40">
-                                {days.map((d) => (
-                                    <li
-                                        key={d}
-                                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                        onClick={() => {
-                                            setSelectedDay(d);
-                                            onChange(d);
-                                            setOpen(false);
-                                        }}
-                                    >
-                                        {d}
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                    <div>
-                        <DatePicker format="HH:mm" />
-                    </div>
+                <div className="w-full flex gap-[15px] items-center border-2">
+                    <DayPicker selectedDay={day} onChange={(val) => onChange("day", val)} />
+                    <TimePicker time={startTime} onChange={(val) => onChange("startTime", val)} />
+                    <p> - </p>
+                    <TimePicker time={endTime} onChange={(val) => onChange("endTime", val)} />
                 </div>
             </td>
         </tr>
     );
 }
 
+function TableContent({ contents, onContentChange }) {
+    return (
+        <>
+            {contents.map((content, index) => (
+                <tr key={index} className="border-grayBorder border-b-[1px]">
+                    <td className="p-[10px] font-medium text-[14px] text-[#5F5F5F]">
+                        <input
+                            type="text"
+                            className="w-full bg-transparent outline-none"
+                            value={content.title}
+                            onChange={(e) => onContentChange(index, "title", e.target.value)}
+                        />
+                    </td>
+                    <td className="relative p-[10px] font-normal text-[14px] text-[#5F5F5F] border-l-[1px] border-grayBorder">
+                        {content.isLink ? (
+                            <input
+                                type="text"
+                                className="w-full bg-transparent outline-none text-blue-500 underline"
+                                value={content.content}
+                                onChange={(e) => onContentChange(index, "content", e.target.value)}
+                            />
+                        ) : (
+                            <input
+                                type="text"
+                                className="w-full bg-transparent outline-none"
+                                value={content.content}
+                                onChange={(e) => onContentChange(index, "content", e.target.value)}
+                            />
+                        )}
+                        <div
+                            onClick={() => onContentChange(index, "isLink", !content.isLink)}
+                            className='absolute right-0 top-[30%] cursor-pointer'
+                        >
+                            {content.isLink ? "Unlink" : "Make Link"}
+                        </div>
+                    </td>
+                </tr>
+            ))}
+        </>
+    );
+}
 
-function NewLink() {
+function NewLink({ courseId }) {
+
+    const handleCreateContent = async () => {
+        try {
+            await createContent(courseId)
+        } catch (error) {
+            console.error("❌ Failed to create content:", error);
+        }
+    }
+
     return (
         <tr>
             <td colSpan={2} className="p-[10px]">
                 <div
-                    className='w-full flex items-center gap-[5px]'
+                    onClick={handleCreateContent}
+                    className='w-full flex items-center gap-[5px] cursor-pointer'
                 >
                     <PlusIcon w={14} h={14} color={"#FF6200"} />
                     <p

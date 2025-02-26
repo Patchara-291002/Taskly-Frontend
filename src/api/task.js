@@ -1,30 +1,21 @@
 import axios from "axios";
 import { API_BASE_URL } from "./config";
 
+// ✅ อัปเดตสถานะของ Task
 export const updateTaskStatus = async (taskId, statusId) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/task/update/status/${taskId}`,
-            {
-                statusId
-            },
-            {
-                withCredentials: true
-            }
-        )
-        return response.data
+        const response = await axios.put(`${API_BASE_URL}/task/update/status/${taskId}`, { statusId }, { withCredentials: true });
+        return response.data;
     } catch (error) {
-        console.log("Error updated task status", error);
-        throw (error);
+        console.error("❌ Error updating task status:", error);
+        throw error;
     }
-}
+};
 
+// ✅ สร้าง Task พร้อมเช็คค่า statusId ถ้าไม่มีให้ใช้ค่า Default
 export const createTask = async ({
+    projectId,
     statusId,
-    taskName,
-    detail,
-    tag,
-    priority,
-    color,
     startDate,
     dueDate,
     startTime,
@@ -34,12 +25,11 @@ export const createTask = async ({
     try {
         const response = await axios.post(`${API_BASE_URL}/task/create`,
             {
+                projectId,
                 statusId,
-                taskName,
-                detail,
-                tag,
-                priority,
-                color,
+                taskName: "Empty",
+                detail: "Empty",
+                priority: 1,
                 startDate,
                 dueDate,
                 startTime,
@@ -49,10 +39,23 @@ export const createTask = async ({
             {
                 withCredentials: true
             }
-        )
-        return response.data
+        );
+        return response.data;
     } catch (error) {
-        console.log("Error create task", error);
-        throw (error);
+        console.error("❌ Error creating task:", error);
+        throw error;
     }
-}
+};
+
+// ✅ อัปเดตข้อมูล Task
+export const updateTask = async (taskId, updatedData) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/task/update/${taskId}`, updatedData, {
+            withCredentials: true
+        });
+        return response.data;
+    } catch (error) {
+        console.error("❌ Error updating task:", error);
+        throw error;
+    }
+};

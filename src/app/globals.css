@@ -40,3 +40,12 @@ h2 {
     border-color: #FF6200; /* Customize the border color on focus */
     box-shadow: 0 0 0 2px rgba(255, 98, 0, 0.3); /* Add a shadow effect */
 }
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.no-spinner {
+  -moz-appearance: textfield; 
+}
