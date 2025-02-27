@@ -96,16 +96,17 @@ export default function ProjectTable({ project }) {
 
 
     return (
-        <div className="w-full min-h-[500px] pt-[30px]">
+        <div className="w-full min-h-[500px]">
             <p className="font-medium text-[16px] pb-[15px]">Tasks</p>
             <div className="w-full border-[1px] border-grayBorder bg-white p-[10px] rounded-[15px]">
                 <table className="table-fixed w-full border-collapse">
                     <colgroup>
                         <col className="w-auto" />
-                        <col className="w-auto" />
-                        <col className="w-auto" />
-                        <col className="w-[160px]" />
-                        <col className="w-auto" />
+                        <col className="w-[140px]" />
+                        <col className="w-[140px]" />
+                        <col className="w-[140px]" />
+                        <col className="w-[175px]" />
+                        <col className="w-[175px]" />
                     </colgroup>
                     <thead>
                         <tr>
@@ -120,6 +121,9 @@ export default function ProjectTable({ project }) {
                             </th>
                             <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
                                 Status
+                            </th>
+                            <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-grayBorder">
+                                Start date
                             </th>
                             <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-grayBorder">
                                 Due Date
@@ -167,6 +171,12 @@ export default function ProjectTable({ project }) {
                                     </td>
 
                                     {/* Due Date (Air Datepicker) */}
+                                    <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-r-0">
+                                        <AirDatepickerComponent
+                                            selectedDate={task.startDate}
+                                            onChange={(newDate) => handleChange(task._id, "startDate", newDate)}
+                                        />
+                                    </td>
                                     <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-r-0">
                                         <AirDatepickerComponent
                                             selectedDate={task.dueDate}

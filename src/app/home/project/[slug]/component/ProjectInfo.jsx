@@ -1,5 +1,5 @@
 import { DayPicker, TimePicker } from '@/app/component/GlobalComponent';
-import { PlusIcon } from '@/app/home/component/icon/GlobalIcon';
+import { LinkIcon, PlusIcon } from '@/app/home/component/icon/GlobalIcon';
 import { useState, useEffect } from 'react';
 import { AirDatepickerComponent } from "@/app/component/GlobalComponent";
 import { updateProjectById, createContent } from '@/api/project';
@@ -51,7 +51,7 @@ export default function ProjectInfo({ project }) {
     };
 
     return (
-        <div className='w-full z-10 bg-white p-[10px] rounded-[15px] border-[1px] border-grayBorder overflow-y-auto'>
+        <div className='w-full z-10 bg-white p-[10px] rounded-[15px] border-[1px] border-grayBorder overflow-y-auto no-scrollbar'>
             <table className="table-auto w-full">
                 <colgroup>
                     <col className='w-[250px]' />
@@ -103,7 +103,7 @@ function TableSchedule({ label, onChange, project }) {
 function TableContent({ contents, onContentChange }) {
     return (
         <>
-            {contents.map((content, index) => (
+            {contents?.map((content, index) => (
                 <tr key={index} className="border-grayBorder border-b-[1px]">
                     <td className="p-[10px] font-medium text-[14px] text-[#5F5F5F]">
                         <input
@@ -127,7 +127,7 @@ function TableContent({ contents, onContentChange }) {
                             </Link> :
                             <input
                                 type="text"
-                                className={`w-full bg-transparent outline-none ${content.isLink ? "text-blue-500 underline" : ""}`}
+                                className={`w-full bg-transparent outline-none ${content.isLink ? "text-blue-500 underline cursor-pointer" : ""}`}
                                 value={content.content}
                                 onChange={(e) => onContentChange(index, "content", e.target.value)}
                             />
@@ -138,7 +138,7 @@ function TableContent({ contents, onContentChange }) {
                             onClick={() => onContentChange(index, "isLink", !content.isLink)}
                             className='cursor-pointer text-[12px]'
                         >
-                            {content.isLink ? "Unlink" : "Make Link"}
+                            {content.isLink ? <LinkIcon w={"12px"} h={"12px"} color={"#3b82f6"} /> : <LinkIcon w={"12px"} h={"12px"} color={"#000000"} />}
                         </div>
                     </td>
                 </tr>

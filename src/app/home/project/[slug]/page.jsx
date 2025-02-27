@@ -164,19 +164,20 @@ export default function page() {
                 </div>
 
                 {/* ใช้ switch/case หรือ if-else เพื่อสลับ UI ตาม activeTab */}
-                <div className="w-full bg-white p-4 rounded-[15px] border-[1px] border-grayBorder">
+                <div className="w-full">
                     {(() => {
                         switch (activeTab) {
                             case "table":
                                 return (
-                                    <div className="flex flex-col gap-4">
+                                    <div className="flex flex-col">
                                         {project && <StatusAndRolePicker project={project} />}
                                         {project && <ProjectTable project={project} />}
                                     </div>
                                 );
                             case "kanban":
                                 return (
-                                    <div>
+                                    <div className="flex flex-col">
+                                        {project && <StatusAndRolePicker project={project} />}
                                         {project && <KanbanBoard project={project} />}
                                     </div>
                                 );

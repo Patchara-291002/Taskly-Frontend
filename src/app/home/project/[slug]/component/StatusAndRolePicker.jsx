@@ -87,7 +87,7 @@ export default function StatusAndRolePicker({ project }) {
 
   return (
     <div
-      className='w-full flex gap-[15px]'
+      className='w-full flex gap-[15px] my-[30px] z-50'
     >
       <StatusPicker project={project} statusPayload={statusPayload} handleStatusChange={handleStatusChange} />
       <RolePicker project={project} rolePayload={rolePayload} handleRoleChange={handleRoleChange} />

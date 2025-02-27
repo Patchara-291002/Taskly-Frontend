@@ -12,7 +12,7 @@ export default function Navbar() {
 
     const list_page = [
         {
-            name: "Dashboard",
+            name: "Home",
             link: "/home/dashboard",
             icon: <DashboardIcon w='22' h='22' />
         },
@@ -20,11 +20,6 @@ export default function Navbar() {
             name: "Project",
             link: "/home/project",
             icon: <ProjectIcon w='22' h='22' />
-        },
-        {
-            name: "Activity",
-            link: "/home/activity",
-            icon: <ActivityIcon w='22' h='22' />
         },
         {
             name: "Study Planner",

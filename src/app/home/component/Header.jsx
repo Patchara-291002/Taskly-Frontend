@@ -46,13 +46,6 @@ export default function header() {
           <div
             className="bg-[#FF6200] w-[40px] h-[40px] flex justify-center items-center rounded-full "
           >
-            <CalendarIcon w='12' h='12' />
-          </div>
-        </Link>
-        <Link href='/'>
-          <div
-            className="bg-[#FF6200] w-[40px] h-[40px] flex justify-center items-center rounded-full "
-          >
             <NotificationIcon w='12' h='12' />
           </div>
         </Link>

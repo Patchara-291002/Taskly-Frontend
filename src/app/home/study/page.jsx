@@ -4,7 +4,7 @@ import Timetable from './component/Timetable'
 import Course from './component/Course'
 import Table from './component/Table'
 import { useEffect, useState } from 'react'
-import { fetchCourse, fetchAssignment } from '@/api/course'
+import { fetchCourse, fetchAssignment, deleteCourseById } from '@/api/course'
 export default function page() {
 
   const [coursesData, setCoursesData] = useState([]);

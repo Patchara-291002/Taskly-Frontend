@@ -18,7 +18,7 @@ export default function KanbanBoard({
 
     return (
         <div className="w-full touch-none">
-            <div className="w-full min-h-[400px] p-[10px] rounded-[15px] border-[1px] border-grayBorder touch-none">
+            <div className="w-full min-h-[400px] p-[10px] rounded-[15px] border-[1px] bg-white border-grayBorder touch-none">
                 {/* ส่ง project ไปยัง Board.jsx */}
                 {project && (
                     <Board

@@ -25,6 +25,18 @@ export const fetchCourseById = async (courseId) => {
     }
 }
 
+export const deleteCourseById = async (courseId) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/course/delete/${courseId}`, {
+            withCredentials: true
+        })
+        return response.data
+    } catch (error) {
+        console.error("Error deleted courses by Id:", error);
+        throw error;
+    }
+}
+
 export const updateCourseById = async (courseId, updatedData) => {
     try {
         const response = await axios.put(`${API_BASE_URL}/course/update/${courseId}`, updatedData, {

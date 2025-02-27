@@ -1,6 +1,6 @@
 import { createContent, updateCourseById } from '@/api/course';
 import { DayPicker, TimePicker } from '@/app/component/GlobalComponent';
-import { PlusIcon } from '@/app/home/component/icon/GlobalIcon';
+import { LinkIcon, PlusIcon } from '@/app/home/component/icon/GlobalIcon';
 import { useState, useEffect, useCallback } from 'react';
 
 export default function CourseInfo({ course }) {
@@ -127,7 +127,7 @@ function TableContent({ contents, onContentChange }) {
                             onClick={() => onContentChange(index, "isLink", !content.isLink)}
                             className='absolute right-0 top-[30%] cursor-pointer'
                         >
-                            {content.isLink ? "Unlink" : "Make Link"}
+                            {content.isLink ? <LinkIcon w={"12px"} h={"12px"} color={"#3b82f6"} /> : <LinkIcon w={"12px"} h={"12px"} color={"#000000"} />}
                         </div>
                     </td>
                 </tr>
