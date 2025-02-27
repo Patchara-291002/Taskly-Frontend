@@ -22,7 +22,7 @@ export default function ProjectTable({ project }) {
             )
         );
     };
-    
+
     // Code จาก Component ตัวอย่าง
     // ✅ ใช้ useCallback เพื่ออัปเดต API อัตโนมัติ
     const updateTaskData = useCallback(async (task) => {
@@ -50,7 +50,7 @@ export default function ProjectTable({ project }) {
         const delay = setTimeout(() => {
             taskPayload.forEach(updateTaskData);
         }, 1000);
-    
+
         return () => clearTimeout(delay);
     }, [taskPayload, updateTaskData]);
 
@@ -105,8 +105,8 @@ export default function ProjectTable({ project }) {
                         <col className="w-[140px]" />
                         <col className="w-[140px]" />
                         <col className="w-[140px]" />
-                        <col className="w-[175px]" />
-                        <col className="w-[175px]" />
+                        <col className="w-auto" />
+                        <col className="w-auto" />
                     </colgroup>
                     <thead>
                         <tr>
@@ -122,7 +122,7 @@ export default function ProjectTable({ project }) {
                             <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
                                 Status
                             </th>
-                            <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-grayBorder">
+                            <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
                                 Start date
                             </th>
                             <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-grayBorder">
@@ -171,7 +171,7 @@ export default function ProjectTable({ project }) {
                                     </td>
 
                                     {/* Due Date (Air Datepicker) */}
-                                    <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-r-0">
+                                    <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
                                         <AirDatepickerComponent
                                             selectedDate={task.startDate}
                                             onChange={(newDate) => handleChange(task._id, "startDate", newDate)}
@@ -206,6 +206,8 @@ export default function ProjectTable({ project }) {
 const emptyTable = () => (
     <tr className="h-[40px]">
         <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-l-0"></td>
+        <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder"></td>
+        <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder"></td>
         <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder"></td>
         <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder"></td>
         <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-r-0"></td>

@@ -72,7 +72,7 @@ export default function ProjectFile({ project }) {
                 <p className="text-gray-500">
                     {isDragging ? "drag it here." : "Choose a file or drag & drop it here."}
                 </p>
-                {isFileLoading && <p className="text-blue-500">กำลังอัปโหลดไฟล์...</p>}
+                {isFileLoading && <p className="text-blue-500">Uploading...</p>}
                 <input
                     type="file"
                     multiple

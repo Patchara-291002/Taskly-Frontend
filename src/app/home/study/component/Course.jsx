@@ -4,10 +4,10 @@ import { extractFormattedDate } from '@/utils/dateUtils'
 import { useEffect, useState } from 'react'
 import { PlusIcon, TrashIcon } from '../../component/icon/GlobalIcon'
 import Link from 'next/link'
-import { createCourse, deleteCourseById } from '@/api/course'
+import { createCourse, deleteCourseById, updateCourseById } from '@/api/course'
 import { useRouter } from "next/navigation";
 
-const CourseCard = ({ course, deleteActive, courseId }) => {
+const CourseCard = ({ course, deleteActive, courseId, getCourse }) => {
 
   const deleteCourse = async () => {
     try {
@@ -24,17 +24,7 @@ const CourseCard = ({ course, deleteActive, courseId }) => {
         onClick={deleteCourse}
         className='w-[20px] h-[20px] flex justify-center items-center  rounded-full bg-red-500'
       >
-        <TrashIcon w={13} h={13} color={"#FFFFFF"} /> 
-      </div>
-    )
-  }
-
-  const colorPicker = () => {
-    return (
-      <div
-        className='w-[20px] h-[20px] rounded-full border-2 border-grayBorder'
-      >
-        
+        <TrashIcon w={13} h={13} color={"#FFFFFF"} />
       </div>
     )
   }
@@ -74,11 +64,45 @@ const CourseCard = ({ course, deleteActive, courseId }) => {
         <div
           className=''
         >
-          { deleteActive && deleteActive ? deleteCoursebutton() : colorPicker() }
+          {deleteActive ? deleteCoursebutton() : <ColorPicker courseId={courseId} initialColor={course.courseColor} getCourse={getCourse} />}
         </div>
       </div>
     </div>
   )
+}
+
+function ColorPicker({ courseId, initialColor, getCourse }) {
+
+  const [selectedColor, setSelectedColor] = useState(initialColor);
+
+  const handleChangeColor = async (newColor) => {
+    setSelectedColor(newColor);
+    try {
+      // เรียก API อัปเดตสีใน DB
+      await updateCourseById(courseId, { courseColor: newColor });
+      console.log("Color updated to:", newColor);
+      getCourse();
+    } catch (error) {
+      console.error("Error updating color:", error);
+    }
+  };
+
+  return (
+    <div className="relative w-4 h-4">
+      {/* input type="color" */}
+      <input
+        type="color"
+        value={initialColor}
+        onChange={(e) => handleChangeColor(e.target.value)}
+        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+      />
+      {/* วงกลมสี */}
+      <span
+        className="absolute w-4 h-4 rounded-full border pointer-events-none"
+        style={{ backgroundColor: selectedColor }}
+      />
+    </div>
+  );
 }
 
 const AddCourseCard = () => {
@@ -115,7 +139,7 @@ const AddCourseCard = () => {
   )
 }
 
-export default function Course({ coursesData }) {
+export default function Course({ coursesData, getCourse }) {
 
   const [deleteActive, setDeleteActive] = useState(false);
 
@@ -143,7 +167,7 @@ export default function Course({ coursesData }) {
         className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(268px,1fr))]"
       >
         {coursesData.map((course) => (
-          <CourseCard key={course._id} course={course} deleteActive={deleteActive} courseId={course._id} />
+          <CourseCard key={course._id} course={course} deleteActive={deleteActive} courseId={course._id} getCourse={getCourse} />
         ))}
         <AddCourseCard />
       </div>

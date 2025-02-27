@@ -17,6 +17,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import ProjectTable from './component/Table/ProjectTable';
 import StatusAndRolePicker from './component/StatusAndRolePicker';
+import TaskCard from '../component/TaskCard';
 
 
 
@@ -26,6 +27,18 @@ export default function page() {
     const [project, setProject] = useState(null);
     const pathname = usePathname();
     const projectId = pathname.split('/').pop();
+
+    const [opendTask, setOpenTask] = useState(false);
+    const [selectedTask, setSelectedTask] = useState("")
+
+    function handleTask(taskId) {
+        setOpenTask(!opendTask)
+        setSelectedTask(taskId)
+    }
+
+    useEffect(() => {
+        console.log("task status: ", opendTask )
+    }, [opendTask])
 
     const [isOpenNewStatus, setIsOpenNewStatus] = useState(false)
     const [statusName, setStatusName] = useState("");
@@ -47,7 +60,7 @@ export default function page() {
         assignees: []
     })
 
-    const [activeTab, setActiveTab] = useState("dashboard");
+    const [activeTab, setActiveTab] = useState("table");
     const swiperRef = useRef(null);
 
     const handleTabClick = (index) => {
@@ -111,27 +124,12 @@ export default function page() {
     //         statusId: statusId
     //     }));
     // }, [statusId]);
-
-    console.log(project)
     return (
         <div
             className='w-full flex flex-col gap-[20px] z-0 relative'
         >
 
-            {project && <ProjectHeader project={project} />}
-
-            {/* {project && <GrantChart project={project} />} */}
-
-
-            {/* {project ? 
-                <KanbanBoard 
-                project={project} 
-                setIsOpenNewStatus={setIsOpenNewStatus} 
-                setIsOpenNewTask={setIsOpenNewTask} 
-                setStatusId={setStatusId}
-                handleOpenNewTask={handleOpenNewTask}
-            /> : <>Sorry</>
-            } */}
+            {project && <ProjectHeader project={project} loadProject={loadProject} />}
 
             <div
                 className='w-full h-[280px] flex gap-[30px]'
@@ -178,7 +176,7 @@ export default function page() {
                                 return (
                                     <div className="flex flex-col">
                                         {project && <StatusAndRolePicker project={project} />}
-                                        {project && <KanbanBoard project={project} />}
+                                        {project && <KanbanBoard project={project} handleTask={handleTask} />}
                                     </div>
                                 );
                             case "dashboard":
@@ -193,6 +191,8 @@ export default function page() {
                     })()}
                 </div>
             </div>
+
+            {opendTask && <TaskCard selectedTask={selectedTask} setSelectedTask={setSelectedTask} setOpenTask={setOpenTask} />}
 
 
             {/* {isOpenNewStatus && (

@@ -15,38 +15,42 @@ export default function page() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [course, setCourse] = useState(null);
+
+    const getCourseById = async () => {
+        setLoading(true);
+        try {
+            const data = await fetchCourseById(courseId);
+            setCourse(data);
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         if (!courseId) return;
-        const getCourseById = async () => {
-            setLoading(true);
-            try {
-                const data = await fetchCourseById(courseId);
-                setCourse(data);
-            } catch (err) {
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
         getCourseById()
     }, [courseId])
 
 
     return (
-        <div>
-            <CourseHeader course={course} />
-            <p
-                className='font-medium pb-[15px]'
-            >
-                Subject Description
-            </p>
-            <div
-                className='w-full h-[280px] flex gap-[30px]'
-            >
-                <CourseInfo course={course} />
-                <CourseFile course={course} />
-            </div>
-            <CourseTable course={course} />
-        </div>
+        <>
+            {course && <div>
+                <CourseHeader course={course} getCourseById={getCourseById} />
+                <p
+                    className='font-medium pb-[15px]'
+                >
+                    Subject Description
+                </p>
+                <div
+                    className='w-full h-[280px] flex gap-[30px]'
+                >
+                    <CourseInfo course={course} />
+                    <CourseFile course={course} />
+                </div>
+                <CourseTable course={course} />
+            </div>}
+        </>
     )
 }

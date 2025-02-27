@@ -15,8 +15,24 @@ export default function KanbanCard({
   role
 }) {
 
+  function formatPriority(priority){
+    switch(priority){
+      case 1:
+        return <p>Normal</p>
+        break;
+      case 2:
+        return <p>Medium</p>
+        break;
+      case 3:
+        return <p>High</p>
+        break;
+      default :
+        return <p>None</p>
+    }
+  }
+
   return (
-    <div className="max-w-[260px] min-h-[100px] rounded-[15px] bg-white p-[15px] border-[1px] border-grayBorder flex flex-col gap-[5px]">
+    <div className="min-w-[200px] min-h-[100px] rounded-[15px] bg-white p-[15px] border-[1px] border-grayBorder flex flex-col gap-[5px]">
       <div className="w-full flex justify-between items-center">
         <div className="flex items-center gap-[8px]">
           <p className="text-[14px] font-medium">
@@ -29,13 +45,13 @@ export default function KanbanCard({
           <div
             className="text-[10px]"
           >
-            {priority}
+            {formatPriority(priority)}
           </div>
           <div
             className="flex justify-center items-center py-[3px] px-[6px] rounded-[15px]"
             style={{ background: role?.color || "#D6D6D6" }}
           >
-            <p className="text-[8px]">{role?.name || "no role"}</p>
+            <p className="text-[10px] font-semibold text-white">{role?.name || "no role"}</p>
           </div>
         </div>
       </div>

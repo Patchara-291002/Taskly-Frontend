@@ -10,6 +10,7 @@ import Link from 'next/link';
 export default function page() {
 
   const [projects, setProjects] = useState([])
+  
 
   useEffect(() => {
 
@@ -25,17 +26,6 @@ export default function page() {
 
     getProjects();
   }, [])
-
-
-  const formatDay = (dateString) => {
-    const date = new Date(dateString);
-    return date.getDate();
-  };
-
-  const formatMonth = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('default', { month: 'short' });
-  };
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -56,26 +46,26 @@ export default function page() {
     <div
       className='relative w-full z-0'
     >
-      <NewButton
-        onClick={() => setIsOpen(true)}
-        buttonText='New'
-      />
+      <div
+        className='w-full flex justify-between items-center'
+      >
+        <NewButton
+          onClick={() => setIsOpen(true)}
+          buttonText='New'
+        />
+      </div>
       <div
         className='grid grid-cols-[repeat(auto-fill,minmax(268px,1fr))] gap-[15px] mt-[20px] z-10'
       >
-        {
+        {projects &&
           projects.map((project, index) => (
             <Link
               key={index}
               href={`/home/project/${project._id}`}
             >
               <ProjectCard
-                projectName={project.projectName}
-                day={formatDay(project.dueDate)}
-                month={formatMonth(project.dueDate)}
-                usersProfile={project.users.map(user => user.userId.profile)}
-                percent={project.progress}
                 maxWidth={350}
+                project={project}
               />
             </Link>
           ))

@@ -12,18 +12,17 @@ export default function page() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const getCourse = async () => {
-      try {
-        const data = await fetchCourse();
-        setCoursesData(data);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
+  const getCourse = async () => {
+    try {
+      const data = await fetchCourse();
+      setCoursesData(data);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
     }
-
+  }
+  useEffect(() => {
     const getAssignment = async () => {
       try {
         const data = await fetchAssignment();
@@ -47,7 +46,7 @@ export default function page() {
       <div
         className='flex flex-col gap-[40px]'
       >
-        <Course coursesData={coursesData} />
+        <Course coursesData={coursesData} getCourse={getCourse} />
         <Timetable coursesData={coursesData} />
         {/* <Table assignmentData={assignmentData} /> */}
       </div>

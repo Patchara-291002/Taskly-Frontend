@@ -59,3 +59,17 @@ export const updateTask = async (taskId, updatedData) => {
         throw error;
     }
 };
+
+export const getTaskById = async (taskId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/task/${taskId}`,
+            {
+                withCredentials:true
+            }
+        )
+        return response.data
+    } catch (error) {
+        console.error("❌ Error fetching task:", error);
+        throw error;
+    }
+}

@@ -17,7 +17,7 @@ export default function RightSideOverview() {
         >
             <ProfileOverview />
             <ClassOverview />
-            <ChartOverview />
+            {/* <ChartOverview /> */}
         </div>
     )
 }

@@ -8,6 +8,7 @@ export default function LeftSideOverview() {
         <div
             className="
                 min-w-[700px]
+                w-full
             "
         >
             <BannerOverview />

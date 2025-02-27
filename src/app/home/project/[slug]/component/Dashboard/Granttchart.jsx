@@ -65,12 +65,12 @@ export default function GanttChart({ project }) {
   }, [project]);
 
   return (
-    <div className="overflow-x-auto bg-white border border-gray-300 rounded">
-      <table className="table-fixed border-collapse">
+    <div className="mt-[30px] p-[20px] overflow-x-auto bg-white border border-grayBorder rounded-[15px]">
+      <table className="table-fixed border-collapse ">
         <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2 min-w-[140px] border text-left">
-              Task (Role)
+          <tr className="">
+            <th className="p-2 min-w-[200px] border text-left">
+              Task / Role
             </th>
             {allDates.map((date) => (
               <th
@@ -90,7 +90,7 @@ export default function GanttChart({ project }) {
                 <tr key={task._id} className="h-[30px]">
                   <td className="border p-2 text-[12px]">
                     <div className="flex items-center gap-2">
-                      <span>{task.taskName}</span>
+                      <span className="" >{task.taskName}</span>
                       <span
                         className="inline-block w-2 h-2 rounded-full"
                         style={{ backgroundColor: task.roleColor }}
@@ -147,13 +147,9 @@ export default function GanttChart({ project }) {
               <tr key={task._id} className="h-[30px]">
                 {/* คอลัมน์แรก: Task + role */}
                 <td className="border p-2 text-[12px]">
-                  <div className="flex items-center gap-2">
+                  <div className="flex justify-between items-center gap-[5px]">
                     <span>{task.taskName}</span>
-                    <span
-                      className="inline-block w-2 h-2 rounded-full"
-                      style={{ backgroundColor: task.roleColor }}
-                    />
-                    <span className="text-[10px] text-gray-500">
+                    <span className="text-[10px]">
                       {task.roleName}
                     </span>
                   </div>

@@ -194,7 +194,7 @@ export const DayPicker = ({ selectedDay, onChange }) => {
                 className="bg-white border-[1px] border-grayBorder px-[6px] min-h-0 h-[25px] cursor-pointer"
                 onClick={toggleDropdown}
             >
-                {selectedDay}
+                {selectedDay || "Select day"}
             </button>
 
             {/* Dropdown แสดงรายการวัน */}

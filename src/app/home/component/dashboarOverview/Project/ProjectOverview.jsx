@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import { useState, useEffect } from 'react'
 import ProjectCard from './ProjectCard'
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
 import { Navigation, Pagination, Mousewheel, Keyboard } from 'swiper/modules';
@@ -8,9 +8,29 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { LeftArrowIcon, RightArrowIcon } from '../../icon/DashboardIcon'
+import { fetchProjectsByUser, createProject } from '@/api/project';
 import { useRef } from 'react';
+import Link from 'next/link';
 
 export default function ProjectOverview() {
+
+    const [projects, setProjects] = useState([])
+
+    useEffect(() => {
+
+        const getProjects = async () => {
+            try {
+                const data = await fetchProjectsByUser()
+                setProjects(data)
+            } catch (error) {
+                console.error('Error loading projects:', error);
+            }
+        }
+
+        getProjects();
+    }, [])
+
+
 
     const swiperRef = useRef();
 
@@ -22,58 +42,6 @@ export default function ProjectOverview() {
         swiperRef.current?.slideNext();
     };
 
-    const projects = [
-        {
-            projectName: "Project 1",
-            day: 30,
-            month: "Sep",
-            percent: 70,
-            usersProfile: [
-                'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-                'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-            ]
-        },
-        {
-            projectName: "Project 2",
-            day: 29,
-            month: "Sep",
-            percent: 40,
-            usersProfile: [
-                'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-                'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-            ]
-        },
-        {
-            projectName: "Project 2",
-            day: 29,
-            month: "Sep",
-            percent: 40,
-            usersProfile: [
-                'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-                'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-            ]
-        },
-        {
-            projectName: "Project 2",
-            day: 29,
-            month: "Sep",
-            percent: 40,
-            usersProfile: [
-                'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-                'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-            ]
-        },
-        {
-            projectName: "Project 2",
-            day: 29,
-            month: "Sep",
-            percent: 40,
-            usersProfile: [
-                'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp',
-                'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
-            ]
-        },
-    ];
 
     const chunkedProjects = [];
     for (let i = 0; i < projects.length; i += 3) {
@@ -116,15 +84,15 @@ export default function ProjectOverview() {
                     <SwiperSlide key={index}>
                         <div className='w-full h-full grid grid-cols-3 gap-[15px]'>
                             {group.map((project, i) => (
-                                <ProjectCard
+                                <Link
                                     key={i}
-                                    projectName={project.projectName}
-                                    day={project.day}
-                                    month={project.month}
-                                    usersProfile={project.usersProfile}
-                                    percent={project.percent}
-                                    maxWidth={350}
-                                />
+                                    href={`/home/project/${project._id}`}
+                                >
+                                    <ProjectCard
+                                        project={project}
+                                        maxWidth={350}
+                                    />
+                                </Link>
                             ))}
                         </div>
                     </SwiperSlide>

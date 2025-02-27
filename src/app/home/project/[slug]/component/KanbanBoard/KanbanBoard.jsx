@@ -11,7 +11,8 @@ export default function KanbanBoard({
     setIsOpenNewStatus,
     setIsOpenNewTask,
     setStatusId,
-    handleOpenNewTask
+    handleOpenNewTask,
+    handleTask
 }) {
     const [isDelete, setIsDelete] = useState(false);
     
@@ -26,6 +27,7 @@ export default function KanbanBoard({
                         setIsOpenNewTask={setIsOpenNewTask}
                         setStatusId={setStatusId}
                         handleOpenNewTask={handleOpenNewTask}
+                        handleTask={handleTask}
                     />
                 )}
             </div>

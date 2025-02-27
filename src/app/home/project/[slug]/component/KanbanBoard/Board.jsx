@@ -7,7 +7,7 @@ import {
   DragOverlay
 } from "@dnd-kit/core";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
-import { PlusIcon } from "@/app/home/component/icon/GlobalIcon";
+import { GripIcon, PlusIcon } from "@/app/home/component/icon/GlobalIcon";
 import { formatToDate } from "@/utils/dateUtils";
 import KanbanCard from "./KanbanCard";
 
@@ -22,7 +22,7 @@ import { fetchProjectByProjectId } from "@/api/project";
 -------------------------------------------------- */
 
 // Render Task
-function SortableTask({ task, projectData }) {
+function SortableTask({ task, projectData, handleTask }) {
   const {
     attributes,
     listeners,
@@ -41,25 +41,37 @@ function SortableTask({ task, projectData }) {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <KanbanCard
-        title={task.taskName}
-        detail={task.detail}
-        tag={task.tag}
-        priority={task.priority}
-        color={task.color}
-        startDate={formatToDate(task.startDate)}
-        dueDate={formatToDate(task.dueDate)}
-        dueTime={task.dueTime}
-        assignees={task.assignees}
-        role={projectData.roles.find(r => r.roleId === task.roleId)}
-      />
+    <div
+      className="relative"
+    >
+      <div ref={setNodeRef} style={style} {...attributes} {...listeners}
+        className="absolute left-[-21px] top-[10px] p-[2px] rounded-[4px] hover:bg-slate-100 bg-slate-200/30"
+      >
+        <GripIcon w={16} h={20} />
+      </div>
+      <div
+        onClick={() => handleTask(task._id)}
+      >
+        <KanbanCard
+          taskId={task._id}
+          title={task.taskName}
+          detail={task.detail}
+          tag={task.tag}
+          priority={task.priority}
+          color={task.color}
+          startDate={formatToDate(task.startDate)}
+          dueDate={formatToDate(task.dueDate)}
+          dueTime={task.dueTime}
+          assignees={task.assignees}
+          role={projectData.roles.find(r => r.roleId === task.roleId)}
+        />
+      </div>
     </div>
   );
 }
 
 // Render Column
-function SortableColumn({ column, tasksInColumn, handleOpenNewTask, projectData }) {
+function SortableColumn({ column, tasksInColumn, handleOpenNewTask, projectData, handleTask }) {
   const {
     attributes,
     listeners,
@@ -101,7 +113,7 @@ function SortableColumn({ column, tasksInColumn, handleOpenNewTask, projectData 
       >
         <div className="w-full mt-[20px] flex flex-col gap-[10px]">
           {tasksInColumn.map((task) => (
-            <SortableTask key={task._id} task={task} projectData={projectData} />
+            <SortableTask key={task._id} task={task} projectData={projectData} handleTask={handleTask} />
           ))}
         </div>
       </SortableContext>
@@ -115,7 +127,8 @@ function SortableColumn({ column, tasksInColumn, handleOpenNewTask, projectData 
 export default function Board({
   initialProjectData,
   setStatusId,
-  handleOpenNewTask
+  handleOpenNewTask,
+  handleTask
 }) {
   const [projectData, setProjectData] = useState(initialProjectData);
   const [activeId, setActiveId] = useState(null);
@@ -269,6 +282,7 @@ export default function Board({
                 setStatusId={setStatusId}
                 handleOpenNewTask={handleOpenNewTask}
                 projectData={projectData}
+                handleTask={handleTask}
               />
             );
           })}
