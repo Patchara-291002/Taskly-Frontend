@@ -2,6 +2,7 @@ import React from 'react'
 import ProfileOverview from './Profile/ProfileOverview'
 import ClassOverview from './ClassToDay/ClassOverview'
 import ChartOverview from './Chart/ChartOverview'
+import Assignment from './Assignment/Assignment'
 
 export default function RightSideOverview() {
     return (
@@ -17,6 +18,7 @@ export default function RightSideOverview() {
         >
             <ProfileOverview />
             <ClassOverview />
+            <Assignment />
             {/* <ChartOverview /> */}
         </div>
     )

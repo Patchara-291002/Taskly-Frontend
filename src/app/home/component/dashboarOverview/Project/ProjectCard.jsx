@@ -33,7 +33,7 @@ export default function ProjectCard({ project, maxWidth }) {
 
   return (
     <div
-      className='w-full h-[160px] bg-white rounded-[15px] p-[15px] flex flex-col justify-between'
+      className='w-full h-[160px] bg-white rounded-[15px] p-[15px] flex flex-col justify-between border border-grayBorder'
       style={{ maxWidth: `${maxWidth}px` }}
     >
       <div className='w-full'>
@@ -50,6 +50,8 @@ export default function ProjectCard({ project, maxWidth }) {
             </p>
           </div>
         </div>
+      </div>
+      <div className='w-full'>
         <div className='flex -space-x-2.5'>
           {usersProfile.map((profile, index) => (
             <div key={index} className='w-[20px] h-[20px] rounded-full overflow-hidden'>
@@ -57,8 +59,6 @@ export default function ProjectCard({ project, maxWidth }) {
             </div>
           ))}
         </div>
-      </div>
-      <div className='w-full'>
         <p className='text-[12px] font-medium'>
           Progress
         </p>

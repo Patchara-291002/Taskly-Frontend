@@ -4,7 +4,7 @@ import { CalendarIcon, CameraIcon, ClockIcon, MoreIcon } from '../../icon/Dashbo
 export default function ClassCard({ subjectName, dueDate, period }) {
     return (
         <div
-            className='w-full h-[85px] bg-white rounded-[15px] p-[15px]'
+            className='w-full h-[85px] bg-white rounded-[15px] p-[15px] border border-grayBorder'
         >
             <div
                 className='flex flex-row gap-[30px]'
