@@ -147,7 +147,7 @@ export default function Board({
 
   useEffect(() => {
     loadProjectData();
-  }, []);
+  }, [loadProjectData]);
 
   // เริ่ม drag
   const handleDragStart = (event) => {

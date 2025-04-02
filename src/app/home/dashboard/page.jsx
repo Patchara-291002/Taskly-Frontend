@@ -13,7 +13,7 @@ import AssignmentOverview from '../component/dashboarOverview/Assignment/Assignm
 import ProjectOverview from '../component/dashboarOverview/Project/ProjectOverview';
 import TaskOverview from '../component/dashboarOverview/Task/TaskOverview';
 
-export default function page() {
+export default function Page() {
   const searchParams = useSearchParams();
   const userId = searchParams.get('userId');
   const { width } = useWindowSize();
@@ -22,7 +22,7 @@ export default function page() {
 
   useEffect(() => {
     if (userId) {
-      axios.get(`http://localhost:3000/user/${userId}`, {
+      axios.get(`${NEXT_PUBLIC_API_BASE_URL}/user/${userId}`, {
         withCredentials: true
       })
         .then(response => {

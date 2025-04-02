@@ -9,7 +9,7 @@ import Link from 'next/link';
 import useWindowSize from '@/hooks/useWindow';
 import { is } from 'date-fns/locale';
 
-export default function page() {
+export default function Page() {
 
   const { width } = useWindowSize();
   const isMobile = width < 768;

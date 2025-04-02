@@ -21,7 +21,7 @@ import TaskCard from '../component/TaskCard';
 
 
 
-export default function page() {
+export default function Page() {
 
 
     const [project, setProject] = useState(null);

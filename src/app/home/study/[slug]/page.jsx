@@ -9,7 +9,7 @@ import CourseHeader from './component/CourseHeader';
 import CourseTable from './component/CourseTable';
 import useWindowSize from '@/hooks/useWindow';
 
-export default function page() {
+export default function Page() {
 
     const { width } = useWindowSize();
 

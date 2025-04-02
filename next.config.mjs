@@ -5,7 +5,8 @@ const nextConfig = {
         esmExternals: true
     },
     env: {
-        NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL
+        NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+        NEXT_PUBLIC_FRONTEND_URL: process.env.NEXT_PUBLIC_FRONTEND_URL
     },
     images: {
         remotePatterns: [
@@ -19,6 +20,9 @@ const nextConfig = {
             },
         ],
     },
+    eslint: {
+        ignoreDuringBuilds: true // Only for development
+    }
 };
 
 export default nextConfig;

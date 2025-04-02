@@ -20,7 +20,7 @@ export default function ProfileOverview() {
             </div>
             <div className='flex flex-col justify-center items-center h-full gap-[20px]'>
                 <div className='w-[85px] h-[85px] rounded-full overflow-hidden'>
-                    {user && <img src={user.profile ? user.profile : Avatar} alt="Profile" referrerPolicy="no-referrer"/> }
+                    {user && <Image src={user.profile ? user.profile : Avatar} alt="Profile" referrerPolicy="no-referrer"/> }
                 </div>
                 <div className='flex flex-col items-center'>
                     <p className='text-[14px] font-medium'>{user?.name || "userName"}</p>

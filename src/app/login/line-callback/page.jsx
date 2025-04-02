@@ -20,7 +20,7 @@ export default function LineCallback() {
                 
                 try {
                     // ✅ ดึงข้อมูลผู้ใช้จาก Token
-                    const response = await axios.get("http://localhost:3000/auth/me", {
+                    const response = await axios.get(`${NEXT_PUBLIC_API_BASE_URL}/auth/me`, {
                         headers: {
                             Authorization: `Bearer ${token}`
                         },

@@ -52,7 +52,7 @@ export default function ProjectCard({ project, maxWidth }) {
         <div className='flex -space-x-2.5'>
           {usersProfile.map((profile, index) => (
             <div key={index} className='w-[20px] h-[20px] rounded-full overflow-hidden'>
-              <img src={profile} alt={`User ${index}`} />
+              <Image src={profile} alt={`User ${index}`} />
             </div>
           ))}
         </div>

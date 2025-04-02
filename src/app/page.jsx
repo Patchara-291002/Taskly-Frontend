@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { redirect } from 'next/navigation';
 
-export default function page() {
+export default function Page() {
     const [isLogin , setIsLogin] = useState(true);
 
     if (isLogin) {

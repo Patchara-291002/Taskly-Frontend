@@ -6,7 +6,7 @@ import { useState } from "react"
 import { useAuth } from "@/context/AuthContext";
 import useWindowSize from "@/hooks/useWindow";
 
-export default function header() {
+export default function Header() {
 
   const { handleLogout } = useAuth();
 

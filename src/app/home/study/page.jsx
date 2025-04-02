@@ -5,7 +5,7 @@ import Course from './component/Course'
 import Table from './component/Table'
 import { useEffect, useState } from 'react'
 import { fetchCourse, fetchAssignment, deleteCourseById } from '@/api/course'
-export default function page() {
+export default function Page() {
 
   const [coursesData, setCoursesData] = useState([]);
   const [assignmentData, setAssignmentData] = useState([]);
