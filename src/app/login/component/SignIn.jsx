@@ -1,7 +1,8 @@
-import { API_BASE_URL } from "@/api/config"
 import Link from "next/link"
 
 export default function SignIn({ setType, handelClick }) {
+
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
     const signInData = [
         {

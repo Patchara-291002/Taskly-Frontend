@@ -48,7 +48,6 @@ export default function page() {
       >
         <Course coursesData={coursesData} getCourse={getCourse} />
         <Timetable coursesData={coursesData} />
-        {/* <Table assignmentData={assignmentData} /> */}
       </div>
     </>
   )
