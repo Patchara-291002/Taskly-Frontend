@@ -4,6 +4,7 @@ import Link from "next/link"
 import { SearchIcon, CalendarIcon, NotificationIcon, LogoutIcon } from "./icon/LayoutIcon"
 import { useState } from "react"
 import { useAuth } from "@/context/AuthContext";
+import useWindowSize from "@/hooks/useWindow";
 
 export default function header() {
 
@@ -11,17 +12,26 @@ export default function header() {
 
   const [isSearchActive, setIsSearchActive] = useState(false);
 
+  const { width } = useWindowSize();
+  const isMobile = width < 1440;
+
+
   function toggleSearch() {
     setIsSearchActive(!isSearchActive);
   }
 
   return (
+    <>
+      {isMobile
+        ? <MobileLayout />
+        : <DeskTopLayout isSearchActive={isSearchActive} toggleSearch={toggleSearch} handleLogout={handleLogout} />}
+    </>
+  )
+}
+
+const DeskTopLayout = ({ isSearchActive, toggleSearch, handleLogout }) => {
+  return (
     <div className='w-[100%] pt-[30px] pb-[40px] flex justify-end'>
-      {/* <h1
-        className='text-primaryorange font-semibold leading-[32px]'
-      >
-        Dashboard
-      </h1> */}
       <div
         className='flex flex-row gap-[20px]'
       >
@@ -59,5 +69,25 @@ export default function header() {
         </Link>
       </div>
     </div>
+  )
+}
+
+const MobileLayout = () => {
+  return (
+    <>
+      <div
+        className="w-full h-[106px] flex flex-col justify-end bg-primaryOrange"
+      >
+        <div
+          className="w-full h-[44px] flex justify-between pb-[8px] px-[13px]"
+        >
+          <p
+            className="text-white font-bold text-[24px]"
+          >
+            Taskly
+          </p>
+        </div>
+      </div>
+    </>
   )
 }

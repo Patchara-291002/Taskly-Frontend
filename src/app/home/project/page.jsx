@@ -6,11 +6,33 @@ import ProjectCard from '../component/dashboarOverview/Project/ProjectCard';
 import NewProject from './component/NewProject';
 import { fetchProjectsByUser, createProject } from '@/api/project';
 import Link from 'next/link';
+import useWindowSize from '@/hooks/useWindow';
+import { is } from 'date-fns/locale';
 
 export default function page() {
 
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
+  const isTablet = width >= 768 && width < 1440;
+
+  const getGridTemplateColumns = () => {
+    if (width < 444) {
+      return 'repeat(1, 1fr)';
+    }
+    if (width >= 444 && width < 684) {
+      return 'repeat(2, 1fr)';
+    }
+    if (width >= 684 && width < 1000) {
+      return 'repeat(3, 1fr)';
+    }
+    if (width >= 1000 && width < 1440) {
+      return 'repeat(4, 1fr)';
+    }
+    return 'repeat(5, 1fr)';
+  };
+
   const [projects, setProjects] = useState([])
-  
+
 
   useEffect(() => {
 
@@ -55,7 +77,8 @@ export default function page() {
         />
       </div>
       <div
-        className='grid grid-cols-[repeat(auto-fill,minmax(268px,1fr))] gap-[15px] mt-[20px] z-10'
+        className='grid gap-[15px] mt-[20px] z-10'
+        style={{ gridTemplateColumns: getGridTemplateColumns() }}
       >
         {projects &&
           projects.map((project, index) => (
@@ -64,18 +87,14 @@ export default function page() {
               href={`/home/project/${project._id}`}
             >
               <ProjectCard
-                maxWidth={350}
+                maxWidth={"none"}
                 project={project}
               />
             </Link>
           ))
         }
       </div>
-      {/* <div
-        className='fixed -z-10 bottom-0 -right-0'
-      >
-        <Image width={351} height={328} alt='project' priority={false} src='/Image/projectcharacter.png' />
-      </div> */}
+      <>
       {isOpen && (
         <NewProject
           isOpen={isOpen}
@@ -89,6 +108,7 @@ export default function page() {
           onSubmit={handleCreateProject}
         />
       )}
+      </>
     </div>
   )
 }

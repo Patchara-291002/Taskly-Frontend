@@ -7,9 +7,22 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-export default function Assignment() {
+export default function AssignmentOverview() {
 
     const assignments = [
+        {
+          _id: "67c0256be595168a5d8a7418",
+          courseId: "67c02328e595168a5d8a6703",
+          assignmentName: "Task 1",
+          description: "Create an idea of ...",
+          status: "Todo",
+          startDate: null,
+          endDate: new Date("2025-01-01T00:00:00.000Z"),
+          userId: "67a074f671d6bedb6c0b2814",
+          links: [],
+          createdAt: new Date("2025-01-18T00:08:59.513Z"),
+          updatedAt: new Date("2025-01-18T01:00:38.491Z")
+        },
         {
           _id: "67c0256be595168a5d8a7418",
           courseId: "67c02328e595168a5d8a6703",
@@ -42,7 +55,7 @@ export default function Assignment() {
         <div
             className="w-full h-[300px] flex flex-col gap-[15px]"
         >
-            <p>Assignment Overview</p>
+            <p className="font-medium" >Assignment Overview</p>
             <Swiper
                 slidesPerView={2}
                 direction='vertical'

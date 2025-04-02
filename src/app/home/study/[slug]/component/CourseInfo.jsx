@@ -43,7 +43,7 @@ export default function CourseInfo({ course }) {
     }, [updateCourse]);
 
     return (
-        <div className='w-full z-10 bg-white p-[10px] rounded-[15px] border-[1px] border-grayBorder overflow-y-auto'>
+        <div className='w-full z-10 bg-white p-[10px] rounded-[15px] border-[1px] border-grayBorder overflow-y-auto overflow-x-hidden'>
             <table className="table-auto w-full">
                 <colgroup>
                     <col className='w-[250px]' />

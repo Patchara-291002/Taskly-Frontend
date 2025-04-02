@@ -1,16 +1,50 @@
+'use client'
+
 import Navbar from "./component/Navbar"
 import Header from "./component/Header"
+import useWindowSize from "@/hooks/useWindow";
 
 export default function RootLayout({ children }) {
+
+    const { width } = useWindowSize();
+    const isMobile = width < 1440;
+
     return (
-        <div className='flex flex-row w-full'>
-            <div className="w-[260px]">
-                <Navbar />
+        <>
+            {isMobile ? <MobileLayout children={children} /> : <DesktopLayout children={children} />}
+        </>
+    )
+}
+
+const DesktopLayout = ({ children }) => {
+    return (
+        <>
+            <div className='flex flex-row w-full'>
+                <div className="w-[260px]">
+                    <Navbar />
+                </div>
+                <div className="w-full px-[30px] overflow-hidden pb-[20px]">
+                    <Header />
+                    {children}
+                </div>
             </div>
-            <div className="w-full px-[30px] overflow-hidden pb-[20px]">
+        </>
+    )
+}
+
+const MobileLayout = ({ children }) => {
+    return (
+        <>
+            <div
+                className="w-full min-h-screen"
+            >
                 <Header />
-                {children}
+                <div
+                    className="w-full h-full bg-grayBackground px-[16px] py-[20px]"
+                >
+                    {children}
+                </div>
             </div>
-        </div>
+        </>
     )
 }

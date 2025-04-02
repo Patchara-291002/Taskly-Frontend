@@ -1,5 +1,6 @@
 import axios from "axios";
-import { API_BASE_URL } from "./config";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // ✅ ดึงโปรเจคทั้งหมดของผู้ใช้
 export const fetchProjectsByUser = async () => {

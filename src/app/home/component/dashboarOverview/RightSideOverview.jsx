@@ -2,7 +2,7 @@ import React from 'react'
 import ProfileOverview from './Profile/ProfileOverview'
 import ClassOverview from './ClassToDay/ClassOverview'
 import ChartOverview from './Chart/ChartOverview'
-import Assignment from './Assignment/Assignment'
+import Assignment from './Assignment/AssignmentOverview'
 
 export default function RightSideOverview() {
     return (

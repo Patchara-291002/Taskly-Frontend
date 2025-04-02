@@ -50,7 +50,7 @@ export default function ProjectOverview() {
 
     return (
         <div
-            className='max-h-[202px] min-h-min w-full h-full mt-[68px]'
+            className='max-h-[202px] min-h-min w-full h-full '
         >
             <div
                 className='w-full flex flex-row justify-between mb-[20px]'

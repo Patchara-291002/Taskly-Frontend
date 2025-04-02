@@ -4,8 +4,6 @@ import React, { useState } from 'react'
 
 export default function ProjectCard({ project, maxWidth }) {
 
-  console.log(project)
-
   const formatDay = (dateString) => {
     const date = new Date(dateString);
     return date.getDate();
@@ -28,12 +26,11 @@ export default function ProjectCard({ project, maxWidth }) {
     )
   }
 
-  // ดึงข้อมูล profile จาก users ใน project
   const usersProfile = project?.users?.map(user => user.userId.profile) || [];
 
   return (
     <div
-      className='w-full h-[160px] bg-white rounded-[15px] p-[15px] flex flex-col justify-between border border-grayBorder'
+      className='w-full min-w-[194px] h-[160px] bg-white rounded-[15px] p-[15px] flex flex-col justify-between border border-grayBorder'
       style={{ maxWidth: `${maxWidth}px` }}
     >
       <div className='w-full'>
@@ -41,7 +38,7 @@ export default function ProjectCard({ project, maxWidth }) {
           <p className='text-[14px] font-medium'>
             {project.projectName}
           </p>
-          <div className='w-[30px] h-[30px] bg-primaryorange rounded-[8px] flex flex-col justify-center items-center'>
+          <div className='w-[30px] h-[30px] bg-primaryOrange rounded-[8px] flex flex-col justify-center items-center'>
             <p className='text-[8px] font-bold text-white'>
               {formatDay(project.dueDate)}
             </p>

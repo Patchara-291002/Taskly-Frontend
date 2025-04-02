@@ -49,42 +49,44 @@ export default function TaskOverview() {
     ]
 
     return (
-        <div
-            className='w-full h-[353px] flex flex-col gap-[15px] mt-[40px] overflow-hidden'
-        >
+        <>
             <div
-                className=''
+                className='w-full h-[353px] flex flex-col gap-[15px] mt-[40px] overflow-hidden'
             >
-                <p
-                    className='font-medium'
+                <div
+                    className=''
                 >
-                    Task Overview
-                </p>
-            </div>
-            <div
-                className='w-full h-[315px]'
-            >
-                <Swiper
-                    slidesPerView={4}
-                    direction='vertical'
-                    spaceBetween={10}
-                    mousewheel={true}
-                    modules={[Mousewheel]}
-                    className="mySwiper w-full h-full"
+                    <p
+                        className='font-medium'
+                    >
+                        Task Overview
+                    </p>
+                </div>
+                <div
+                    className='w-full h-[315px]'
                 >
-                    {tasks.map((task, index) => (
-                        <SwiperSlide key={index}>
-                            <TaskCard
-                                title={task.title}
-                                detail={task.detail}
-                                dueDate={task.dueDate}
-                                dueTime={task.dueTime}
-                                taskType={task.taskType}
-                            />
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
+                    <Swiper
+                        slidesPerView={4}
+                        direction='vertical'
+                        spaceBetween={10}
+                        mousewheel={true}
+                        modules={[Mousewheel]}
+                        className="mySwiper w-full h-full"
+                    >
+                        {tasks.map((task, index) => (
+                            <SwiperSlide key={index}>
+                                <TaskCard
+                                    title={task.title}
+                                    detail={task.detail}
+                                    dueDate={task.dueDate}
+                                    dueTime={task.dueTime}
+                                    taskType={task.taskType}
+                                />
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </div>
             </div>
-        </div>
+        </>
     )
 }

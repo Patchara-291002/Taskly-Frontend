@@ -7,7 +7,12 @@ import CourseInfo from './component/CourseInfo';
 import CourseFile from './component/CourseFile';
 import CourseHeader from './component/CourseHeader';
 import CourseTable from './component/CourseTable';
+import useWindowSize from '@/hooks/useWindow';
+
 export default function page() {
+
+    const { width } = useWindowSize();
+
 
     const pathname = usePathname();
     const courseId = pathname.split('/').pop();
@@ -43,12 +48,21 @@ export default function page() {
                 >
                     Subject Description
                 </p>
-                <div
-                    className='w-full h-[280px] flex gap-[30px]'
-                >
-                    <CourseInfo course={course} />
-                    <CourseFile course={course} />
-                </div>
+                {width < 1042 ?
+                    <div
+                        className='w-full flex flex-col gap-[25px]'
+                    >
+                        <CourseInfo course={course} />
+                        <CourseFile course={course} />
+                    </div>
+                    :
+                    <div
+                        className='w-full h-[280px] flex gap-[30px]'
+                    >
+                        <CourseInfo course={course} />
+                        <CourseFile course={course} />
+                    </div>
+                }
                 <CourseTable course={course} />
             </div>}
         </>
