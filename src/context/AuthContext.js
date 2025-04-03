@@ -10,12 +10,10 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/auth/me`, {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/me`, {
                     withCredentials: true
                 })
 

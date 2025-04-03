@@ -41,7 +41,7 @@ function LoginContent() {
         </div>
         <div className='my-auto'>
           <div className='flex flex-col gap-[30px]'>
-            <p className='text-primaryorange font-bold text-[40px]'>
+            <p className='text-primaryOrange font-bold text-[40px]'>
               Manage your tasks and projects
               <br />
               More easily
@@ -54,20 +54,20 @@ function LoginContent() {
           </div>
           <div className='flex gap-[1rem] mt-[50px]'>
             <button
-              className='bg-primaryorange w-[160px] py-[8px] rounded-[8px] font-semibold text-[14px] text-white'
+              className='bg-primaryOrange w-[160px] py-[8px] rounded-[8px] font-semibold text-[14px] text-white'
               onClick={() => getStart('signUp')}
             >
               Get Started
             </button>
             <button
-              className='bg-primaryorange/20 w-[160px] py-[8px] rounded-[8px] font-semibold text-[14px] text-primaryorange'
+              className='bg-primaryOrange/20 w-[160px] py-[8px] rounded-[8px] font-semibold text-[14px] text-primaryOrange'
             >
               Explore features
             </button>
           </div>
         </div>
       </div>
-      <p className='absolute left-[20px] top-[20px] text-primaryorange font-bold text-[20px]'>
+      <p className='absolute left-[20px] top-[20px] text-primaryOrange font-bold text-[20px]'>
         Taskly
       </p>
       {opendPopUp && <PopUp closePopUp={closePopUp} type={popUpType} setType={setPopUpType} />}

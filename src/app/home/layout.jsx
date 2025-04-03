@@ -13,19 +13,15 @@ export default function RootLayout({ children }) {
         <>
             { isMobile 
                 ? 
-                <MobileLayout>
-                    {children}
-                </MobileLayout> 
+                <MobileLayout children={children} />
                 : 
-                <DesktopLayout>
-                    {children}
-                </DesktopLayout>
+                <DesktopLayout children={children} />
                 }
         </>
     )
 }
 
-const DesktopLayout = () => {
+const DesktopLayout = ({children}) => {
     return (
         <>
             <div className='flex flex-row w-full'>
@@ -34,13 +30,14 @@ const DesktopLayout = () => {
                 </div>
                 <div className="w-full px-[30px] overflow-hidden pb-[20px]">
                     <Header />
+                    {children}
                 </div>
             </div>
         </>
     )
 }
 
-const MobileLayout = () => {
+const MobileLayout = ({children}) => {
     return (
         <>
             <div
@@ -50,7 +47,7 @@ const MobileLayout = () => {
                 <div
                     className="w-full h-full bg-grayBackground px-[16px] py-[20px]"
                 >
-                    
+                    {children}
                 </div>
             </div>
         </>

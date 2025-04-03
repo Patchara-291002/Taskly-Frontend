@@ -22,7 +22,7 @@ export default function Page() {
 
   useEffect(() => {
     if (userId) {
-      axios.get(`${NEXT_PUBLIC_API_BASE_URL}/user/${userId}`, {
+      axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${userId}`, {
         withCredentials: true
       })
         .then(response => {
