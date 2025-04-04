@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Image from 'next/image'
 
 export default function ProjectCard({ project, maxWidth }) {
 
@@ -52,7 +53,7 @@ export default function ProjectCard({ project, maxWidth }) {
         <div className='flex -space-x-2.5'>
           {usersProfile.map((profile, index) => (
             <div key={index} className='w-[20px] h-[20px] rounded-full overflow-hidden'>
-              <Image src={profile} alt={`User ${index}`} />
+              <Image  width={20} height={20} src={profile} alt={`User ${index}`} />
             </div>
           ))}
         </div>

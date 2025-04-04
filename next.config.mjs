@@ -18,6 +18,10 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'my-image-uploader-bucket.s3.ap-southeast-2.amazonaws.com',
             },
+            {
+                protocol: 'https',
+                hostname: 'profile.line-scdn.net'
+            }
         ],
     },
     eslint: {
