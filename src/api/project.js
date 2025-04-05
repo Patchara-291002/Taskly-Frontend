@@ -24,6 +24,15 @@ export const createProject = async (projectName, startDate, dueDate) => {
         });
 };
 
+export const deleteProject = async (projectId) => {
+    return axios.delete(`${API_BASE_URL}/project/delete/${projectId}`, { withCredentials: true })
+        .then(response => response.data)
+        .catch(error => {
+            console.error("❌ Error deleting project:", error);
+            throw error;
+        });
+}
+
 // ✅ ดึงข้อมูลโปรเจคโดยใช้ projectId
 export const fetchProjectByProjectId = async (projectId) => {
     try {

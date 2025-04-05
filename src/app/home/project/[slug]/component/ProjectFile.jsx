@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { uploadFileToProject } from "@/api/project";
 import Link from "next/link";
 
-export default function ProjectFile({ project }) {
+export default function ProjectFile({ project, loadProject }) {
 
     const [files, setFiles] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
@@ -33,7 +33,7 @@ export default function ProjectFile({ project }) {
                         await uploadFileToProject(projectId, file);
                     })
                 );
-                window.location.reload();
+                loadProject();   
             } catch (error) {
                 console.error(`❌ Failed to upload ${file.name}:`, error);
             } finally {
@@ -59,7 +59,7 @@ export default function ProjectFile({ project }) {
 
     return (
         <div
-            className='w-full h-full flex flex-col gap-[15px] bg-white border-[1px] border-grayBorder rounded-[15px] p-[15px] overflow-y-auto'
+            className='w-full max-h-[300px] flex flex-col gap-[15px] bg-white border-[1px] border-grayBorder rounded-[15px] p-[15px] overflow-y-auto'
         >
             <div
                 className={`border-2 border-dashed p-6 rounded-lg text-center cursor-pointer ${isDragging ? "border-blue-500 bg-blue-100" : "border-gray-300"
@@ -92,8 +92,9 @@ export default function ProjectFile({ project }) {
                         >
                             <Link
                                 href={file.fileAddress}
+                                className="max-w-[250px]"
                             >
-                                <p>{file.fileName}</p>
+                                <p className="line-clamp-2">{file.fileName}</p>
                             </Link>
                             <button
                                 className="bg-[#F1F1F1] p-1 text-grayBorder rounded-[15px]"

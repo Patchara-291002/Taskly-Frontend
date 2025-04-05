@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { NewButton } from '../component/GlobalComponent';
+import { NewButton, DeleteButton } from '../component/GlobalComponent';
 import ProjectCard from '../component/dashboarOverview/Project/ProjectCard';
 import NewProject from './component/NewProject';
 import { fetchProjectsByUser, createProject } from '@/api/project';
@@ -12,8 +12,6 @@ import { is } from 'date-fns/locale';
 export default function Page() {
 
   const { width } = useWindowSize();
-  const isMobile = width < 768;
-  const isTablet = width >= 768 && width < 1440;
 
   const getGridTemplateColumns = () => {
     if (width < 444) {
@@ -39,7 +37,6 @@ export default function Page() {
     const getProjects = async () => {
       try {
         const data = await fetchProjectsByUser()
-        console.log(data)
         setProjects(data)
       } catch (error) {
         console.error('Error loading projects:', error);
@@ -50,6 +47,7 @@ export default function Page() {
   }, [])
 
   const [isOpen, setIsOpen] = useState(false);
+  const [onDelete, setOnDelete] = useState(false);
 
   const [startDate, setStartDate] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -75,6 +73,10 @@ export default function Page() {
           onClick={() => setIsOpen(true)}
           buttonText='New'
         />
+        <DeleteButton
+          onDelete={onDelete}
+          setOnDelete={setOnDelete}
+        />
       </div>
       <div
         className='grid gap-[15px] mt-[20px] z-10'
@@ -82,32 +84,29 @@ export default function Page() {
       >
         {projects &&
           projects.map((project, index) => (
-            <Link
+            <ProjectCard
               key={index}
-              href={`/home/project/${project._id}`}
-            >
-              <ProjectCard
-                maxWidth={"none"}
-                project={project}
-              />
-            </Link>
+              maxWidth={"none"}
+              project={project}
+              onDelete={onDelete}
+            />
           ))
         }
       </div>
       <>
-      {isOpen && (
-        <NewProject
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          startDate={startDate}
-          setStartDate={setStartDate}
-          dueDate={dueDate}
-          setDueDate={setDueDate}
-          projectName={projectName}
-          setProjectName={setProjectName}
-          onSubmit={handleCreateProject}
-        />
-      )}
+        {isOpen && (
+          <NewProject
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            dueDate={dueDate}
+            setDueDate={setDueDate}
+            projectName={projectName}
+            setProjectName={setProjectName}
+            onSubmit={handleCreateProject}
+          />
+        )}
       </>
     </div>
   )

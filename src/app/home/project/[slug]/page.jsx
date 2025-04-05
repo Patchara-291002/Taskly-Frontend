@@ -18,10 +18,11 @@ import "swiper/css";
 import ProjectTable from './component/Table/ProjectTable';
 import StatusAndRolePicker from './component/StatusAndRolePicker';
 import TaskCard from '../component/TaskCard';
-
-
+import useWindowSize from '@/hooks/useWindow';
 
 export default function Page() {
+
+    const { width } = useWindowSize();
 
 
     const [project, setProject] = useState(null);
@@ -89,41 +90,6 @@ export default function Page() {
         loadProject();
     }, [activeTab])
 
-
-    // const handleNewStatusSubmit = async () => {
-    //     try {
-    //         const newStatus = await createStatus(projectId, statusName, statusColor);
-    //         setIsOpenNewStatus(false);
-    //         window.location.reload();
-    //     } catch (error) {
-    //         console.error('Error creating status:', error);
-    //     }
-    // }
-
-
-
-    // const handleCreateTask = async () => {
-    //     try {
-    //         const newTask = await createTask(task);
-    //         setIsOpenNewTask(false);
-    //         window.location.reload();
-    //     } catch (error) {
-    //         console.error('Error creating task:', error);
-    //     }
-    // };
-
-    // const handleOpenNewTask = (newStatusId) => {
-    //     setIsOpenNewTask(true);
-    //     setStatusId(newStatusId);
-    // };
-
-    // useEffect(() => {
-    //     if (!statusId) return;
-    //     setTask((prevTask) => ({
-    //         ...prevTask,
-    //         statusId: statusId
-    //     }));
-    // }, [statusId]);
     return (
         <div
             className='w-full flex flex-col gap-[20px] z-0 relative'
@@ -132,10 +98,10 @@ export default function Page() {
             {project && <ProjectHeader project={project} loadProject={loadProject} />}
 
             <div
-                className='w-full h-[280px] flex gap-[30px]'
+                className='w-full flex flex-col lg:flex-row gap-[30px]'
             >
                 {project && <ProjectInfo project={project} />}
-                {project && <ProjectFile project={project} />}
+                {project && <ProjectFile project={project} loadProject={loadProject} />}
             </div>
 
             <div className="w-full">
