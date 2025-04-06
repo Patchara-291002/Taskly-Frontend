@@ -5,6 +5,7 @@ import { SearchIcon, CalendarIcon, NotificationIcon, LogoutIcon } from "./icon/L
 import { useState } from "react"
 import { useAuth } from "@/context/AuthContext";
 import useWindowSize from "@/hooks/useWindow";
+import { BurgerIcon } from "@/app/component/GlobalIcon";
 
 export default function Header() {
 
@@ -73,19 +74,45 @@ const DeskTopLayout = ({ isSearchActive, toggleSearch, handleLogout }) => {
 }
 
 const MobileLayout = () => {
+
+  const [isSideBarOpen, setIsSideBarOpen] = useState(false);
+
+
   return (
     <>
       <div
-        className="w-full h-[106px] flex flex-col justify-end bg-primaryOrange"
+        className="relative z-30"
       >
         <div
-          className="w-full h-[44px] flex justify-between pb-[8px] px-[13px]"
+          className="w-full h-[106px] flex flex-col justify-end bg-primaryOrange "
         >
-          <p
-            className="text-white font-bold text-[24px]"
+          <div
+            className="w-full h-[44px] flex justify-between pb-[8px] px-[13px]"
           >
-            Taskly
-          </p>
+            <p
+              className="text-white font-bold text-[24px]"
+            >
+              Taskly
+            </p>
+            <button
+              onClick={() => setIsSideBarOpen(!isSideBarOpen)}
+            >
+              <BurgerIcon w={25} h={25} color={"#FFFFFF"} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Sidebar */}
+      <div
+        className={`z-50 fixed top-[106px] right-0 w-[360px] h-[calc(100vh-106px)] 
+            bg-white shadow-lg 
+            transform transition-transform duration-300 ease-in-out
+            ${isSideBarOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      >
+        {/* Sidebar content here */}
+        <div className="p-[20px]">
+          <h2>Sidebar Content</h2>
         </div>
       </div>
     </>

@@ -76,6 +76,7 @@ export default function Page() {
         try {
             const projectData = await fetchProjectByProjectId(projectId)
             setProject(projectData);
+            console.log("projectData: ", projectData)
         } catch (error) {
             console.error('Failed to load project:', error);
         }
@@ -159,28 +160,6 @@ export default function Page() {
             </div>
 
             {opendTask && <TaskCard selectedTask={selectedTask} setSelectedTask={setSelectedTask} setOpenTask={setOpenTask} />}
-
-
-            {/* {isOpenNewStatus && (
-                <NewStatus
-                    setStatusName={setStatusName}
-                    statusName={statusName}
-                    setStatusColor={setStatusColor}
-                    setIsOpenNewStatus={setIsOpenNewStatus}
-                    isOpenNewStatus={isOpenNewStatus}
-                    onSubmit={handleNewStatusSubmit}
-                />
-            )}
-            {isOpenNewTask && (
-                <NewTask
-                    isOpenNewTask={isOpenNewTask}
-                    setIsOpenNewTask={setIsOpenNewTask}
-                    task={task}
-                    setTask={setTask}
-                    statusId={statusId}
-                    onSubmit={handleCreateTask}
-                />
-            )} */}
         </div>
     )
 }
