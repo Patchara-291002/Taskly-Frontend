@@ -1,252 +1,245 @@
-import { useEffect, useState, useCallback } from 'react'
-import { createStatus, updateStatus } from '@/api/status';
-import { createRoleToProject, updateRole } from '@/api/project';
+import { useEffect, useState } from 'react'
+import { createStatus, updateStatus, deleteStatus } from '@/api/status';
+import { createRoleToProject, updateRole, deleteRole } from '@/api/project';
+import { DropDownIcon } from '@/app/component/GlobalIcon';
+import { PlusIcon2, TrashSolidIcon } from '@/app/home/component/icon/GlobalIcon';
 
-export default function StatusAndRolePicker({ project }) {
+const PickerItem = ({ item, type, onChange, onColorChange, onDelete }) => {
+  const [isHovered, setIsHovered] = useState(false);
 
+  const itemId = type === 'status' ? item._id : item.roleId;
+  const itemName = type === 'status' ? item.statusName : item.name;
+
+  return (
+    <div className='flex justify-between items-center'>
+      <li className="py-2 flex items-center gap-[5px]">
+        <div className="relative w-3 h-3">
+          <input
+            type="color"
+            value={item.color || "#D6D6D6"}
+            onChange={(e) => onColorChange(itemId, "color", e.target.value)}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          />
+          <span
+            className="absolute w-3 h-3 rounded-[2px] pointer-events-none"
+            style={{ backgroundColor: item.color || "#D6D6D6" }}
+          />
+        </div>
+        <input
+          type="text"
+          value={itemName}
+          onChange={(e) => onChange(itemId, e.target.value)}
+          className='bg-white w-[140px] focus:outline-none text-[12px]'
+          placeholder={`Enter ${type} name`}
+        />
+      </li>
+      <button
+        className='p-2 rounded-full transition-colors hover:bg-red-100'
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onClick={() => onDelete(itemId)}
+      >
+        <TrashSolidIcon w={12} h={12} color={isHovered ? "#FF0000" : "#CBCBCB"} />
+      </button>
+    </div>
+  );
+};
+
+const Picker = ({ title, type, items, isOpen, onToggle, onNew, onChange, onColorChange, onDelete }) => {
+  return (
+    <div className='relative'>
+      <button
+        onClick={onToggle}
+        className='px-[14px] py-[4px] border border-primaryOrange rounded-full flex justify-center items-center gap-[5px]'
+      >
+        <p className='text-primaryOrange text-[14px] font-medium'>{title}</p>
+        <DropDownIcon w={10} h={5} color={"#FF6200"} />
+      </button>
+      {isOpen && (
+        <div className='absolute p-[15px] w-[200px] min-h-[148px] bg-white rounded-md shadow-md'>
+          <div className='flex justify-between items-center mb-[15px]'>
+            <p className='text-primaryOrange text-[12px] font-semibold'>{title}</p>
+            <button
+              onClick={onNew}
+              className='w-[16px] h-[16px] flex justify-center items-center rounded-full border-[1.5px] border-primaryOrange hover:bg-orange-50'
+            >
+              <PlusIcon2 w={6} h={6} color={"#FF6200"} />
+            </button>
+          </div>
+          <ul className='space-y-2'>
+            {items?.map((item) => (
+              <PickerItem
+                key={type === 'status' ? item._id : item.roleId}
+                item={item}
+                type={type}
+                onChange={onChange}
+                onColorChange={onColorChange}
+                onDelete={onDelete}
+              />
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default function StatusAndRolePicker({ project, loadProject }) {
   const [statusPayload, setStatusPayload] = useState([]);
   const [rolePayload, setRolePayload] = useState([]);
+  const [openStatus, setOpenStatus] = useState(false);
+  const [openRole, setOpenRole] = useState(false);
 
   useEffect(() => {
-    if (project?.statuses) {
-      setStatusPayload(project.statuses);
-    }
-    if (project?.roles)
-      setRolePayload(project.roles);
-  }, [project])
+    if (project?.statuses) setStatusPayload(project.statuses);
+    if (project?.roles) setRolePayload(project.roles);
+  }, [project]);
 
-  // handle change data
-  function handleStatusChange(id, key, value) {
-    setStatusPayload((prev) =>
+  // Status handlers
+  const handleStatusChange = (id, value) => {
+    setStatusPayload(prev =>
       prev.map(status =>
-        status._id === id ? { ...status, [key]: value } : status
+        status._id === id
+          ? { ...status, statusName: value }
+          : status
       )
-    )
-  }
+    );
+  };
 
-  function handleRoleChange(id, key, value) {
-    setRolePayload((prev) => 
-      prev.map(role => 
-        role.roleId === id ? { ...role, [key]: value } : role
+  const handleStatusColorChange = (id, key, value) => {
+    setStatusPayload(prev =>
+      prev.map(status =>
+        status._id === id
+          ? { ...status, [key]: value }
+          : status
       )
-    )
-  }
+    );
+  };
 
-  // ✅ ใช้ useCallback เพื่ออัปเดต API อัตโนมัติ
-  const updateStatusData = useCallback(async (statusPayload) => {
+  const handleNewStatus = async () => {
     try {
-      await updateStatus(
-        statusPayload._id,
-        statusPayload.statusName,
-        statusPayload.color,
-        statusPayload.isDone
-      );
-      // console.log(`✅ Updated assignment: ${project.statuses}`);
-    } catch (error) {
-      console.error("❌ Failed to update status:", error);
-    }
-  }, []);
-  
-  const updateRoleData = useCallback(async (rolePayload) => {
-    try {
-      await updateRole(
-        project._id,
-        rolePayload.roleId,
-        rolePayload.name,
-        rolePayload.color
-      );
-      // console.log(`✅ Updated assignment: ${project.statuses}`);
-    } catch (error) {
-      console.error("❌ Failed to update role:", error);
-    }
-  }, []);
-
-  useEffect(() => {
-    const delay = setTimeout(() => {
-      statusPayload.forEach(status => {
-        if (status._id) { 
-          updateStatusData(status);
-        }
-      });
-    }, 1000);
-  
-    return () => clearTimeout(delay);
-  }, [statusPayload, updateStatusData]);
-
-  useEffect(() => {
-    const delay = setTimeout(() => {
-      rolePayload.forEach(role => {
-        if (role.roleId) { 
-         updateRoleData(role);
-        }
-      });
-    }, 1000);
-  
-    return () => clearTimeout(delay);
-  }, [rolePayload, updateRoleData]);
-
-  return (
-    <div
-      className='w-full flex gap-[15px] my-[30px] z-50'
-    >
-      <StatusPicker project={project} statusPayload={statusPayload} handleStatusChange={handleStatusChange} />
-      <RolePicker project={project} rolePayload={rolePayload} handleRoleChange={handleRoleChange} />
-    </div>
-  )
-}
-
-const StatusPicker = ({ project, statusPayload, handleStatusChange }) => {
-
-  const [openStatus, setOpenStatus] = useState(false)
-
-  const NewStatus = async () => {
-
-    const status = {
-      projectId: project._id,
-      statusName: "New status",
-      color: "#D6D6D6"
-    }
-
-    try {
-      await createStatus(status.projectId, status.statusName, status.color);
-      window.location.reload()
-      console.log(statusPayload);
+      await createStatus(project._id, "New Status", "#D6D6D6");
+      loadProject();
     } catch (error) {
       console.error("❌ Failed to create status:", error);
     }
-  }
+  };
 
-  return (
-    <div className='relative'>
-      <button
-        onClick={() => setOpenStatus(!openStatus)}
-        className='px-[14px] py-[4px] border-2 rounded-full'
-      >
-        Status
-      </button>
-      {openStatus && (
-        <div
-          className='absolute p-[15px] w-[200px] min-h-[148px] bg-white rounded-md shadow-md'
-        >
-          <div
-            className='flex justify-between items-center'
-          >
-            <p>Status</p>
-            <button
-              onClick={NewStatus}
-            >
-              add
-            </button>
-          </div>
-          <ul>
-            {statusPayload && statusPayload.map((s) => {
-              return (
-                <li
-                  key={s._id}
-                  className="py-2 flex items-center gap-[5px]"
-                // onClick={() => {
-                //   onChange(s.name);
-                //   setOpenStatus(false);
-                // }}
-                >
-                  <div className="relative w-3 h-3">
-                    <input
-                      type="color"
-                      value={s.color}
-                      onChange={(e) => handleStatusChange(s._id, "color", e.target.value)}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    />
-                    <span
-                      className="absolute w-3 h-3 rounded-full border pointer-events-none"
-                      style={{ backgroundColor: s.color }}
-                    />
-                  </div>
-                  <input
-                    type="text"
-                    value={s.statusName}
-                    onChange={(e) => handleStatusChange(s._id, "statusName", e.target.value)}
-                    className='bg-white w-[140px] focus:outline-none'
-                  />
-                </li>
-              )
-            })}
-          </ul>
-        </div>
-      )}
-    </div>
-  )
-}
-const RolePicker = ({ project, rolePayload, handleRoleChange }) => {
-
-  const [openRole, setOpenRole] = useState(false)
-
-  const NewRole = async () => {
+  const handleDeleteStatus = async (statusId) => {
     try {
-      await createRoleToProject(project._id,);
-      window.location.reload()
-      console.log(rolePayload);
+      await deleteStatus(statusId);
+      loadProject();
     } catch (error) {
-      console.error("❌ Failed to create status:", error);
+      console.error("❌ Failed to delete status:", error);
     }
-  }
+  };
+
+  // Role handlers
+  const handleRoleChange = (id, value) => {
+    setRolePayload(prev =>
+      prev.map(role =>
+        role.roleId === id
+          ? { ...role, name: value }
+          : role
+      )
+    );
+  };
+
+  const handleRoleColorChange = (id, key, value) => {
+    setRolePayload(prev =>
+      prev.map(role =>
+        role.roleId === id
+          ? { ...role, [key]: value }
+          : role
+      )
+    );
+  };
+
+  const handleNewRole = async () => {
+    try {
+      await createRoleToProject(project._id);
+      loadProject();
+    } catch (error) {
+      console.error("❌ Failed to create role:", error);
+    }
+  };
+
+  const handleDeleteRole = async (roleId) => {
+    try {
+      await deleteRole(project._id, roleId);
+      loadProject();
+    } catch (error) {
+      console.error("❌ Failed to delete role:", error);
+    }
+  };
+
+  // Auto-save with debounce
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      statusPayload.forEach(async status => {
+        if (status._id) {
+          try {
+            await updateStatus(
+              status._id,
+              status.statusName,
+              status.color,
+              status.isDone
+            );
+          } catch (error) {
+            console.error("❌ Failed to update status:", error);
+          }
+        }
+      });
+    }, 1000);
+
+    return () => clearTimeout(delay);
+  }, [statusPayload]);
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      rolePayload.forEach(async role => {
+        if (role.roleId) {
+          try {
+            await updateRole(
+              project._id,
+              role.roleId,
+              role.name,
+              role.color
+            );
+          } catch (error) {
+            console.error("❌ Failed to update role:", error);
+          }
+        }
+      });
+    }, 1000);
+
+    return () => clearTimeout(delay);
+  }, [rolePayload, project._id]);
 
   return (
-    <div className='relative'>
-      <button
-        onClick={() => setOpenRole(!openRole)}
-        className='px-[14px] py-[4px] border-2 rounded-full'
-      >
-        Role
-      </button>
-      {openRole && (
-        <div
-          className='absolute p-[15px] w-[200px] min-h-[148px] bg-white rounded-md shadow-md'
-        >
-          <div
-            className='flex justify-between items-center'
-          >
-            <p>Role</p>
-            <button
-              onClick={NewRole}
-            >
-              add
-            </button>
-          </div>
-          <ul>
-            {rolePayload && rolePayload.map((r) => {
-              return (
-                <li
-                  key={r.roleId}
-                  className="py-2 flex items-center gap-[5px]"
-                // onClick={() => {
-                //   onChange(s.name);
-                //   setOpenStatus(false);
-                // }}
-                >
-                  <div className="relative w-3 h-3">
-                    <input
-                      type="color"
-                      value={r.color}
-                      onChange={(e) => handleRoleChange(r.roleId, "color", e.target.value)}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    />
-                    <span
-                      className="absolute w-3 h-3 rounded-full border pointer-events-none"
-                      style={{ backgroundColor: r.color }}
-                    />
-                  </div>
-                  <input
-                    type="text"
-                    value={r.name}
-                    onChange={(e) => handleRoleChange(r.roleId, "name", e.target.value)}
-                    className='bg-white w-[140px] focus:outline-none'
-                  />
-                </li>
-              )
-            })}
-          </ul>
-        </div>
-      )}
+    <div className='w-full flex gap-[15px] my-[30px] z-50'>
+      <Picker
+        title="Status"
+        type="status"
+        items={statusPayload}
+        isOpen={openStatus}
+        onToggle={() => setOpenStatus(!openStatus)}
+        onNew={handleNewStatus}
+        onChange={handleStatusChange}
+        onColorChange={handleStatusColorChange}
+        onDelete={handleDeleteStatus}
+      />
+      <Picker
+        title="Role"
+        type="role"
+        items={rolePayload}
+        isOpen={openRole}
+        onToggle={() => setOpenRole(!openRole)}
+        onNew={handleNewRole}
+        onChange={handleRoleChange}
+        onColorChange={handleRoleColorChange}
+        onDelete={handleDeleteRole}
+      />
     </div>
-  )
+  );
 }

@@ -8,6 +8,7 @@ import { fetchProjectsByUser, createProject } from '@/api/project';
 import Link from 'next/link';
 import useWindowSize from '@/hooks/useWindow';
 import { is } from 'date-fns/locale';
+import { redirect } from 'next/dist/server/api-utils';
 
 export default function Page() {
 
@@ -57,7 +58,7 @@ export default function Page() {
     try {
       const newProject = await createProject(projectName, startDate, dueDate);
       setIsOpen(false);
-      window.location.reload();
+      redirect(`/home/project/${newProject._id}`)
     } catch (error) {
       console.error('Error creating project:', error);
     }

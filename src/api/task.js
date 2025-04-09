@@ -74,3 +74,13 @@ export const getTaskById = async (taskId) => {
         throw error;
     }
 }
+
+export const deleteTask = async (taskId) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/task/delete/${taskId}`, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        console.error("❌ Error deleting task:", error);
+        throw error;
+    }
+}

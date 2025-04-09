@@ -12,6 +12,7 @@ import ProjectHeader from './component/ProjectHeader'
 import KanbanBoard from './component/KanbanBoard/KanbanBoard';
 import ProjectInfo from './component/ProjectInfo';
 import ProjectFile from './component/ProjectFile';
+import ProjectNote from './component/ProjectNote';
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -76,7 +77,6 @@ export default function Page() {
         try {
             const projectData = await fetchProjectByProjectId(projectId)
             setProject(projectData);
-            console.log("projectData: ", projectData)
         } catch (error) {
             console.error('Failed to load project:', error);
         }
@@ -95,13 +95,13 @@ export default function Page() {
         <div
             className='w-full flex flex-col gap-[20px] z-0 relative'
         >
-
             {project && <ProjectHeader project={project} loadProject={loadProject} />}
 
             <div
                 className='w-full flex flex-col lg:flex-row gap-[30px]'
             >
-                {project && <ProjectInfo project={project} />}
+                {/* {project && <ProjectInfo project={project} />} */}
+                <ProjectNote project={project} loadProject={loadProject} />
                 {project && <ProjectFile project={project} loadProject={loadProject} />}
             </div>
 
@@ -129,20 +129,20 @@ export default function Page() {
                 </div>
 
                 {/* ใช้ switch/case หรือ if-else เพื่อสลับ UI ตาม activeTab */}
-                <div className="w-full">
+                <div className="w-full pb-[180px]">
                     {(() => {
                         switch (activeTab) {
                             case "table":
                                 return (
                                     <div className="flex flex-col">
-                                        {project && <StatusAndRolePicker project={project} />}
-                                        {project && <ProjectTable project={project} />}
+                                        {project && <StatusAndRolePicker project={project} loadProject={loadProject} />}
+                                        {project && <ProjectTable project={project} loadProject={loadProject} />}
                                     </div>
                                 );
                             case "kanban":
                                 return (
                                     <div className="flex flex-col">
-                                        {project && <StatusAndRolePicker project={project} />}
+                                        {project && <StatusAndRolePicker project={project} loadProject={loadProject} />}
                                         {project && <KanbanBoard project={project} handleTask={handleTask} />}
                                     </div>
                                 );

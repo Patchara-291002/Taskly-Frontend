@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
-import { uploadFileToProject } from "@/api/project";
+import { uploadFileToProject, deleteFileFromProject } from "@/api/project";
 import Link from "next/link";
+import { TrashSolidIcon } from "@/app/home/component/icon/GlobalIcon";
 
 export default function ProjectFile({ project, loadProject }) {
 
@@ -33,7 +34,7 @@ export default function ProjectFile({ project, loadProject }) {
                         await uploadFileToProject(projectId, file);
                     })
                 );
-                loadProject();   
+                loadProject();
             } catch (error) {
                 console.error(`❌ Failed to upload ${file.name}:`, error);
             } finally {
@@ -57,9 +58,25 @@ export default function ProjectFile({ project, loadProject }) {
         handleFiles(e.dataTransfer.files);
     };
 
+    const handleDeleteFile = async (fileId) => {
+        const projectId = project._id
+
+        if (!projectId) {
+            console.error
+            return;
+        }
+
+        try {
+            await deleteFileFromProject(projectId, fileId);
+            loadProject();
+        } catch (error) {
+            console.error(`❌ Failed to delete file ${fileId}:`, error);
+        }
+    }
+
     return (
         <div
-            className='w-full max-h-[300px] flex flex-col gap-[15px] bg-white border-[1px] border-grayBorder rounded-[15px] p-[15px] overflow-y-auto'
+            className='w-full lg:max-w-[420px] h-[300px] flex flex-col gap-[15px] bg-white border-[1px] border-grayBorder rounded-[15px] p-[15px] overflow-y-auto'
         >
             <div
                 className={`border-2 border-dashed p-6 rounded-lg text-center cursor-pointer ${isDragging ? "border-blue-500 bg-blue-100" : "border-gray-300"
@@ -86,25 +103,38 @@ export default function ProjectFile({ project, loadProject }) {
             >
                 {project && project.files.map((file) => {
                     return (
-                        <div
-                            className="w-full h-[70px] flex justify-between items-center p-[10px] border-grayBorder border-[1px] rounded-[15px]"
+                        <FileItem
                             key={file._id}
-                        >
-                            <Link
-                                href={file.fileAddress}
-                                className="max-w-[250px]"
-                            >
-                                <p className="line-clamp-2">{file.fileName}</p>
-                            </Link>
-                            <button
-                                className="bg-[#F1F1F1] p-1 text-grayBorder rounded-[15px]"
-                            >
-                                delete
-                            </button>
-                        </div>
+                            file={file}
+                            onDelete={() => handleDeleteFile(file._id)}
+                        />
                     )
                 })}
             </div>
         </div>
     )
 }
+
+
+const FileItem = ({ file, onDelete }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+        <div className="w-full h-[70px] flex justify-between items-center p-[10px] border-grayBorder border-[1px] rounded-[15px]">
+            <Link href={file.fileAddress} className="max-w-[250px]">
+                <p className="line-clamp-2">{file.fileName}</p>
+            </Link>
+            <button
+                className={`p-2 rounded-full transition-colors hover:bg-red-100`}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(file._id);
+                }}
+            >
+                <TrashSolidIcon w={12} h={12} color={isHovered ? "red" : "#CBCBCB"} />
+            </button>
+        </div>
+    );
+};

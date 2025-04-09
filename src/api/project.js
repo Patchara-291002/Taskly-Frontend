@@ -69,6 +69,20 @@ export const createContent = async (projectId) => {
     }
 };
 
+export const deleteContent = async (projectId, contentId) => {
+    try {
+        const response = await axios.delete(
+            `${API_BASE_URL}/project/delete-content/${projectId}/${contentId}`,
+            { withCredentials: true } 
+        );
+        console.log("✅ Content deleted:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error('❌ Error deleting content:', error.response?.data || error.message);
+        throw error;
+    }
+}
+
 export const updateProjectById = async (projectId, updatedData) => {
     try {
         const response = await axios.put(
@@ -103,6 +117,16 @@ export const uploadFileToProject = async (projectId, file) => {
     }
 };
 
+export const deleteFileFromProject = async (projectId, fileId) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/project/delete-file/${projectId}/${fileId}`, { withCredentials: true })
+        return response.data;
+    } catch (error) {
+        console.error("❌ Error deleting file:", error);
+        throw error;
+    }
+}
+
 export const createRoleToProject = async (projectId) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/project/create-role/${projectId}`,
@@ -135,6 +159,16 @@ export const updateRole = async (projectId, roleId, name, color) => {
         return response.data
     } catch (error) {
         console.error("❌ Error updated role:", error);
+        throw error;
+    }
+}
+
+export const deleteRole = async (projectId, roleId) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/project/delete-role/${projectId}/${roleId}`, { withCredentials: true })
+        return response.data
+    } catch (error) {
+        console.error("❌ Error deleted role:", error);
         throw error;
     }
 }
