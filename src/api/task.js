@@ -54,6 +54,7 @@ export const updateTask = async (taskId, updatedData) => {
         const response = await axios.put(`${API_BASE_URL}/task/update/${taskId}`, updatedData, {
             withCredentials: true
         });
+        console.log("✅ Task updated successfully:", response.data);
         return response.data;
     } catch (error) {
         console.error("❌ Error updating task:", error);

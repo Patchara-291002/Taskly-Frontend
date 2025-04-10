@@ -110,19 +110,28 @@ export default function Page() {
                 <div className="flex gap-5 pb-2">
                     <button
                         className={activeTab === "table" ? "text-orange-500 border-b-2 border-orange-500" : "text-gray-500"}
-                        onClick={() => handleTabClick("table")}
+                        onClick={() => {
+                            loadProject();
+                            handleTabClick("table");
+                        }}
                     >
                         Table
                     </button>
                     <button
                         className={activeTab === "kanban" ? "text-orange-500 border-b-2 border-orange-500" : "text-gray-500"}
-                        onClick={() => handleTabClick("kanban")}
+                        onClick={() => {
+                            loadProject();
+                            handleTabClick("kanban");
+                        }}
                     >
                         Kanban
                     </button>
                     <button
                         className={activeTab === "dashboard" ? "text-orange-500 border-b-2 border-orange-500" : "text-gray-500"}
-                        onClick={() => handleTabClick("dashboard")}
+                        onClick={() => {
+                            loadProject();
+                            handleTabClick("dashboard")
+                        }}
                     >
                         Dashboard
                     </button>
@@ -143,7 +152,7 @@ export default function Page() {
                                 return (
                                     <div className="flex flex-col">
                                         {project && <StatusAndRolePicker project={project} loadProject={loadProject} />}
-                                        {project && <KanbanBoard project={project} handleTask={handleTask} />}
+                                        {project && <KanbanBoard project={project} handleTask={handleTask} loadProject={loadProject} />}
                                     </div>
                                 );
                             case "dashboard":

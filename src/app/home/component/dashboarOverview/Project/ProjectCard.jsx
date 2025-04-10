@@ -37,7 +37,7 @@ export default function ProjectCard({ project, maxWidth, onDelete }) {
     return (
       <div className='w-full h-[5px] bg-[#EDEDED] relative rounded-full'>
         <div
-          className="absolute h-full bg-primaryorange rounded-full"
+          className="absolute h-full bg-primaryOrange rounded-full"
           style={{ width: `${project.progress}%` }}
         />
       </div>

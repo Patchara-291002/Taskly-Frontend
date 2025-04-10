@@ -93,7 +93,7 @@ function SortableColumn({ column, tasksInColumn, handleOpenNewTask, projectData,
     <div
       ref={setNodeRef}
       style={style}
-      className="max-w-[300px] w-full flex-1 border-r-2 px-[30px]"
+      className="max-w-[300px] min-h-[400px] w-full flex-1 border-r-2 px-[30px]"
     >
       <div className="flex justify-between items-center w-full">
         <p {...attributes} {...listeners} className="cursor-grab">
@@ -128,7 +128,8 @@ export default function Board({
   initialProjectData,
   setStatusId,
   handleOpenNewTask,
-  handleTask
+  handleTask,
+  loadProject
 }) {
   const [projectData, setProjectData] = useState(initialProjectData);
   const [activeId, setActiveId] = useState(null);
@@ -212,6 +213,7 @@ export default function Board({
       // Call updateTaskStatus
       try {
         await updateTaskStatus(movedTask._id, movedTask.statusId);
+        loadProject();
       } catch (error) {
         console.error("Failed to move task", error);
         await loadProjectData(); // revert
