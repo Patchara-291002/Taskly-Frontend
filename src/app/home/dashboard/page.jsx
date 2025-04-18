@@ -1,8 +1,9 @@
 'use client'
 
+import { Suspense } from "react";
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import LeftSideOverview from "../component/dashboarOverview/LeftSideOverview";
 import RightSideOverview from "../component/dashboarOverview/RightSideOverview";
 import ProtectedRoute from '../component/ProtectedRoute';
@@ -13,11 +14,10 @@ import AssignmentOverview from '../component/dashboarOverview/Assignment/Assignm
 import ProjectOverview from '../component/dashboarOverview/Project/ProjectOverview';
 import TaskOverview from '../component/dashboarOverview/Task/TaskOverview';
 
-export default function Page() {
+function DashboardContent() {
   const searchParams = useSearchParams();
   const userId = searchParams.get('userId');
   const { width } = useWindowSize();
-
   const isMobile = width < 1440;
 
   useEffect(() => {
@@ -26,49 +26,54 @@ export default function Page() {
         withCredentials: true
       })
         .then(response => {
-          const data = response.data
+          const data = response.data;
           localStorage.setItem('user', JSON.stringify(data));
         })
         .catch(error => {
-          console.log('Error fetching user data:')
+          console.error('Error fetching user data:', error);
         });
-
     }
   }, [userId]);
 
   return (
     <ProtectedRoute>
-      {isMobile ? (
-        <MobileLayout />
-      ) : <DeskTopLayout />}
+      {isMobile ? <MobileLayout /> : <DeskTopLayout />}
     </ProtectedRoute>
-
   );
 }
 
 const DeskTopLayout = () => {
   return (
-    <>
-      <div className="w-full flex gap-[60px]">
-        <LeftSideOverview />
-        <RightSideOverview />
-      </div>
-    </>
-  )
+    <div className="w-full flex gap-[60px]">
+      <LeftSideOverview />
+      <RightSideOverview />
+    </div>
+  );
 }
 
 const MobileLayout = () => {
   return (
-    <>
-      <div
-        className='w-full flex flex-col gap-[25px]'
-      >
-        <BannerOverview />
-        <ClassOverview />
-        <AssignmentOverview />
-        <ProjectOverview />
-        <TaskOverview />
-      </div>
-    </>
-  )
+    <div className='w-full flex flex-col gap-[25px]'>
+      <BannerOverview />
+      <ClassOverview />
+      <AssignmentOverview />
+      <ProjectOverview />
+      <TaskOverview />
+    </div>
+  );
+}
+
+// Main component wrapped with Suspense
+export default function Page() {
+  return (
+    <Suspense 
+      fallback={
+        <div className="w-full h-screen flex justify-center items-center">
+          <div className="w-8 h-8 border-4 border-primaryOrange border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <DashboardContent />
+    </Suspense>
+  );
 }

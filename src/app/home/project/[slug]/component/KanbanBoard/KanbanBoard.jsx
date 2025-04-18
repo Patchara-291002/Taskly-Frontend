@@ -19,19 +19,27 @@ export default function KanbanBoard({
 
 
     return (
-        <div className="touch-none">
-            <div className="w-full min-h-[400px] px-[10px] py-[20px] rounded-[15px] border-[1px] bg-white border-grayBorder overflow-x-auto touch-none">
-                {/* ส่ง project ไปยัง Board.jsx */}
-                {project && (
-                    <Board
-                        initialProjectData={project}
-                        setIsOpenNewTask={setIsOpenNewTask}
-                        setStatusId={setStatusId}
-                        handleOpenNewTask={handleOpenNewTask}
-                        handleTask={handleTask}
-                        loadProject={loadProject}
-                    />
-                )}
+        <div className="">
+            <div className="w-full min-h-[400px] px-[10px] py-[20px] rounded-[15px] border-[1px] bg-white border-grayBorder overflow-x-scroll">
+                <div
+                    className="touch-none"
+                >
+                    {project && (
+                        <Board
+                            initialProjectData={project}
+                            setIsOpenNewTask={setIsOpenNewTask}
+                            setStatusId={setStatusId}
+                            handleOpenNewTask={handleOpenNewTask}
+                            handleTask={handleTask}
+                            loadProject={loadProject}
+                        />
+                    )}
+                </div>
+                <div
+                    className="h-[50px]"
+                >
+
+                </div>
             </div>
         </div>
     );

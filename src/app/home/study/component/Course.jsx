@@ -2,12 +2,14 @@
 
 import { extractFormattedDate } from '@/utils/dateUtils'
 import { useEffect, useState } from 'react'
-import { PlusIcon, TrashIcon } from '../../component/icon/GlobalIcon'
+import { PlusIcon, TrashIcon, TrashSolidIcon } from '../../component/icon/GlobalIcon'
 import Link from 'next/link'
 import { createCourse, deleteCourseById, updateCourseById } from '@/api/course'
 import { useRouter } from "next/navigation";
 
-const CourseCard = ({ course, deleteActive, courseId, getCourse }) => {
+const CourseCard = ({ course, deleteActive, courseId, 
+  getCourse 
+}) => {
 
   const deleteCourse = async () => {
     try {
@@ -18,60 +20,72 @@ const CourseCard = ({ course, deleteActive, courseId, getCourse }) => {
     }
   }
 
-  const deleteCoursebutton = () => {
+  const DeleteCourse = () => {
     return (
       <div
         onClick={deleteCourse}
-        className='w-[20px] h-[20px] flex justify-center items-center  rounded-full bg-red-500'
+        className='z-50 absolute top-2 right-2 w-[30px] h-[30px] rounded-full bg-[#FF0000] cursor-pointer'
       >
-        <TrashIcon w={13} h={13} color={"#FFFFFF"} />
+        <div
+          className='w-full h-full flex justify-center items-center'
+        >
+          <TrashSolidIcon w={16} h={16} color={"#FFFFFF"} />
+        </div>
       </div>
     )
   }
 
   return (
     <div
-      className="w-full h-[210px] flex flex-col border-[1px] border-grayBorder rounded-[15px] overflow-hidden"
+      className="w-full h-[210px] relative flex flex-col border-[1px] border-grayBorder rounded-[15px] overflow-hidden"
     >
-      <div
-        className={`w-full h-[134px]`}
-        style={{ backgroundColor: `${course.courseColor || "#FF6200"}` }}
+      <Link
+        href={`/home/study/${courseId}`}
+        className='cursor-pointer'
       >
-
-      </div>
-      <div
-        className="p-[15px] flex justify-between"
-      >
-        <Link
-          href={`/home/study/${courseId}`}
-          className='cursor-pointer'
-        >
-          <div>
-            <p
-              className='text-[#454545] font-medium text-[14px]'
-            >
-              {course.courseName}
-            </p>
-          </div>
-          <div>
-            <p
-              className='text-[#454545] font-medium text-[12px]'
-            >
-              {course.Assignment} Assignment
-            </p>
-          </div>
-        </Link>
         <div
-          className=''
+          className={`w-full h-[134px] flex justify-center items-center`}
+          style={{ backgroundColor: `${course.courseColor || "#D6D6D6"}` }}
         >
-          {deleteActive ? deleteCoursebutton() : <ColorPicker courseId={courseId} initialColor={course.courseColor} getCourse={getCourse} />}
+          <p
+            className='font-bold text-[24px] text-white'
+          >
+            {course.courseName}
+          </p>
+        </div>
+      </Link>
+      <div
+        className='p-[15px]'
+      >
+        <div
+          className="flex justify-between"
+        >
+          <p
+            className='text-[#454545] font-medium text-[12px]'
+          >
+            {course.Assignment} Assignment
+          </p>
+          <div
+            className=''
+          >
+            <ColorPicker 
+              courseId={courseId} 
+              initialColor={course.courseColor} 
+              getCourse={getCourse} 
+            />
+          </div>
         </div>
       </div>
+      {deleteActive && (
+        <DeleteCourse />
+      )}
     </div>
   )
 }
 
-function ColorPicker({ courseId, initialColor, getCourse }) {
+function ColorPicker({ courseId, initialColor, 
+  getCourse 
+}) {
 
   const [selectedColor, setSelectedColor] = useState(initialColor);
 
@@ -139,7 +153,9 @@ const AddCourseCard = () => {
   )
 }
 
-export default function Course({ coursesData, getCourse }) {
+export default function Course({ coursesData, 
+  getCourse
+ }) {
 
   const [deleteActive, setDeleteActive] = useState(false);
 
@@ -158,17 +174,23 @@ export default function Course({ coursesData, getCourse }) {
         <div
           onClick={() => setDeleteActive(!deleteActive)}
           className='p-[8px] rounded-full'
-          style={{ background: deleteActive ? "#fc5656" : "#EDEDED" }}
+          style={{ background: deleteActive ? "#FFE0E0" : "" }}
         >
-          {deleteActive ? <TrashIcon w={"16px"} h={"16px"} color={"#FFFFFF"} /> : <TrashIcon w={"16px"} h={"16px"} color={"#000000"} />}
+          {deleteActive ? <TrashSolidIcon w={"16px"} h={"16px"} color={"#FF0000"} /> : <TrashSolidIcon w={"16px"} h={"16px"} color={"#CBCBCB"} />}
         </div>
       </div>
       <div
         className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(268px,1fr))]"
       >
         {coursesData.map((course) => (
-          <CourseCard key={course._id} course={course} deleteActive={deleteActive} courseId={course._id} getCourse={getCourse} />
-        ))}
+          <CourseCard 
+            key={course._id} 
+            course={course} 
+            deleteActive={deleteActive} 
+            courseId={course._id} 
+            getCourse={getCourse} 
+          />
+        ))} 
         <AddCourseCard />
       </div>
     </div>

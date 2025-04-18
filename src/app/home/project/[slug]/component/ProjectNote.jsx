@@ -55,17 +55,25 @@ export default function ProjectNote({ project, loadProject }) {
   return (
     <div className='relative w-full max-h-[300px] overflow-hidden'>
       <div className='w-full h-[300px] z-10 bg-white rounded-[15px] p-[10px] border-[1px] border-grayBorder overflow-y-auto no-scrollbar'>
-        <div className='w-full flex flex-col gap-[10px]'>
-          {projectPayload?.contents?.map((content, index) => (
-            <NoteCard
-              key={index}
-              content={content}
-              onUpdate={(updates) => handleContentUpdate(index, updates)}
-              projectId={projectPayload._id}
-              loadProject={loadProject}
-            />
-          ))}
-        </div>
+        {
+          projectPayload.contents && projectPayload.contents.length > 0 ? (
+            <div className='w-full flex flex-col gap-[10px]'>
+              {projectPayload?.contents?.map((content, index) => (
+                <NoteCard
+                  key={index}
+                  content={content}
+                  onUpdate={(updates) => handleContentUpdate(index, updates)}
+                  projectId={projectPayload._id}
+                  loadProject={loadProject}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className='w-full h-full flex justify-center items-center text-[#D5D5D5] text-[14px] font-semibold'>
+              Create your Note or Link for this project
+            </div>
+          )
+        }
         <button
           className='absolute bottom-2 right-2 w-[40px] h-[40px] bg-primaryOrange rounded-full flex justify-center items-center cursor-pointer'
           onClick={handleCreateContent}
@@ -155,7 +163,7 @@ const NoteCard = ({ projectId, loadProject, content, onUpdate }) => {
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-500 underline block truncate hover:text-blue-600"
-            title={content.content} 
+            title={content.content}
           >
             {content.content}
           </a>

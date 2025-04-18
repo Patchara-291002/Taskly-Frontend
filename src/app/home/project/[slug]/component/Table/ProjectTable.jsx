@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { PlusIcon, TrashIcon } from "@/app/home/component/icon/GlobalIcon";
+import { PlusIcon, TrashIcon, TrashSolidIcon } from "@/app/home/component/icon/GlobalIcon";
 import { AirDatepickerComponent, PrjRolePicker, StdStatusPicker, PrjPriorityPicker } from "@/app/component/GlobalComponent";
 // import { updateAssignment, createAssignment } from "@/api/course"
 import { updateTask, createTask } from "@/api/task";
@@ -51,7 +51,7 @@ export default function ProjectTable({ project, loadProject }) {
     useEffect(() => {
         const delay = setTimeout(() => {
             taskPayload.forEach(updateTaskData);
-        }, 1000);
+        }, 500);
 
         return () => clearTimeout(delay);
     }, [taskPayload, updateTaskData]);
@@ -90,7 +90,7 @@ export default function ProjectTable({ project, loadProject }) {
                 assignees: [],
             });
 
-            window.location.reload();
+            loadProject();
         } catch (error) {
             console.error("❌ Failed to create task:", error);
         }
@@ -98,7 +98,7 @@ export default function ProjectTable({ project, loadProject }) {
 
 
     return (
-        <div className="w-full  bg-white border border-grayBorder overflow-x-scroll p-[10px] rounded-[15px]">
+        <div className="w-full max-h-[400px] bg-white border border-grayBorder overflow-x-scroll p-[10px] rounded-[15px]">
             <div className="w-full min-w-[1024px] ">
                 <table className="table-fixed w-full border-collapse">
                     <colgroup>
@@ -222,7 +222,7 @@ export default function ProjectTable({ project, loadProject }) {
                                             onChange={(newDate) => handleChange(task._id, "dueDate", newDate)}
                                         />
                                     </td>
-                                    <td>
+                                    <td className="">
                                         <TrashButton 
                                             taskId={task._id}
                                             loadProject={loadProject}
@@ -273,7 +273,7 @@ const TrashButton = ({ taskId, loadProject }) => {
 
     return (
         <button
-            className="w-[26px] h-[26px] flex justify-center items-center bg-[#F1F1F1] rounded-full"
+            className=""
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onClick={(e) => {
@@ -281,7 +281,7 @@ const TrashButton = ({ taskId, loadProject }) => {
                 handleDeleteTask(taskId);
             }}
         >
-            <TrashIcon w={12} h={12} color={isHovered ? "#FF6200" : "#D9D9D9"} />
+            <TrashSolidIcon w={16} h={16} color={isHovered ? "#FF6200" : "#D9D9D9"} />
         </button>
     )
 }

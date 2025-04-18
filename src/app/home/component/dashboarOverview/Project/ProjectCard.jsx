@@ -52,7 +52,7 @@ export default function ProjectCard({ project, maxWidth, onDelete }) {
     >
       <div
         className='w-full min-w-[194px] h-[160px] bg-white rounded-[15px] p-[15px] flex flex-col justify-between border border-grayBorder'
-        style={{ maxWidth: `${maxWidth}px` }}
+        // style={{ maxWidth: `${maxWidth}px` }}
       >
         <div className='w-full'>
           <div className='w-full flex justify-between'>

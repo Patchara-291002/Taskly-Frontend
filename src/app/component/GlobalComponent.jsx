@@ -77,7 +77,7 @@ export const TimePicker = ({ time = "00:00", onChange }) => {
             <div className="relative">
                 <button
                     ref={hourButtonRef}
-                    className="bg-gray-100 w-[50px] text-center focus:outline-none border border-gray-300 cursor-pointer"
+                    className="bg-white rounded-[2px] px-[5px] text-center focus:outline-none border border-grayBorder cursor-pointer"
                     onClick={() => toggleDropdown("hour")}
                 >
                     {hour}
@@ -111,7 +111,7 @@ export const TimePicker = ({ time = "00:00", onChange }) => {
             <div className="relative">
                 <button
                     ref={minuteButtonRef}
-                    className="bg-gray-100 w-[50px] text-center focus:outline-none border border-gray-300 cursor-pointer"
+                    className="bg-white rounded-[2px] px-[5px] text-center focus:outline-none border border-grayBorder cursor-pointer"
                     onClick={() => toggleDropdown("minute")}
                 >
                     {minute}
@@ -191,7 +191,7 @@ export const DayPicker = ({ selectedDay, onChange }) => {
             {/* ปุ่มกดเพื่อเปิด dropdown */}
             <button
                 ref={buttonRef}
-                className="bg-white border-[1px] border-grayBorder px-[6px] min-h-0 h-[25px] cursor-pointer"
+                className="bg-white border border-grayBorder rounded-[5px] px-[20px] min-h-0 h-[25px] cursor-pointer text-[14px]"
                 onClick={toggleDropdown}
             >
                 {selectedDay || "Select day"}
@@ -232,7 +232,7 @@ export const StdStatusPicker = ({ selectedStatus, onChange }) => {
     const dropdownRef = useRef(null);
 
     const statusOptions = [
-        { name: "Todo", color: "#5F5F5F" },
+        { name: "Todo", color: "#FEB146" },
         { name: "Doing", color: "#1F86FF" },
         { name: "Done", color: "#18A900" },
     ];
@@ -266,25 +266,20 @@ export const StdStatusPicker = ({ selectedStatus, onChange }) => {
 
     return (
         <>
-            {/* ปุ่มกดเพื่อเปิด dropdown */}
             <button
                 ref={buttonRef}
-                className="bg-white border-[1px] border-grayBorder px-[10px] py-[6px] min-h-0 rounded-md cursor-pointer"
+                className="relative flex gap-[5px] items-center text-white font-semibold  bg-white px-[10px] py-[4px] min-h-0 rounded-full cursor-pointer"
                 onClick={toggleDropdown}
-                style={{ color: statusOptions.find(s => s.name === selectedStatus)?.color || "black" }}
+                style={{ background: statusOptions.find(s => s.name === selectedStatus)?.color || "black" }}
             >
+                <div className="w-[7px] h-[7px] bg-white rounded-full"/>
                 {selectedStatus}
             </button>
 
-            {/* Dropdown แสดงรายการ Status */}
             {openStatus && (
                 <ul
                     ref={dropdownRef}
-                    className="fixed bg-white border border-gray-300 rounded-lg shadow-md w-40 p-2 z-[1000]"
-                    style={{
-                        top: position.top,
-                        left: position.left,
-                    }}
+                    className="absolute bg-white border border-gray-300 rounded-lg shadow-md w-40 p-2 z-[1000] mt-1"
                 >
                     {statusOptions.map((s) => (
                         <li
@@ -340,20 +335,15 @@ export const PrjRolePicker = ({ selectedRole, roleOptions, onChange, loadProject
     }, []);
 
     return (
-        <div className="relative inline-block">
-            {/* ปุ่มกดเพื่อเปิด dropdown */}
+        <>
             <button
                 ref={buttonRef}
-                className="relative font-semibold bg-white px-[10px] py-[6px] min-h-0 rounded-md cursor-pointer flex items-center gap-2 text-white"
+                className="font-medium text-[12px] text-white bg-white px-[20px] py-[6px] min-h-0 rounded-full cursor-pointer"
                 style={{ background: selectedRole ? selectedRole.color : "#CACACA" }}
                 onClick={toggleDropdown}
             >
                 {selectedRole ? (
                     <>
-                        {/* <span
-                            className="w-3 h-3 rounded-full"
-                            style={{ background: selectedRole.color }}
-                        ></span> */}
                         {selectedRole.name}
                     </>
                 ) : (
@@ -388,7 +378,7 @@ export const PrjRolePicker = ({ selectedRole, roleOptions, onChange, loadProject
                     ))}
                 </ul>
             )}
-        </div>
+        </>
     );
 };
 
@@ -406,7 +396,7 @@ export const PrjPriorityPicker = ({ selectedPriority, onChange }) => {
         },
         {
             value: 2,
-            label: "Medium", 
+            label: "Medium",
             bgColor: "#FFF7E5",
             textColor: "#FF9900"
         },
@@ -440,15 +430,15 @@ export const PrjPriorityPicker = ({ selectedPriority, onChange }) => {
             }
         };
 
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
+        document.addEventListener("click", handleClickOutside);
+        return () => document.removeEventListener("click", handleClickOutside);
     }, []);
 
     return (
-        <div className="relative inline-block">
+        <>
             <button
                 ref={buttonRef}
-                className="px-[10px] py-[6px] min-h-0 rounded-md cursor-pointer"
+                className="font-medium text-[12px] text-white bg-white px-[20px] py-[6px] min-h-0 rounded-full cursor-pointer"
                 style={getPriorityStyle(selectedPriority)}
                 onClick={toggleDropdown}
             >
@@ -458,7 +448,7 @@ export const PrjPriorityPicker = ({ selectedPriority, onChange }) => {
             {openPriority && (
                 <ul
                     ref={dropdownRef}
-                    className="absolute bg-white border border-gray-300 rounded-lg shadow-md w-40 p-2 z-50 mt-1"
+                    className="absolute bg-white border border-graBorder rounded-lg shadow-md w-40 p-2 z-50"
                 >
                     {priorityOptions.map((priority) => (
                         <li
@@ -475,7 +465,7 @@ export const PrjPriorityPicker = ({ selectedPriority, onChange }) => {
                     ))}
                 </ul>
             )}
-        </div>
+        </>
     );
 };
 

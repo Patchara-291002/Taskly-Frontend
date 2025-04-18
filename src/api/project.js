@@ -172,3 +172,23 @@ export const deleteRole = async (projectId, roleId) => {
         throw error;
     }
 }
+
+export const addPeopleToProject = async (projectId) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/project/add/${projectId}`, {}, { withCredentials: true })
+        return response.data
+    } catch (error) {
+        console.error("❌ Error added people:", error);
+        throw error;
+    }
+}
+
+export const updateUserRole = async (projectId, userId, roleId) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/project/user-role/${projectId}/${userId}`, { roleId }, { withCredentials: true })
+        return response.data
+    } catch (error) {
+        console.error("❌ Error updated user role:", error);
+        throw error;
+    }
+}

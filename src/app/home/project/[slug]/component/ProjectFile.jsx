@@ -79,17 +79,26 @@ export default function ProjectFile({ project, loadProject }) {
             className='w-full lg:max-w-[420px] h-[300px] flex flex-col gap-[15px] bg-white border-[1px] border-grayBorder rounded-[15px] p-[15px] overflow-y-auto'
         >
             <div
-                className={`border-2 border-dashed p-6 rounded-lg text-center cursor-pointer ${isDragging ? "border-blue-500 bg-blue-100" : "border-gray-300"
+                className={`border border-[#D6D6D6] border-dashed border-spacing-[20px] p-[16px] rounded-lg text-center cursor-pointer ${isDragging ? "border-blue-500 bg-blue-100" : "border-gray-300"
                     }`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={openFileDialog}
             >
-                <p className="text-gray-500">
+                <p className="text-[12px] font-medium">
                     {isDragging ? "drag it here." : "Choose a file or drag & drop it here."}
                 </p>
-                {isFileLoading && <p className="text-blue-500">Uploading...</p>}
+                <p
+                    className="text-[12px] text-[#5F5F5F]"
+                >
+                    Up to 10 MB
+                </p>
+                <div
+                    className="border border-primaryOrange rounded-[5px] text-primaryOrange px-[16px] py-[4px] w-fit font-medium text-[12px] mx-auto mt-[15px]"
+                >
+                    {isFileLoading ? "Uploading..." : "Browse File"}
+                </div>
                 <input
                     type="file"
                     multiple
@@ -99,17 +108,25 @@ export default function ProjectFile({ project, loadProject }) {
                 />
             </div>
             <div
-                className="flex flex-col gap-[10px]"
+                className="h-full flex flex-col gap-[10px]"
             >
-                {project && project.files.map((file) => {
-                    return (
-                        <FileItem
-                            key={file._id}
-                            file={file}
-                            onDelete={() => handleDeleteFile(file._id)}
-                        />
-                    )
-                })}
+                {project.files && project.files.length > 0 ? (
+                    project && project.files.map((file) => {
+                        return (
+                            <FileItem
+                                key={file._id}
+                                file={file}
+                                onDelete={() => handleDeleteFile(file._id)}
+                            />
+                        )
+                    })
+                ) : (
+                    <div
+                        className="w-full h-full flex justify-center items-center text-[#D5D5D5] text-[14px] font-semibold"
+                    >
+                        Import your file to this project
+                    </div>
+                )}
             </div>
         </div>
     )
@@ -121,7 +138,7 @@ const FileItem = ({ file, onDelete }) => {
 
     return (
         <div className="w-full h-[70px] flex justify-between items-center p-[10px] border-grayBorder border-[1px] rounded-[15px]">
-            <Link href={file.fileAddress} className="max-w-[250px]">
+            <Link href={file.fileAddress} className="max-w-[250px]" target="_blank" rel="noopener noreferrer">
                 <p className="line-clamp-2">{file.fileName}</p>
             </Link>
             <button

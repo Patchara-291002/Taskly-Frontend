@@ -1,12 +1,13 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
 import Cookies from 'js-cookie';
+import styles from "@/app/component/Loading.module.css";
 
-export default function LineCallback() {
+function LineCallbackContent() {
     const router = useRouter();
     const { setUser } = useAuth();
     const searchParams = useSearchParams();
@@ -14,12 +15,11 @@ export default function LineCallback() {
     useEffect(() => {
         const handleLineCallback = async () => {
             const token = searchParams.get("token");
-            console.log("Received token:", token); // For debugging
-            
+            console.log("Received token:", token);
+
             if (token) {
-                // ใช้ js-cookie แทน document.cookie
                 Cookies.set('token', token, { path: '/' });
-                
+
                 try {
                     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/me`, {
                         headers: {
@@ -27,7 +27,7 @@ export default function LineCallback() {
                         },
                         withCredentials: true
                     });
-                    
+
                     setUser(response.data.user);
                     console.log("LINE login successful:", response.data.user);
                     router.push("/home/dashboard");
@@ -40,16 +40,28 @@ export default function LineCallback() {
                 router.push("/login?error=no_token");
             }
         };
-        
+
         handleLineCallback();
     }, [router, setUser, searchParams]);
-    
+
     return (
-        <div className="flex justify-center items-center h-screen">
-            <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-                <p className="mt-4">กำลังเข้าสู่ระบบด้วย LINE...</p>
-            </div>
+        <div className="w-full h-screen flex justify-center items-center bg-white">
+            <div className={styles.loader} />
         </div>
+    );
+}
+
+// Main component wrapped with Suspense
+export default function LineCallback() {
+    return (
+        <Suspense 
+            fallback={
+                <div className="w-full h-screen flex justify-center items-center bg-white">
+                    <div className={styles.loader} />
+                </div>
+            }
+        >
+            <LineCallbackContent />
+        </Suspense>
     );
 }

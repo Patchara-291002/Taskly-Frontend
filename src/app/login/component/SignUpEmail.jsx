@@ -1,6 +1,7 @@
 import { LeftArrowIcon } from "@/app/home/component/icon/DashboardIcon"
 import { registerWithEmail } from "@/api/auth";
 import { useState } from "react";
+import { redirect } from "next/dist/server/api-utils";
 
 export default function SignUpEmail({ setType }) {
 
@@ -17,18 +18,15 @@ export default function SignUpEmail({ setType }) {
                 return;
             }
             if (password.length < 6) {
-                console.log('Password must be at least 6 characters long');
+                alert('Password must be at least 6 characters long');
                 return
             }
             setLoading(true);
             
             const signUp = await registerWithEmail(name, email, password)
-            console.log('Sign up successful:');
 
-            setTimeout(() => {
-                setType("signUpSent");
-                setLoading(false);
-            }, 3000)
+            setType("signUpSent");
+            setLoading(false);
             
         } catch (error) {
             setLoading(false);
@@ -46,7 +44,7 @@ export default function SignUpEmail({ setType }) {
             className='w-full h-full flex flex-col justify-center items-center gap-[30px]'
         >
             <p
-                className='text-primaryorange font-semibold text-[28px]'
+                className='text-primaryOrange font-semibold text-[28px]'
             >
                 Sign up with email
             </p>
@@ -70,7 +68,7 @@ export default function SignUpEmail({ setType }) {
                     placeholder="John Doe"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className='w-[300px] h-[35px] bg-[#F2F2F2] rounded-[5px]'
+                    className='w-[300px] h-[35px] bg-[#F2F2F2] rounded-[5px] text-[12px] px-[10px] outline-none'
                 />
             </div>
             <div
@@ -86,7 +84,7 @@ export default function SignUpEmail({ setType }) {
                     placeholder="example@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className='w-[300px] h-[35px] bg-[#F2F2F2] rounded-[5px]'
+                    className='w-[300px] h-[35px] bg-[#F2F2F2] rounded-[5px] text-[12px] px-[10px] outline-none'
                 />
             </div>
             <div
@@ -101,13 +99,12 @@ export default function SignUpEmail({ setType }) {
                     type="text"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className='w-[300px] h-[35px] bg-[#F2F2F2] rounded-[5px]'
+                    className='w-[300px] h-[35px] bg-[#F2F2F2] rounded-[5px] text-[12px] px-[10px] outline-none'
                 />
             </div>
             <button
                 onClick={handelSignUpWihtEmail}
-                className='w-[200px] h-[40px] bg-primaryorange rounded-full
-                                    text-white font-medium text-[14px]'
+                className='w-[200px] h-[40px] bg-primaryOrange rounded-full text-white font-medium text-[14px]'
             >
                 {loading ? "loading" : "Continue"}
             </button>

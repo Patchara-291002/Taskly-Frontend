@@ -11,9 +11,10 @@ import { LeftArrowIcon, RightArrowIcon } from '../../icon/DashboardIcon'
 import { fetchProjectsByUser, createProject } from '@/api/project';
 import { useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function ProjectOverview() {
-
+    const router = useRouter()
     const [projects, setProjects] = useState([])
 
     useEffect(() => {
@@ -42,18 +43,12 @@ export default function ProjectOverview() {
         swiperRef.current?.slideNext();
     };
 
-
-    const chunkedProjects = [];
-    for (let i = 0; i < projects.length; i += 3) {
-        chunkedProjects.push(projects.slice(i, i + 3));
-    }
-
     return (
         <div
-            className='max-h-[202px] min-h-min w-full h-full '
+            className='w-full h-[200px]'
         >
             <div
-                className='w-full flex flex-row justify-between mb-[20px]'
+                className='flex flex-row justify-between mb-[20px]'
             >
                 <h2 className='text-black font-medium'>
                     Project Overview
@@ -76,28 +71,46 @@ export default function ProjectOverview() {
                 </div>
             </div>
 
-            <Swiper
-                onSwiper={(swiper) => (swiperRef.current = swiper)}
-                className="mySwiper"
-            >
-                {chunkedProjects.map((group, index) => (
-                    <SwiperSlide key={index}>
-                        <div className='w-full h-full grid grid-cols-3 gap-[15px]'>
-                            {group.map((project, i) => (
-                                <Link
-                                    key={i}
-                                    href={`/home/project/${project._id}`}
-                                >
-                                    <ProjectCard
-                                        project={project}
-                                        maxWidth={350}
-                                    />
-                                </Link>
-                            ))}
-                        </div>
-                    </SwiperSlide>
-                ))}
-            </Swiper>
+            {projects.length > 0 ? (
+                <Swiper
+                    onSwiper={(swiper) => (swiperRef.current = swiper)}
+                    slidesPerView={3}
+                    spaceBetween={15}
+                    className="mySwiper"
+                >
+                    {projects.map((project, index) => (
+                        <SwiperSlide key={index}>
+                            <Link href={`/home/project/${project._id}`}>
+                                <ProjectCard
+                                    project={project}
+                                    maxWidth={"none"}
+                                />
+                            </Link>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+            ) : (
+                <div
+                    className='w-full h-full flex flex-col justify-center items-center bg-white border border-grayBorder rounded-[15px]'
+                >
+                    <img
+                        src={"https://my-image-uploader-bucket.s3.ap-southeast-2.amazonaws.com/P1/undraw_scrum-board_uqku.png"} 
+                        alt="No project"
+                       className='w-[130px]  mb-[10px]'
+                    />
+                    <p
+                        className='font-medium text-[14px] text-[#707070]'
+                    >
+                        Try to create your project
+                    </p>
+                    <button
+                        className='px-[16px] py-[4px] bg-primaryOrange rounded-[5px] text-[14px] text-white font-medium mt-[10px]'
+                        onClick={() => router.push('/home/project')}
+                    >
+                        go
+                    </button>
+                </div>
+            )}
         </div>
 
     )

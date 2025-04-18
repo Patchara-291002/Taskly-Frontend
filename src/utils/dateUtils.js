@@ -10,11 +10,11 @@ export const formatMonth = (dateString) => {
 
 export const formatToDate = (isoString) => {
     const date = new Date(isoString);
-    const year = date.getFullYear().toString().slice(-2); // Get last two digits of the year
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
     const day = String(date.getDate()).padStart(2, '0');
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear();
 
-    return `${day}-${month}-${year}`;
+    return `${day} ${month} ${year}`;
 };
 
 export function extractFormattedDate(datetimeStr) {
@@ -33,23 +33,23 @@ export function extractFormattedDate(datetimeStr) {
 export function extractTimeRange(datetimeStr) {
     // สร้าง Date object จาก string
     const date = new Date(datetimeStr);
-    
+
     // ดึงชั่วโมงและนาทีในรูปแบบ UTC (เพราะ input อยู่ในรูปแบบ Zulu/UTC)
     const startHour = date.getUTCHours();
     const startMinutes = date.getUTCMinutes();
-    
+
     // ฟอร์แมตเวลาเริ่มต้นให้เป็น "HH:MM"
     const formattedStart = `${String(startHour).padStart(2, '0')}:${String(startMinutes).padStart(2, '0')}`;
-    
+
     // สร้าง Date object ใหม่เพื่อคำนวณเวลาสิ้นสุดโดยเพิ่ม 1 ชั่วโมง
     const endDate = new Date(date.getTime());
     endDate.setUTCHours(endDate.getUTCHours() + 1);
     const endHour = endDate.getUTCHours();
     const endMinutes = endDate.getUTCMinutes();
-    
+
     // ฟอร์แมตเวลาสิ้นสุดให้เป็น "HH:MM"
     const formattedEnd = `${String(endHour).padStart(2, '0')}:${String(endMinutes).padStart(2, '0')}`;
-    
+
     // คืนค่าเป็นช่วงเวลาในรูปแบบ "HH:MM HH:MM"
     return `${formattedStart} ${formattedEnd}`;
-  }
+}

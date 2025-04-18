@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
+import styles from "@/app/component/Loading.module.css"
 
 export default function AuthCallback() {
     const router = useRouter();
@@ -44,5 +45,11 @@ export default function AuthCallback() {
         handleCallback();
     }, [router, setUser]);
 
-    return <p>Loading...</p>;
+    return (
+        <div
+            className="w-full h-screen flex justify-center items-center bg-white"
+        >
+            <div className={styles.loader} />
+        </div>
+    );
 }

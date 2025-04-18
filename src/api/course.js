@@ -5,7 +5,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const fetchCourse = async () => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/course`, {
+        const response = await axios.get(`${API_BASE_URL}/course/`, {
             withCredentials: true,
         })
         return response.data;
@@ -152,6 +152,42 @@ export const updateAssignment = async (assignmentId, assignmentName, description
     }
     catch (error) {
         console.error("❌ Error updating assignment:", error);
+        throw error;
+    }
+}
+
+export const deleteContentInCourse = async (courseId, contentId) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/course/delete-content/${courseId}/${contentId}`, {
+            withCredentials: true
+        })
+        return response.data
+    } catch (error) {
+        console.error("❌ Error deleting assignment:", error);
+        throw error;
+    }
+}
+
+export const deleteFileInCourse = async (courseId, fileId) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/course/delete-file/${courseId}/${fileId}`, {
+            withCredentials: true
+        })
+        return response.data
+    } catch (error) {
+        console.error("❌ Error deleting file:", error);
+        throw error;
+    }
+}
+
+export const deleteAssignment = async (assignmentId) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/assignment/delete/${assignmentId}`, {
+            withCredentials: true
+        })
+        return response.data
+    } catch (error) {
+        console.error("❌ Error deleting assignment:", error);
         throw error;
     }
 }

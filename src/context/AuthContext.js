@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { logout } from "@/api/auth";
+import { redirect } from "next/dist/server/api-utils";
 
 const AuthContext = createContext(null);
 
@@ -32,6 +33,7 @@ export const AuthProvider = ({ children }) => {
         try {
             await logout(); 
             setUser(null);
+            redirect("/login");
         } catch (error) {
             console.error("Logout failed:", error);
         }
