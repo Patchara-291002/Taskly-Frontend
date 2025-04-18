@@ -25,8 +25,13 @@ function LineCallbackContent() {
                         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/line/callback`,
                         {
                             params: { code, state },
-                            withCredentials: true
-                        }
+                            withCredentials: true,
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            }
+                        },
+
                     );
 
                     const { token, user } = authResponse.data;
