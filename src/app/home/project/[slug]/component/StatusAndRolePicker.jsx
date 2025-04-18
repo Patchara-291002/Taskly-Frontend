@@ -217,29 +217,51 @@ export default function StatusAndRolePicker({ project, loadProject }) {
   }, [rolePayload, project._id]);
 
   return (
-    <div className='w-full flex gap-[15px] my-[30px] z-50'>
-      <Picker
-        title="Status"
-        type="status"
-        items={statusPayload}
-        isOpen={openStatus}
-        onToggle={() => setOpenStatus(!openStatus)}
-        onNew={handleNewStatus}
-        onChange={handleStatusChange}
-        onColorChange={handleStatusColorChange}
-        onDelete={handleDeleteStatus}
-      />
-      <Picker
-        title="Role"
-        type="role"
-        items={rolePayload}
-        isOpen={openRole}
-        onToggle={() => setOpenRole(!openRole)}
-        onNew={handleNewRole}
-        onChange={handleRoleChange}
-        onColorChange={handleRoleColorChange}
-        onDelete={handleDeleteRole}
-      />
-    </div>
+    <>
+      <div className='w-full flex gap-[15px] my-[30px] z-50'>
+        <Picker
+          title="Status"
+          type="status"
+          items={statusPayload}
+          isOpen={openStatus}
+          onToggle={() => setOpenStatus(!openStatus)}
+          onNew={handleNewStatus}
+          onChange={handleStatusChange}
+          onColorChange={handleStatusColorChange}
+          onDelete={handleDeleteStatus}
+        />
+        <Picker
+          title="Role"
+          type="role"
+          items={rolePayload}
+          isOpen={openRole}
+          onToggle={() => setOpenRole(!openRole)}
+          onNew={handleNewRole}
+          onChange={handleRoleChange}
+          onColorChange={handleRoleColorChange}
+          onDelete={handleDeleteRole}
+        />
+      </div>
+      <div
+        className='w-full flex flex-wrap gap-[15px] mb-[30px]'
+      >
+        {rolePayload?.map((role, index) => (
+          <div
+            key={index}
+            className='flex gap-[7px] items-center'
+          >
+            <span
+              className='w-[10px] h-[10px] rounded-full'
+              style={{ backgroundColor: role.color || "#D6D6D6" }}
+            />
+            <p
+              className='text-[12px] text-[#1F1E1D]'
+            >
+              {role.name}
+            </p>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

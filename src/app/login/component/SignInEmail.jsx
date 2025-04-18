@@ -1,12 +1,13 @@
 import { LeftArrowIcon } from "@/app/home/component/icon/DashboardIcon"
 import { useState } from "react"
 import { signInWithEmail } from "@/api/auth";
+import { redirect } from "next/dist/server/api-utils";
 
 export default function SignInEmail({ setType }) {
 
     const [email, setEmail] = useState("puttchara331003@gmail.com");
     const [password, setPassword] = useState("000000");
-    const [loading , setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleSingInWithEmail = async () => {
         try {
@@ -15,9 +16,9 @@ export default function SignInEmail({ setType }) {
             }
             setLoading(true);
 
-            const response  = await signInWithEmail(email, password)
+            const response = await signInWithEmail(email, password)
             console.log("Sign in successful:", response);
-
+            window.location.href = "/";
         } catch (error) {
             console.error("Sign in failed:", error.response?.data?.message || error.message);
         } finally {
@@ -30,14 +31,14 @@ export default function SignInEmail({ setType }) {
             className='w-full h-full flex flex-col justify-center items-center gap-[30px]'
         >
             <p
-                className='text-primaryorange font-semibold text-[28px]'
+                className='text-primaryOrange font-semibold text-[28px]'
             >
                 Sign up with email
             </p>
             <p
                 className='text-center'
             >
-                Enter the email address associated with 
+                Enter the email address associated with
                 <br />
                 your account.
             </p>
@@ -54,7 +55,7 @@ export default function SignInEmail({ setType }) {
                     placeholder=""
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className='w-[300px] h-[35px] bg-[#F2F2F2] rounded-[5px]'
+                    className='w-[300px] h-[35px] bg-[#F2F2F2] rounded-[5px] px-[10px] text-[14px] outline-none'
                 />
             </div>
             <div
@@ -69,12 +70,12 @@ export default function SignInEmail({ setType }) {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className='w-[300px] h-[35px] bg-[#F2F2F2] rounded-[5px]'
+                    className='w-[300px] h-[35px] bg-[#F2F2F2] rounded-[5px] px-[10px] text-[14px] outline-none'
                 />
             </div>
             <button
                 onClick={handleSingInWithEmail}
-                className='w-[200px] h-[40px] bg-primaryorange rounded-full
+                className='w-[200px] h-[40px] bg-primaryOrange rounded-full
                                         text-white font-medium text-[14px]'
             >
                 {loading ? "loading" : "Continue"}

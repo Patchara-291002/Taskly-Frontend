@@ -1,9 +1,10 @@
 import { createContent, updateCourseById } from '@/api/course';
 import { DayPicker, TimePicker } from '@/app/component/GlobalComponent';
-import { LinkIcon, PlusIcon } from '@/app/home/component/icon/GlobalIcon';
-import { useState, useEffect, useCallback } from 'react';
+import { LinkIcon, PlusIcon, TrashSolidIcon } from '@/app/home/component/icon/GlobalIcon';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { deleteContentInCourse } from '@/api/course';
 
-export default function CourseInfo({ course }) {
+export default function CourseInfo({ course, getCourseById }) {
     const [coursePayload, setCoursePayload] = useState(course || []);
     useEffect(() => {
         if (course) {
@@ -43,19 +44,20 @@ export default function CourseInfo({ course }) {
     }, [updateCourse]);
 
     return (
-        <div className='w-full z-10 bg-white p-[10px] rounded-[15px] border-[1px] border-grayBorder overflow-y-auto overflow-x-hidden'>
+        <div className='w-full h-[300px]  z-10 bg-white p-[10px] rounded-[15px] border-[1px] border-grayBorder overflow-y-auto overflow-x-auto'>
             <table className="table-auto w-full">
                 <colgroup>
-                    <col className='w-[250px]' />
+                    <col className='w-[200px]' />
                     <col className='w-auto' />
+                    <col className='w-[50px]' />
                 </colgroup>
                 <tbody>
+                    <TableSchedule label="Schedule" day={coursePayload.day} startTime={coursePayload.startTime} endTime={coursePayload.endTime} onChange={handleChange} />
                     <TableRow label="Subject Code" value={coursePayload.courseCode || ""} onChange={(val) => handleChange("courseCode", val)} />
                     <TableRow label="Instructor" value={coursePayload.instructorName || ""} onChange={(val) => handleChange("instructorName", val)} />
                     <TableRow label="Location" value={coursePayload.location || ""} onChange={(val) => handleChange("location", val)} />
-                    <TableSchedule label="Schedule" day={coursePayload.day} startTime={coursePayload.startTime} endTime={coursePayload.endTime} onChange={handleChange} />
-                    <TableContent contents={coursePayload.contents || []} onContentChange={handleContentChange} />
-                    <NewLink courseId={coursePayload._id} />
+                    <TableContent loadCourse={getCourseById} courseId={coursePayload._id} contents={coursePayload.contents || []} onContentChange={handleContentChange} />
+                    <NewLink courseId={coursePayload._id} getCourseById={getCourseById} />
                 </tbody>
             </table>
         </div>
@@ -63,15 +65,34 @@ export default function CourseInfo({ course }) {
 }
 
 function TableRow({ label, value, onChange }) {
+    const textareaRef = useRef(null);
+
+    useEffect(() => {
+        const textarea = textareaRef.current;
+        if (textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+    }, [value]);
+
+    const handleInput = (e) => {
+        const textarea = e.target;
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+        onChange(e.target.value);
+    };
+
     return (
         <tr className="border-grayBorder border-b-[1px]">
             <td className="p-[10px] font-medium text-[14px] text-[#5F5F5F]">{label}</td>
             <td className="p-[10px] font-normal text-[14px] text-[#5F5F5F] border-l-[1px] border-grayBorder">
-                <input
-                    type="text"
-                    className="w-full bg-transparent outline-none"
+                <textarea
+                    ref={textareaRef}
+                    className="w-full bg-transparent outline-none resize-none overflow-hidden leading-tight py-[2px]"
                     value={typeof value === "string" ? value : ""}
-                    onChange={(e) => onChange(e.target.value)}
+                    onChange={handleInput}
+                    rows={1}
+                    style={{ minHeight: '24px' }}
                 />
             </td>
         </tr>
@@ -83,7 +104,7 @@ function TableSchedule({ label, day, startTime, endTime, onChange }) {
         <tr className="border-grayBorder border-b-[1px]">
             <td className="p-[10px] font-medium text-[14px] text-[#5F5F5F]">{label}</td>
             <td className="p-[10px] font-normal text-[14px] text-[#5F5F5F] border-l-[1px] border-grayBorder">
-                <div className="w-full flex gap-[15px] items-center border-2">
+                <div className="w-full flex gap-[15px] items-center">
                     <DayPicker selectedDay={day} onChange={(val) => onChange("day", val)} />
                     <TimePicker time={startTime} onChange={(val) => onChange("startTime", val)} />
                     <p> - </p>
@@ -94,40 +115,86 @@ function TableSchedule({ label, day, startTime, endTime, onChange }) {
     );
 }
 
-function TableContent({ contents, onContentChange }) {
+function TableContent({ contents, onContentChange, courseId, loadCourse }) {
+    const titleRefs = useRef([]);
+    const contentRefs = useRef([]);
+
+    useEffect(() => {
+        contents.forEach((_, index) => {
+            const titleTextarea = titleRefs.current[index];
+            const contentTextarea = contentRefs.current[index];
+
+            if (titleTextarea) {
+                titleTextarea.style.height = 'auto';
+                titleTextarea.style.height = titleTextarea.scrollHeight + 'px';
+            }
+            if (contentTextarea) {
+                contentTextarea.style.height = 'auto';
+                contentTextarea.style.height = contentTextarea.scrollHeight + 'px';
+            }
+        });
+    }, [contents]);
+
+    const handleInput = (textarea, index, key, value) => {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+        onContentChange(index, key, value);
+    };
+
+    const handleDeleteContent = async (courseId, contentId) => {
+        try {
+            await deleteContentInCourse(courseId, contentId);
+            console.log("✅ Content deleted successfully");
+            loadCourse();
+        } catch (error) {
+            console.error("❌ Failed to delete assignment:", error);
+        }
+    };
+
     return (
         <>
             {contents.map((content, index) => (
                 <tr key={index} className="border-grayBorder border-b-[1px]">
                     <td className="p-[10px] font-medium text-[14px] text-[#5F5F5F]">
-                        <input
-                            type="text"
-                            className="w-full bg-transparent outline-none"
+                        <textarea
+                            ref={el => titleRefs.current[index] = el}
+                            className="w-full bg-transparent outline-none resize-none overflow-hidden leading-tight py-[2px]"
                             value={content.title}
-                            onChange={(e) => onContentChange(index, "title", e.target.value)}
+                            onChange={(e) => handleInput(e.target, index, "title", e.target.value)}
+                            rows={1}
+                            style={{ minHeight: '24px' }}
                         />
                     </td>
                     <td className="relative p-[10px] font-normal text-[14px] text-[#5F5F5F] border-l-[1px] border-grayBorder">
-                        {content.isLink ? (
-                            <input
-                                type="text"
-                                className="w-full bg-transparent outline-none text-blue-500 underline"
-                                value={content.content}
-                                onChange={(e) => onContentChange(index, "content", e.target.value)}
-                            />
-                        ) : (
-                            <input
-                                type="text"
-                                className="w-full bg-transparent outline-none"
-                                value={content.content}
-                                onChange={(e) => onContentChange(index, "content", e.target.value)}
-                            />
-                        )}
+                        <textarea
+                            ref={el => contentRefs.current[index] = el}
+                            className={`w-full bg-transparent outline-none resize-none overflow-hidden leading-tight py-[2px] ${content.isLink ? 'text-blue-500 underline' : ''
+                                }`}
+                            value={content.content}
+                            onChange={(e) => handleInput(e.target, index, "content", e.target.value)}
+                            rows={1}
+                            style={{ minHeight: '24px' }}
+                        />
+                    </td>
+                    <td>
                         <div
-                            onClick={() => onContentChange(index, "isLink", !content.isLink)}
-                            className='absolute right-0 top-[30%] cursor-pointer'
+                            className='flex justify-center items-center gap-[10px]'
                         >
-                            {content.isLink ? <LinkIcon w={"12px"} h={"12px"} color={"#3b82f6"} /> : <LinkIcon w={"12px"} h={"12px"} color={"#000000"} />}
+                            <div
+                                onClick={() => onContentChange(index, "isLink", !content.isLink)}
+                                className='cursor-pointer'
+                            >
+                                <LinkIcon
+                                    w="12px"
+                                    h="12px"
+                                    color={content.isLink ? "#FF6200" : "#5F5F5F"}
+                                />
+                            </div>
+                            <button
+                                onClick={() => handleDeleteContent(courseId, content._id)}
+                            >
+                                <TrashSolidIcon w={12} h={12} color="#5F5F5F" />
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -136,11 +203,12 @@ function TableContent({ contents, onContentChange }) {
     );
 }
 
-function NewLink({ courseId }) {
+function NewLink({ courseId, getCourseById }) {
 
     const handleCreateContent = async () => {
         try {
             await createContent(courseId)
+            getCourseById();
         } catch (error) {
             console.error("❌ Failed to create content:", error);
         }
@@ -148,7 +216,7 @@ function NewLink({ courseId }) {
 
     return (
         <tr>
-            <td colSpan={2} className="p-[10px]">
+            <td colSpan={2} className="p-[10px] border-b-[1px] border-grayBorder">
                 <div
                     onClick={handleCreateContent}
                     className='w-full flex items-center gap-[5px] cursor-pointer'

@@ -62,7 +62,7 @@ export const BlurBackground = ({ children, isOpen, onClose }) => {
             <div 
                 className='absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm'
             ></div>
-            <div className='relative z-20'
+            <div className='w-full flex justify-center  z-20'
                 onClick={(e) => e.stopPropagation()}
             >
                 {children}
@@ -79,10 +79,10 @@ export const DeleteButton = ({ onDelete, setOnDelete }) => {
                 onClick={() => setOnDelete(!onDelete)}
             >
                 <div
-                    className='w-[30px] h-[30px] flex justify-center items-center hover:bg-[#FFE0E0] rounded-full'
-                    style={{ background: onDelete ? '#FFE0E0' : '#EDEDED' }}
+                    className='w-[30px] h-[30px] flex justify-center items-center rounded-full'
+                    style={{ background: onDelete ? '#FFE0E0' : '' }}
                 >
-                    <TrashSolidIcon w='16' h='16' color={'#FF0000'} />
+                    <TrashSolidIcon w='16' h='16' color={ onDelete ? '#FF0000' : '#CBCBCB'} />
                 </div>
             </button>
         </div>

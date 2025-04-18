@@ -8,6 +8,7 @@ import CourseFile from './component/CourseFile';
 import CourseHeader from './component/CourseHeader';
 import CourseTable from './component/CourseTable';
 import useWindowSize from '@/hooks/useWindow';
+import Chart from './component/Chart';
 
 export default function Page() {
 
@@ -41,30 +42,34 @@ export default function Page() {
 
     return (
         <>
-            {course && <div>
-                <CourseHeader course={course} getCourseById={getCourseById} />
-                <p
-                    className='font-medium pb-[15px]'
+            {course &&
+                <div
+                    className='w-full'
                 >
-                    Subject Description
-                </p>
-                {width < 1042 ?
-                    <div
-                        className='w-full flex flex-col gap-[25px]'
+                    <CourseHeader course={course} getCourseById={getCourseById} />
+                    <p
+                        className='font-medium pb-[15px]'
                     >
-                        <CourseInfo course={course} />
-                        <CourseFile course={course} />
-                    </div>
-                    :
-                    <div
-                        className='w-full h-[280px] flex gap-[30px]'
-                    >
-                        <CourseInfo course={course} />
-                        <CourseFile course={course} />
-                    </div>
-                }
-                <CourseTable course={course} />
-            </div>}
+                        Subject Description
+                    </p>
+                    {width < 1024 ?
+                        <div
+                            className='w-full flex flex-col gap-[25px]'
+                        >
+                            <CourseInfo course={course} getCourseById={getCourseById} />
+                            <CourseFile course={course} getCourseById={getCourseById} />
+                        </div>
+                        :
+                        <div
+                            className='w-full h-[280px] flex gap-[30px]'
+                        >
+                            <CourseInfo course={course} getCourseById={getCourseById} />
+                            <CourseFile course={course} getCourseById={getCourseById} />
+                        </div>
+                    }
+                    <CourseTable course={course} getCourseById={getCourseById} />
+                    <Chart course={course} getCourseById={getCourseById} />
+                </div>}
         </>
     )
 }

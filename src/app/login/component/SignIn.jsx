@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { GoogleIcon, LineIcon, EmailIcon } from "@/app/component/GlobalIcon";
 
 export default function SignIn({ setType, handelClick }) {
 
@@ -14,6 +15,11 @@ export default function SignIn({ setType, handelClick }) {
             name: "email",
             link: "",
             label: "Sign in with Email"
+        },
+        {
+            name: "line",
+            link: `${API_BASE_URL}/auth/line`,
+            label: "Sign in with LINE"
         }
     ]
 
@@ -33,7 +39,7 @@ export default function SignIn({ setType, handelClick }) {
             className='w-full h-full flex flex-col justify-center items-center gap-[60px]'
         >
             <p
-                className='text-primaryorange font-semibold text-[28px]'
+                className='text-primaryOrange font-semibold text-[28px]'
             >
                 Welcome back!
             </p>
@@ -45,8 +51,11 @@ export default function SignIn({ setType, handelClick }) {
                         key={index}
                         onClick={() => handleSingInOptions(data.name)}
                         href={data.link}
-                        className='w-[280px] h-[44px] flex justify-center items-center border-[1px] border-black rounded-full cursor-pointer'
+                        className='w-[280px] h-[44px] flex justify-center items-center gap-[15px] border-[1px] border-black rounded-full cursor-pointer'
                     >
+                        {data.name === "google" && <GoogleIcon w={22} h={22} />}
+                        {data.name === "line" && <LineIcon w={34} h={34} color={"#39CD00"} />}
+                        {data.name === "email" && <EmailIcon w={22} h={22} color={"#000000"} />}
                         <p
                             className=''
                         >
@@ -56,7 +65,7 @@ export default function SignIn({ setType, handelClick }) {
                 ))}
             </div>
             <div
-                className='flex gap-[6px]'
+                className='flex gap-[6px] text-[14px]'
             >
                 <p
                     className=''

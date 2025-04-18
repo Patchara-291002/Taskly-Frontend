@@ -1,40 +1,28 @@
 import React from 'react'
 import { CalendarIcon, CameraIcon, ClockIcon, MoreIcon } from '../../icon/DashboardIcon'
 
-export default function ClassCard({ subjectName, dueDate, period }) {
+export default function ClassCard({ subjectName, dueDate, period, color }) {
     return (
         <div
-            className='w-full h-[85px] bg-white rounded-[15px] p-[15px] border border-grayBorder'
+            className='w-full h-[85px] bg-white p-[15px] rounded-[15px] border border-grayBorder overflow-hidden'
         >
             <div
-                className='flex flex-row gap-[30px]'
+                className='w-full h-full flex flex-row'
             >
                 <div
-                    className='min-w-[55px] min-h-[55px] w-[55px] h-[55px] flex justify-center items-center bg-primaryorange/20 rounded-[15px]'
+                    className='w-full flex flex-col justify-between items-start '
                 >
-                    <CameraIcon w={25} h={25} color={"#FF6200"} />
-                </div>
-                <div
-                    className='w-full'
-                >
-                    <div
-                        className='w-full flex justify-between items-start'
+                    <p
+                        className='font-medium text-[14px]'
                     >
-                        <p
-                            className='font-medium text-[14px]'
-                        >
-                            {subjectName}
-                        </p>
-                        <button>
-                            <MoreIcon h={12} color={"black"} />
-                        </button>
-                    </div>
+                        {subjectName}
+                    </p>
                     <div
                         className='flex items-center gap-[7px]'
                     >
-                        <CalendarIcon w={12} h={12} color={"#FF6200"}/>
+                        <CalendarIcon w={12} h={12} color={"#FF6200"} />
                         <p
-                            className='text-[12px]'
+                            className='text-[12px] text-[#1F1E1D]'
                         >
                             {dueDate}
                         </p>
@@ -42,14 +30,18 @@ export default function ClassCard({ subjectName, dueDate, period }) {
                     <div
                         className='flex items-center gap-[7px]'
                     >
-                        <ClockIcon w={12} h={12} color={"#FF6200"}/>
+                        <ClockIcon w={12} h={12} color={"#FF6200"} />
                         <p
-                            className='text-[12px]'
+                            className='text-[12px] text-[#1F1E1D]'
                         >
                             {period}
                         </p>
                     </div>
                 </div>
+                <div
+                    className='w-[16px] h-[16px] rounded-full '
+                    style={{ backgroundColor: color }}
+                />
             </div>
         </div>
     )

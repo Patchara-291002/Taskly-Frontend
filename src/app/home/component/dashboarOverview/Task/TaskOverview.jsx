@@ -7,46 +7,27 @@ import { Mousewheel } from 'swiper/modules';
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { useEffect, useState } from "react";
+import { getTaskToday } from '@/api/home';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function TaskOverview() {
+    const router = useRouter()
+    const [tasks, setTasks] = useState([])
 
-    const tasks = [
-        {
-            title: "English",
-            detail: "Midterm Exam 1",
-            dueDate: "30 Oct 2024",
-            dueTime: "16.00",
-            taskType: "Assignment"
-        },
-        {
-            title: "English",
-            detail: "Midterm Exam 1",
-            dueDate: "24 Oct 2024",
-            dueTime: "16.00",
-            taskType: "Assignment"
-        },
-        {
-            title: "English",
-            detail: "Midterm Exam 1",
-            dueDate: "22 Oct 2024",
-            dueTime: "16.00",
-            taskType: "Assignment"
-        },
-        {
-            title: "English",
-            detail: "Midterm Exam 1",
-            dueDate: "16 Oct 2024",
-            dueTime: "16.00",
-            taskType: "Assignment"
-        },
-        {
-            title: "English",
-            detail: "Midterm Exam 1",
-            dueDate: "12 Oct 2024",
-            dueTime: "16.00",
-            taskType: "Assignment"
-        },
-    ]
+    const fetchTasks = async () => {
+        try {
+            const response = await getTaskToday();
+            setTasks(response);
+        } catch (error) {
+            console.error("Error fetching tasks:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchTasks();
+    }, []);
 
     return (
         <>
@@ -65,26 +46,46 @@ export default function TaskOverview() {
                 <div
                     className='w-full h-[315px]'
                 >
-                    <Swiper
-                        slidesPerView={4}
-                        direction='vertical'
-                        spaceBetween={10}
-                        mousewheel={true}
-                        modules={[Mousewheel]}
-                        className="mySwiper w-full h-full"
-                    >
-                        {tasks.map((task, index) => (
-                            <SwiperSlide key={index}>
-                                <TaskCard
-                                    title={task.title}
-                                    detail={task.detail}
-                                    dueDate={task.dueDate}
-                                    dueTime={task.dueTime}
-                                    taskType={task.taskType}
-                                />
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
+                    {tasks.length > 0 ? (
+                        <Swiper
+                            slidesPerView={4}
+                            direction='vertical'
+                            spaceBetween={10}
+                            mousewheel={true}
+                            modules={[Mousewheel]}
+                            className="mySwiper w-full h-full"
+                        >
+                            {tasks.map((task, index) => (
+                                <SwiperSlide key={index}>
+                                    <TaskCard
+                                        task={task}
+                                        fetchTasks={fetchTasks}
+                                    />
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    ) : (
+                        <div
+                            className='w-full h-full flex flex-col justify-center items-center bg-white border border-grayBorder rounded-[15px]'
+                        >
+                            <img
+                                src={"https://my-image-uploader-bucket.s3.ap-southeast-2.amazonaws.com/P1/undraw_task-list_qe3p.png"}
+                                alt="No project"
+                                className='w-[130px] mb-[10px]'
+                            />
+                            <p
+                                className='font-medium text-[14px] text-[#707070]'
+                            >
+                                You have no task for team project
+                            </p>
+                            <button
+                                className='px-[16px] py-[4px] bg-primaryOrange rounded-[5px] text-[14px] text-white font-medium mt-[10px]'
+                                onClick={() => router.push('/home/project')}
+                            >
+                                go
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </>

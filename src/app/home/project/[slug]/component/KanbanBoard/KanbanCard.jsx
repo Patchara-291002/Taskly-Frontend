@@ -1,42 +1,41 @@
 import React, { useEffect } from "react";
 import { CalendarIcon, ClockIcon } from "@/app/home/component/icon/DashboardIcon";
 import { formatToDate } from "@/utils/dateUtils";
+import PriorityBar from "@/app/component/GlobalComponent/PriorityBar";
 
 export default function KanbanCard({
-  title,
-  detail,
-  tag,
-  priority,
-  color,
-  startDate,
-  dueDate,
-  dueTime,
-  assignees,
-  role
+  projectData,
+  task,
 }) {
 
-  function formatPriority(priority){
-    switch(priority){
+  function formatPriority(priority) {
+    switch (priority) {
       case 1:
-        return <p>Normal</p>
+        return <PriorityBar priority={1} />
         break;
       case 2:
-        return <p>Medium</p>
+        return <PriorityBar priority={2} />
         break;
       case 3:
-        return <p>High</p>
+        return <PriorityBar priority={3} />
         break;
-      default :
-        return <p>None</p>
+      default:
+        return <PriorityBar priority={0} />
     }
   }
+
+  const role = projectData.roles.find(r => r.roleId === task.roleId)
+
+  const assignedUsers = projectData.users.filter(user =>
+    user.projectRole?.roleId === task.roleId
+  ).map(user => user.userId);
 
   return (
     <div className="min-w-[200px] min-h-[100px] rounded-[15px] bg-white p-[15px] border-[1px] border-grayBorder flex flex-col gap-[5px]">
       <div className="w-full flex justify-between items-center">
         <div className="flex items-center gap-[8px]">
           <p className="text-[14px] font-medium">
-            {title.length > 13 ? title.slice(0, 13) + "..." : title}
+            {task.taskName.length > 13 ? task.taskName.slice(0, 13) + "..." : task.taskName}
           </p>
         </div>
         <div
@@ -45,7 +44,7 @@ export default function KanbanCard({
           <div
             className="text-[10px]"
           >
-            {formatPriority(priority)}
+            {formatPriority(task.priority)}
           </div>
           <div
             className="flex justify-center items-center py-[3px] px-[6px] rounded-[15px]"
@@ -56,10 +55,17 @@ export default function KanbanCard({
         </div>
       </div>
 
-      <div className="flex -space-x-2.5">
-        {assignees?.map((user, i) => (
-          <div key={i} className="w-[20px] h-[20px] rounded-full overflow-hidden">
-            {/* <img src={user.profile} alt="Profile" /> */}
+      <div className="flex -space-x-2.5 items-center">
+        {assignedUsers.slice(0, 3).map((user, i) => (
+          <div
+            key={user._id}
+            className="w-[20px] h-[20px] rounded-full overflow-hidden border-2 border-white"
+          >
+            <img
+              src={user.profile}
+              alt={user.name}
+              className="w-full h-full object-cover"
+            />
           </div>
         ))}
       </div>
@@ -68,12 +74,8 @@ export default function KanbanCard({
       >
         <div className="flex items-center gap-[5px]">
           <CalendarIcon w={12} h={12} color="#FF6200" />
-          <p className="text-[10px] text-[#1F1E1D]">{dueDate}</p>
+          <p className="text-[10px] text-[#1F1E1D]">{formatToDate(task.dueDate)}</p>
         </div>
-        {/* <div className="flex items-center gap-[7px]">
-          <ClockIcon w={12} h={12} color="#FF6200" />
-          <p className="text-[10px] text-[#1F1E1D]">{dueTime}</p>
-        </div> */}
       </div>
     </div>
   );

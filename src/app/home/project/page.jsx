@@ -58,7 +58,7 @@ export default function Page() {
     try {
       const newProject = await createProject(projectName, startDate, dueDate);
       setIsOpen(false);
-      redirect(`/home/project/${newProject._id}`)
+      window.location.href = `/home/project/${newProject._id}`
     } catch (error) {
       console.error('Error creating project:', error);
     }
@@ -79,21 +79,31 @@ export default function Page() {
           setOnDelete={setOnDelete}
         />
       </div>
-      <div
-        className='grid gap-[15px] mt-[20px] z-10'
-        style={{ gridTemplateColumns: getGridTemplateColumns() }}
-      >
-        {projects &&
-          projects.map((project, index) => (
+      {projects && projects.length > 0 ? (
+        <div
+          className='grid gap-[15px] mt-[20px] z-10'
+          style={{ gridTemplateColumns: getGridTemplateColumns() }}
+        >
+          {projects.map((project, index) => (
             <ProjectCard
               key={index}
               maxWidth={"none"}
               project={project}
               onDelete={onDelete}
             />
-          ))
-        }
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="w-full h-[calc(100vh-157px)] flex flex-col items-center justify-center">
+          <img
+            src="https://my-image-uploader-bucket.s3.ap-southeast-2.amazonaws.com/P1/undraw_project-completed_fwjq.png"
+            alt="No project"
+            className='w-[200px] mb-[10px]'
+          />
+          <p className="text-[16px] font-medium text-[#D4D4D4]">You don't have any projects yet?</p>
+          <p className="text-[14px] font-medium text-[#D4D4D4]">Create your first team project</p>
+        </div>
+      )}
       <>
         {isOpen && (
           <NewProject

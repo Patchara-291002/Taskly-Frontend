@@ -44,26 +44,13 @@ function SortableTask({ task, projectData, handleTask }) {
     <div
       className="relative"
     >
-      <div ref={setNodeRef} style={style} {...attributes} {...listeners}
-        className="absolute left-[-21px] top-[10px] p-[2px] rounded-[4px] hover:bg-slate-100 bg-slate-200/30"
-      >
-        <GripIcon w={16} h={20} />
-      </div>
       <div
-        onClick={() => handleTask(task._id)}
+        ref={setNodeRef} style={style} {...attributes} {...listeners}
+        className="cursor-grab"
       >
         <KanbanCard
-          taskId={task._id}
-          title={task.taskName}
-          detail={task.detail}
-          tag={task.tag}
-          priority={task.priority}
-          color={task.color}
-          startDate={formatToDate(task.startDate)}
-          dueDate={formatToDate(task.dueDate)}
-          dueTime={task.dueTime}
-          assignees={task.assignees}
-          role={projectData.roles.find(r => r.roleId === task.roleId)}
+          projectData={projectData}
+          task={task}
         />
       </div>
     </div>
@@ -93,30 +80,39 @@ function SortableColumn({ column, tasksInColumn, handleOpenNewTask, projectData,
     <div
       ref={setNodeRef}
       style={style}
-      className="max-w-[300px] min-h-[400px] w-full flex-1 border-r-2 px-[30px]"
+      className="min-w-[260px] min-h-[400px] w-full flex-1 border-r-2 px-[30px] relative"
     >
-      <div className="flex justify-between items-center w-full">
-        <p {...attributes} {...listeners} className="cursor-grab">
-          {column.statusName}
-        </p>
-        {/* <button
-          className="w-[18px] h-[18px] flex justify-center items-center border-primaryorange border rounded-full"
-          onClick={() => handleOpenNewTask(column._id)}
-        >
-          <PlusIcon color="#FF6200" w="8px" h="8px" />
-        </button> */}
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute top-2 right-4 drop-shadow-lg z-50 cursor-grab"
+      >
+        <GripIcon w={16} h={20} />
       </div>
 
-      {/* Render Tasks ในคอลัมน์นี้ */}
-      <SortableContext
-        items={tasksInColumn.map((task) => `task-${task._id}`)}
-      >
-        <div className="w-full mt-[20px] flex flex-col gap-[10px]">
+      {/* Header ที่สามารถลากได้ */}
+      <div className="flex justify-between items-center w-full relative z-10 bg-white py-2">
+        <p
+          className="font-medium"
+          style={{ color: column.color }}
+        >
+          {column.statusName}
+        </p>
+      </div>
+
+      {/* แยก Task Container ออกมา */}
+      <div className="w-full mt-[20px] flex flex-col gap-[10px] relative z-0">
+        <SortableContext items={tasksInColumn.map((task) => `task-${task._id}`)}>
           {tasksInColumn.map((task) => (
-            <SortableTask key={task._id} task={task} projectData={projectData} handleTask={handleTask} />
+            <SortableTask
+              key={task._id}
+              task={task}
+              projectData={projectData}
+              handleTask={handleTask}
+            />
           ))}
-        </div>
-      </SortableContext>
+        </SortableContext>
+      </div>
     </div>
   );
 }
@@ -177,6 +173,14 @@ export default function Board({
 
     const activeId = active.id;
     const overId = over.id;
+
+    console.log('Dragging:', {
+      from: activeId,
+      to: overId,
+      isColumn: activeId.startsWith('column-'),
+      activeData: active.data,
+      overData: over.data
+    });
 
     // ทำ deep copy
     const newProjectData = JSON.parse(JSON.stringify(projectData));
@@ -295,12 +299,11 @@ export default function Board({
         {activeItem ? (
           activeItem.type === "task" ? (
             <div
-              className="w-[260px] h-[100px] rounded-[15px] bg-white p-[15px] border-[1px] border-grayBorder"
+              className="w-[200px] h-[100px] rounded-[15px] bg-white p-[15px] border-[1px] border-grayBorder"
             >
-
             </div>
           ) : (
-            <div className="max-w-[300px] w-full flex-1 border-r-2 px-[30px]">
+            <div className="max-w-[300px] w-full h-full flex-1 px-[30px]">
               <div className="flex justify-between items-center w-full">
                 <p>{activeItem.data.statusName}</p>
               </div>

@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 
-export default function PrjStatusPicker({ statusOptions, selectedStatus, onChange, loadProject }) {
+export default function PrjPriorityPicker({ statusOptions, selectedStatus, onChange, loadProject }) {
     const [openStatus, setOpenStatus] = useState(false);
-    const [position, setPosition] = useState({ top: 0, left: 0 });
     const buttonRef = useRef(null);
     const dropdownRef = useRef(null);
 
@@ -34,9 +33,9 @@ export default function PrjStatusPicker({ statusOptions, selectedStatus, onChang
             {/* ปุ่มกดเพื่อเปิด dropdown */}
             <button
                 ref={buttonRef}
-                className="font-semibold text-white bg-white px-[10px] py-[6px] min-h-0 rounded-md cursor-pointer"
+                className="font-medium text-[12px] text-white bg-white px-[20px] py-[6px] min-h-0 rounded-full cursor-pointer"
                 onClick={toggleDropdown}
-                style={{ background: selectedStatus.color || "#F7F7F7" }}
+                style={{ background: selectedStatus?.color || "#F7F7F7" }}
             >
                 {selectedStatus ? selectedStatus.statusName : "Select Status"}
             </button>

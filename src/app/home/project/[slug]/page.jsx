@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef,useCallback } from 'react'
 import GranttChart from './component/Dashboard/Granttchart'
-import { usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import NewStatus from './component/NewStatus'
-import { fetchProjectByProjectId } from '@/api/project'
+import { fetchProjectByProjectId, addPeopleToProject } from '@/api/project'
 import { createStatus } from '@/api/status'
 import NewTask from './component/NewTask'
 import { createTask } from '@/api/task'
@@ -20,13 +20,19 @@ import ProjectTable from './component/Table/ProjectTable';
 import StatusAndRolePicker from './component/StatusAndRolePicker';
 import TaskCard from '../component/TaskCard';
 import useWindowSize from '@/hooks/useWindow';
+import { tr } from 'date-fns/locale';
+import { add } from 'date-fns';
+import Chart from './component/Dashboard/Chart';
 
 export default function Page() {
 
-    const { width } = useWindowSize();
+    // const { width } = useWindowSize();
+    const router = useRouter();
 
 
     const [project, setProject] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
     const pathname = usePathname();
     const projectId = pathname.split('/').pop();
 
@@ -39,7 +45,7 @@ export default function Page() {
     }
 
     useEffect(() => {
-        console.log("task status: ", opendTask )
+        console.log("task status: ", opendTask)
     }, [opendTask])
 
     const [isOpenNewStatus, setIsOpenNewStatus] = useState(false)
@@ -72,7 +78,6 @@ export default function Page() {
         }
     };
 
-
     const loadProject = async () => {
         try {
             const projectData = await fetchProjectByProjectId(projectId)
@@ -81,11 +86,32 @@ export default function Page() {
             console.error('Failed to load project:', error);
         }
     }
+    
+    const checkPeopleInProject = useCallback(async () => {
+        try {
+            const response = await addPeopleToProject(projectId);
+            console.log("✅ People added to project:", response);
+        } catch (error) {
+            console.error('❌ Error adding people to project:', error);
+        }
+    }, [projectId]);
+
 
     useEffect(() => {
-        if (!projectId) return
-        loadProject();
-    }, [projectId])
+        if (!projectId) return;
+        
+        const initializeProject = async () => {
+            setIsLoading(true);
+            try {
+                await loadProject();
+                await checkPeopleInProject();
+            } finally {
+                setIsLoading(false);
+            }
+        };
+    
+        initializeProject();
+    }, [projectId, checkPeopleInProject]);
 
     useEffect(() => {
         loadProject();
@@ -157,8 +183,9 @@ export default function Page() {
                                 );
                             case "dashboard":
                                 return (
-                                    <div>
+                                    <div className='flex flex-col gap-[20px]'>
                                         {project && <GranttChart project={project} />}
+                                        {project && <Chart project={project} />}
                                     </div>
                                 )
                             default:
