@@ -14,30 +14,41 @@ function LineCallbackContent() {
 
     useEffect(() => {
         const handleLineCallback = async () => {
-            const token = searchParams.get("token");
-            console.log("Received token:", token);
+            const code = searchParams.get("code");
+            const state = searchParams.get("state");
+            console.log("Received code:", code);
 
-            if (token) {
-                Cookies.set('token', token, { path: '/' });
-
+            if (code) {
                 try {
-                    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/me`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        },
-                        withCredentials: true
-                    });
+                    // ส่ง code ไป backend เพื่อแลกเป็น token
+                    const authResponse = await axios.get(
+                        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/line/callback`,
+                        {
+                            params: { code, state },
+                            withCredentials: true
+                        }
+                    );
 
-                    setUser(response.data.user);
-                    console.log("LINE login successful:", response.data.user);
-                    router.push("/home/dashboard");
+                    const { token, user } = authResponse.data;
+
+                    if (token) {
+                        Cookies.set('token', token, {
+                            path: '/',
+                            secure: true,
+                            sameSite: 'none'
+                        });
+
+                        setUser(user);
+                        console.log("LINE login successful:", user);
+                        router.push("/home/dashboard");
+                    }
                 } catch (error) {
-                    console.error("Failed to fetch user info:", error.response?.data || error.message);
+                    console.error("LINE authentication failed:", error.response?.data || error.message);
                     router.push("/login?error=line_auth_failed");
                 }
             } else {
-                console.error("No token in URL params");
-                // router.push("/login?error=no_token");
+                console.error("No code in URL params");
+                router.push("/login?error=no_code");
             }
         };
 
@@ -54,7 +65,7 @@ function LineCallbackContent() {
 // Main component wrapped with Suspense
 export default function LineCallback() {
     return (
-        <Suspense 
+        <Suspense
             fallback={
                 <div className="w-full h-screen flex justify-center items-center bg-white">
                     <div className={styles.loader} />
