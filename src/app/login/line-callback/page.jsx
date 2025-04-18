@@ -37,7 +37,7 @@ function LineCallbackContent() {
                 }
             } else {
                 console.error("No token in URL params");
-                router.push("/login?error=no_token");
+                // router.push("/login?error=no_token");
             }
         };
 
