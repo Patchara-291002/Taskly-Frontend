@@ -305,7 +305,7 @@ export const StdStatusPicker = ({ selectedStatus, onChange }) => {
     );
 };
 
-export const PrjRolePicker = ({ selectedRole, roleOptions, onChange }) => {
+export const PrjRolePicker = ({ selectedRole, roleOptions, onChange, loadProject }) => {
     const [openRole, setOpenRole] = useState(false);
     const [position, setPosition] = useState({ top: 0, left: 0 });
     const buttonRef = useRef(null);
@@ -320,6 +320,7 @@ export const PrjRolePicker = ({ selectedRole, roleOptions, onChange }) => {
                 left: rect.left + window.scrollX,
             });
         }
+        loadProject()
         setOpenRole(!openRole);
     };
 
@@ -343,15 +344,16 @@ export const PrjRolePicker = ({ selectedRole, roleOptions, onChange }) => {
             {/* ปุ่มกดเพื่อเปิด dropdown */}
             <button
                 ref={buttonRef}
-                className="relative bg-white border-[1px] border-grayBorder px-[10px] py-[6px] min-h-0 rounded-md cursor-pointer flex items-center gap-2"
+                className="relative font-semibold bg-white px-[10px] py-[6px] min-h-0 rounded-md cursor-pointer flex items-center gap-2 text-white"
+                style={{ background: selectedRole ? selectedRole.color : "#CACACA" }}
                 onClick={toggleDropdown}
             >
                 {selectedRole ? (
                     <>
-                        <span
+                        {/* <span
                             className="w-3 h-3 rounded-full"
                             style={{ background: selectedRole.color }}
-                        ></span>
+                        ></span> */}
                         {selectedRole.name}
                     </>
                 ) : (
@@ -392,41 +394,42 @@ export const PrjRolePicker = ({ selectedRole, roleOptions, onChange }) => {
 
 export const PrjPriorityPicker = ({ selectedPriority, onChange }) => {
     const [openPriority, setOpenPriority] = useState(false);
-    const [position, setPosition] = useState({ top: 0, left: 0 });
     const buttonRef = useRef(null);
     const dropdownRef = useRef(null);
 
     const priorityOptions = [
         {
             value: 1,
-            lable: "Normal"
+            label: "Normal",
+            bgColor: "#F7F7F7",
+            textColor: "#5F5F5F"
         },
         {
             value: 2,
-            lable: "Medium"
+            label: "Medium", 
+            bgColor: "#FFF7E5",
+            textColor: "#FF9900"
         },
         {
             value: 3,
-            lable: "High"
-        },
-    ]
+            label: "High",
+            bgColor: "#FFE5E5",
+            textColor: "#FF0000"
+        }
+    ];
 
+    const getPriorityStyle = (value) => {
+        const option = priorityOptions.find(p => p.value === value);
+        return {
+            backgroundColor: option?.bgColor || "#F7F7F7",
+            color: option?.textColor || "#5F5F5F"
+        };
+    };
 
-
-    // ✅ เปิด dropdown และคำนวณตำแหน่ง
     const toggleDropdown = () => {
-        // if (!openPriority && buttonRef.current) {
-        //     const rect = buttonRef.current.getBoundingClientRect();
-        //     console.log(rect)
-        //     setPosition({
-        //         top: rect.bottom + window.scrollY,
-        //         left: rect.left + window.scrollX,
-        //     });
-        // }
         setOpenPriority(!openPriority);
     };
 
-    // ✅ ปิด dropdown เมื่อคลิกข้างนอก
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (
@@ -443,41 +446,31 @@ export const PrjPriorityPicker = ({ selectedPriority, onChange }) => {
 
     return (
         <div className="relative inline-block">
-            {/* ปุ่มกดเพื่อเปิด dropdown */}
             <button
                 ref={buttonRef}
-                className="relative bg-white border-[1px] border-grayBorder px-[10px] py-[6px] min-h-0 rounded-md cursor-pointer flex items-center gap-2"
+                className="px-[10px] py-[6px] min-h-0 rounded-md cursor-pointer"
+                style={getPriorityStyle(selectedPriority)}
                 onClick={toggleDropdown}
             >
-                {(() => {
-                    switch (selectedPriority) {
-                        case 1: return "Normal";
-                        case 2: return "Medium";
-                        case 3: return "High";
-                        default: return "Normal";
-                    }
-                })()}
+                {priorityOptions.find(p => p.value === selectedPriority)?.label || "Normal"}
             </button>
 
-            {/* Dropdown แสดงรายการ Role */}
             {openPriority && (
                 <ul
-                    className="absolute bg-white border border-gray-300 rounded-lg shadow-md w-40 p-2 z-50"
-                // style={{
-                //     top: position.top,
-                //     left: position.left,
-                // }}
+                    ref={dropdownRef}
+                    className="absolute bg-white border border-gray-300 rounded-lg shadow-md w-40 p-2 z-50 mt-1"
                 >
-                    {priorityOptions.map((p, index) => (
+                    {priorityOptions.map((priority) => (
                         <li
-                            key={index}
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+                            key={priority.value}
+                            className="px-4 py-2 cursor-pointer rounded-md"
+                            style={getPriorityStyle(priority.value)}
                             onClick={() => {
-                                onChange(p.value);
+                                onChange(priority.value);
                                 setOpenPriority(false);
                             }}
                         >
-                            {p.lable}
+                            {priority.label}
                         </li>
                     ))}
                 </ul>

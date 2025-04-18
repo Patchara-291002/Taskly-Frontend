@@ -54,6 +54,7 @@ export const updateTask = async (taskId, updatedData) => {
         const response = await axios.put(`${API_BASE_URL}/task/update/${taskId}`, updatedData, {
             withCredentials: true
         });
+        console.log("✅ Task updated successfully:", response.data);
         return response.data;
     } catch (error) {
         console.error("❌ Error updating task:", error);
@@ -71,6 +72,16 @@ export const getTaskById = async (taskId) => {
         return response.data
     } catch (error) {
         console.error("❌ Error fetching task:", error);
+        throw error;
+    }
+}
+
+export const deleteTask = async (taskId) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/task/delete/${taskId}`, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        console.error("❌ Error deleting task:", error);
         throw error;
     }
 }

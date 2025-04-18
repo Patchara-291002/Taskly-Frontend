@@ -12,14 +12,15 @@ export default function KanbanBoard({
     setIsOpenNewTask,
     setStatusId,
     handleOpenNewTask,
-    handleTask
+    handleTask,
+    loadProject
 }) {
     const [isDelete, setIsDelete] = useState(false);
-    
+
 
     return (
-        <div className="w-full touch-none">
-            <div className="w-full min-h-[400px] p-[10px] rounded-[15px] border-[1px] bg-white border-grayBorder touch-none">
+        <div className="touch-none">
+            <div className="w-full min-h-[400px] px-[10px] py-[20px] rounded-[15px] border-[1px] bg-white border-grayBorder overflow-x-auto touch-none">
                 {/* ส่ง project ไปยัง Board.jsx */}
                 {project && (
                     <Board
@@ -28,6 +29,7 @@ export default function KanbanBoard({
                         setStatusId={setStatusId}
                         handleOpenNewTask={handleOpenNewTask}
                         handleTask={handleTask}
+                        loadProject={loadProject}
                     />
                 )}
             </div>

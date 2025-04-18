@@ -51,7 +51,7 @@ export default function ProjectInfo({ project }) {
     };
 
     return (
-        <div className='w-full z-10 bg-white p-[10px] rounded-[15px] border-[1px] border-grayBorder overflow-y-auto no-scrollbar'>
+        <div className='w-full min-w-[677px] max-h-[300px] z-10 bg-white p-[10px] rounded-[15px] border-[1px] border-grayBorder overflow-y-auto no-scrollbar'>
             <table className="table-auto w-full">
                 <colgroup>
                     <col className='w-[250px]' />

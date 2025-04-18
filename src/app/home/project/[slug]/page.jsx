@@ -12,16 +12,18 @@ import ProjectHeader from './component/ProjectHeader'
 import KanbanBoard from './component/KanbanBoard/KanbanBoard';
 import ProjectInfo from './component/ProjectInfo';
 import ProjectFile from './component/ProjectFile';
+import ProjectNote from './component/ProjectNote';
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import ProjectTable from './component/Table/ProjectTable';
 import StatusAndRolePicker from './component/StatusAndRolePicker';
 import TaskCard from '../component/TaskCard';
-
-
+import useWindowSize from '@/hooks/useWindow';
 
 export default function Page() {
+
+    const { width } = useWindowSize();
 
 
     const [project, setProject] = useState(null);
@@ -89,53 +91,18 @@ export default function Page() {
         loadProject();
     }, [activeTab])
 
-
-    // const handleNewStatusSubmit = async () => {
-    //     try {
-    //         const newStatus = await createStatus(projectId, statusName, statusColor);
-    //         setIsOpenNewStatus(false);
-    //         window.location.reload();
-    //     } catch (error) {
-    //         console.error('Error creating status:', error);
-    //     }
-    // }
-
-
-
-    // const handleCreateTask = async () => {
-    //     try {
-    //         const newTask = await createTask(task);
-    //         setIsOpenNewTask(false);
-    //         window.location.reload();
-    //     } catch (error) {
-    //         console.error('Error creating task:', error);
-    //     }
-    // };
-
-    // const handleOpenNewTask = (newStatusId) => {
-    //     setIsOpenNewTask(true);
-    //     setStatusId(newStatusId);
-    // };
-
-    // useEffect(() => {
-    //     if (!statusId) return;
-    //     setTask((prevTask) => ({
-    //         ...prevTask,
-    //         statusId: statusId
-    //     }));
-    // }, [statusId]);
     return (
         <div
             className='w-full flex flex-col gap-[20px] z-0 relative'
         >
-
             {project && <ProjectHeader project={project} loadProject={loadProject} />}
 
             <div
-                className='w-full h-[280px] flex gap-[30px]'
+                className='w-full flex flex-col lg:flex-row gap-[30px]'
             >
-                {project && <ProjectInfo project={project} />}
-                {project && <ProjectFile project={project} />}
+                {/* {project && <ProjectInfo project={project} />} */}
+                <ProjectNote project={project} loadProject={loadProject} />
+                {project && <ProjectFile project={project} loadProject={loadProject} />}
             </div>
 
             <div className="w-full">
@@ -143,40 +110,49 @@ export default function Page() {
                 <div className="flex gap-5 pb-2">
                     <button
                         className={activeTab === "table" ? "text-orange-500 border-b-2 border-orange-500" : "text-gray-500"}
-                        onClick={() => handleTabClick("table")}
+                        onClick={() => {
+                            loadProject();
+                            handleTabClick("table");
+                        }}
                     >
                         Table
                     </button>
                     <button
                         className={activeTab === "kanban" ? "text-orange-500 border-b-2 border-orange-500" : "text-gray-500"}
-                        onClick={() => handleTabClick("kanban")}
+                        onClick={() => {
+                            loadProject();
+                            handleTabClick("kanban");
+                        }}
                     >
                         Kanban
                     </button>
                     <button
                         className={activeTab === "dashboard" ? "text-orange-500 border-b-2 border-orange-500" : "text-gray-500"}
-                        onClick={() => handleTabClick("dashboard")}
+                        onClick={() => {
+                            loadProject();
+                            handleTabClick("dashboard")
+                        }}
                     >
                         Dashboard
                     </button>
                 </div>
 
                 {/* ใช้ switch/case หรือ if-else เพื่อสลับ UI ตาม activeTab */}
-                <div className="w-full">
+                <div className="w-full pb-[180px]">
                     {(() => {
                         switch (activeTab) {
                             case "table":
                                 return (
                                     <div className="flex flex-col">
-                                        {project && <StatusAndRolePicker project={project} />}
-                                        {project && <ProjectTable project={project} />}
+                                        {project && <StatusAndRolePicker project={project} loadProject={loadProject} />}
+                                        {project && <ProjectTable project={project} loadProject={loadProject} />}
                                     </div>
                                 );
                             case "kanban":
                                 return (
                                     <div className="flex flex-col">
-                                        {project && <StatusAndRolePicker project={project} />}
-                                        {project && <KanbanBoard project={project} handleTask={handleTask} />}
+                                        {project && <StatusAndRolePicker project={project} loadProject={loadProject} />}
+                                        {project && <KanbanBoard project={project} handleTask={handleTask} loadProject={loadProject} />}
                                     </div>
                                 );
                             case "dashboard":
@@ -193,28 +169,6 @@ export default function Page() {
             </div>
 
             {opendTask && <TaskCard selectedTask={selectedTask} setSelectedTask={setSelectedTask} setOpenTask={setOpenTask} />}
-
-
-            {/* {isOpenNewStatus && (
-                <NewStatus
-                    setStatusName={setStatusName}
-                    statusName={statusName}
-                    setStatusColor={setStatusColor}
-                    setIsOpenNewStatus={setIsOpenNewStatus}
-                    isOpenNewStatus={isOpenNewStatus}
-                    onSubmit={handleNewStatusSubmit}
-                />
-            )}
-            {isOpenNewTask && (
-                <NewTask
-                    isOpenNewTask={isOpenNewTask}
-                    setIsOpenNewTask={setIsOpenNewTask}
-                    task={task}
-                    setTask={setTask}
-                    statusId={statusId}
-                    onSubmit={handleCreateTask}
-                />
-            )} */}
         </div>
     )
 }

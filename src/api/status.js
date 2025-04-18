@@ -36,3 +36,13 @@ export const createStatus = async (projectId, statusName, color) => {
         throw error;
     }
 };
+
+export const deleteStatus = async (statusId) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/status/delete/${statusId}`, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        console.error("❌ Error deleting status:", error);
+        throw error;
+    }
+}

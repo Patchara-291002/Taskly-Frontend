@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { PlusIcon } from './icon/GlobalIcon'
+import { PlusIcon, TrashIcon, TrashSolidIcon } from './icon/GlobalIcon'
 
 export const NewButton = ({ onClick, buttonText = "New" }) => {
 
@@ -7,7 +7,7 @@ export const NewButton = ({ onClick, buttonText = "New" }) => {
 
     return (
         <button
-            className='px-[14px] py-[4px] border-[1px] rounded-full border-primaryorange hover:bg-primaryorange'
+            className='px-[14px] py-[4px] border-[1px] rounded-full border-primaryOrange hover:bg-primaryOrange'
             onMouseEnter={() => setIsHover(true)}
             onMouseLeave={() => setIsHover(false)}
             onClick={onClick}
@@ -17,7 +17,7 @@ export const NewButton = ({ onClick, buttonText = "New" }) => {
             >
                 <PlusIcon w='12' h='12' color={isHover ? '#FFFFFF' : '#FF6200'} />
                 <p
-                    className={`text-[14px] ${isHover ? 'text-white' : 'text-primaryorange'}`}
+                    className={`text-[14px] ${isHover ? 'text-white' : 'text-primaryOrange'}`}
                 >
                     {buttonText}
                 </p>
@@ -70,3 +70,21 @@ export const BlurBackground = ({ children, isOpen, onClose }) => {
         </div>
     );
 };
+
+export const DeleteButton = ({ onDelete, setOnDelete }) => {
+
+    return (
+        <div>
+            <button
+                onClick={() => setOnDelete(!onDelete)}
+            >
+                <div
+                    className='w-[30px] h-[30px] flex justify-center items-center hover:bg-[#FFE0E0] rounded-full'
+                    style={{ background: onDelete ? '#FFE0E0' : '#EDEDED' }}
+                >
+                    <TrashSolidIcon w='16' h='16' color={'#FF0000'} />
+                </div>
+            </button>
+        </div>
+    )
+}

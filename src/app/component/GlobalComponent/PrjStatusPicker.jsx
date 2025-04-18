@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 
-export default function PrjStatusPicker({ statusOptions, selectedStatus, onChange }) {
+export default function PrjStatusPicker({ statusOptions, selectedStatus, onChange, loadProject }) {
     const [openStatus, setOpenStatus] = useState(false);
     const [position, setPosition] = useState({ top: 0, left: 0 });
     const buttonRef = useRef(null);
@@ -10,6 +10,7 @@ export default function PrjStatusPicker({ statusOptions, selectedStatus, onChang
 
     // ฟังก์ชันเปิด dropdown และคำนวณตำแหน่ง
     const toggleDropdown = () => {
+        loadProject();
         setOpenStatus(!openStatus);
     };
 
@@ -33,9 +34,9 @@ export default function PrjStatusPicker({ statusOptions, selectedStatus, onChang
             {/* ปุ่มกดเพื่อเปิด dropdown */}
             <button
                 ref={buttonRef}
-                className="bg-white border-[1px] border-grayBorder px-[10px] py-[6px] min-h-0 rounded-md cursor-pointer"
+                className="font-semibold text-white bg-white px-[10px] py-[6px] min-h-0 rounded-md cursor-pointer"
                 onClick={toggleDropdown}
-                // style={{ color: selectedStatus.color || "black" }}
+                style={{ background: selectedStatus.color || "#F7F7F7" }}
             >
                 {selectedStatus ? selectedStatus.statusName : "Select Status"}
             </button>
@@ -55,8 +56,16 @@ export default function PrjStatusPicker({ statusOptions, selectedStatus, onChang
                                 setOpenStatus(false);
                             }}
                         >
-                            <span className="w-3 h-3 rounded-full" style={{ background: s.color }}></span>
-                            {s.statusName}
+                            <div
+                                className='w-full flex justify-between items-center'
+                            >
+                                <p
+                                    className='text-[12px] font-medium'
+                                >
+                                    {s.statusName}
+                                </p>
+                                <span className="w-[7px] h-[7px] rounded-full" style={{ background: s.color }}></span>
+                            </div>
                         </li>
                     ))}
                 </ul>

@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
-import { PlusIcon } from "@/app/home/component/icon/GlobalIcon";
+import { PlusIcon, TrashIcon } from "@/app/home/component/icon/GlobalIcon";
 import { AirDatepickerComponent, PrjRolePicker, StdStatusPicker, PrjPriorityPicker } from "@/app/component/GlobalComponent";
 // import { updateAssignment, createAssignment } from "@/api/course"
 import { updateTask, createTask } from "@/api/task";
 import { createStatus } from "@/api/status";
 import PrjStatusPicker from "@/app/component/GlobalComponent/PrjStatusPicker";
+import { Aa, Calendar, Priority, Role, Status } from "@/app/component/GlobalIcon";
+import { deleteTask } from "@/api/task";
 
-export default function ProjectTable({ project }) {
+export default function ProjectTable({ project, loadProject }) {
     const [taskPayload, setTaskPayload] = useState([]);
 
     useEffect(() => {
@@ -96,37 +98,67 @@ export default function ProjectTable({ project }) {
 
 
     return (
-        <div className="w-full min-h-[500px]">
-            <p className="font-medium text-[16px] pb-[15px]">Tasks</p>
-            <div className="w-full border-[1px] border-grayBorder bg-white p-[10px] rounded-[15px]">
+        <div className="w-full  bg-white border border-grayBorder overflow-x-scroll p-[10px] rounded-[15px]">
+            <div className="w-full min-w-[1024px] ">
                 <table className="table-fixed w-full border-collapse">
                     <colgroup>
                         <col className="w-auto" />
-                        <col className="w-[140px]" />
-                        <col className="w-[140px]" />
-                        <col className="w-[140px]" />
-                        <col className="w-auto" />
-                        <col className="w-auto" />
+                        <col className="max-w-[70px]" />
+                        <col className="max-w-[70px]" />
+                        <col className="max-w-[70px]" />
+                        <col className="w-[180px]" />
+                        <col className="w-[180px]" />
+                        <col className="w-[40px]" />
                     </colgroup>
                     <thead>
                         <tr>
-                            <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
-                                Name of Assignment
+                            <th className="py-[12px] px-[10px] border-r-[1px] border-grayBorder">
+                                <div
+                                    className="flex items-end gap-[3px] "
+                                >
+                                    <Aa w={22} h={22} color={"#FF6200"} />
+                                    <p className="font-normal text-[14px] text-[#5F5F5F]">name of task</p>
+                                </div>
+                            </th>
+                            <th className="py-[12px] px-[10px] border-r-[1px] border-grayBorder">
+                                <div
+                                    className="flex items-end gap-[3px] "
+                                >
+                                    <Role w={19} h={19} color={"#FF6200"} />
+                                    <p className="font-normal text-[14px] text-[#5F5F5F]">role</p>
+                                </div>
                             </th>
                             <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
-                                Role
+                                <div
+                                    className="flex items-end gap-[3px] "
+                                >
+                                    <Priority w={19} h={19} color={"#FF6200"} />
+                                    <p className="font-normal text-[14px] text-[#5F5F5F]">priorty</p>
+                                </div>
                             </th>
                             <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
-                                Priority
+                                <div
+                                    className="flex items-end gap-[3px] "
+                                >
+                                    <Status w={20} h={20} color={"#FF6200"} />
+                                    <p className="font-normal text-[14px] text-[#5F5F5F]">status</p>
+                                </div>
                             </th>
                             <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
-                                Status
-                            </th>
-                            <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
-                                Start date
+                                <div
+                                    className="flex items-center gap-[3px] "
+                                >
+                                    <Calendar w={17} h={17} color={"#FF6200"} />
+                                    <p className="font-normal text-[14px] text-[#5F5F5F]">start date</p>
+                                </div>
                             </th>
                             <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-grayBorder">
-                                Due Date
+                                <div
+                                    className="flex items-center gap-[3px] "
+                                >
+                                    <Calendar w={17} h={17} color={"#FF6200"} />
+                                    <p className="font-normal text-[14px] text-[#5F5F5F]">due date</p>
+                                </div>
                             </th>
                         </tr>
                     </thead>
@@ -138,12 +170,17 @@ export default function ProjectTable({ project }) {
                                 <tr key={index}>
                                     {/* Name of Assignment */}
                                     <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-l-0">
-                                        <input
-                                            type="text"
-                                            className="w-full bg-transparent outline-none"
-                                            value={task.taskName}
-                                            onChange={(e) => handleChange(task._id, "taskName", e.target.value)}
-                                        />
+                                        <div
+                                            className="flex items-center gap-[5px]"
+                                        >
+                                            <p className="font-normal">{index + 1}.</p>
+                                            <input
+                                                type="text"
+                                                className="w-full bg-transparent outline-none"
+                                                value={task.taskName}
+                                                onChange={(e) => handleChange(task._id, "taskName", e.target.value)}
+                                            />
+                                        </div>
                                     </td>
 
                                     {/* Description */}
@@ -152,6 +189,7 @@ export default function ProjectTable({ project }) {
                                             selectedRole={project?.roles.find(r => r.roleId === task.roleId)}
                                             roleOptions={project.roles}
                                             onChange={(newRole) => handleChange(task._id, "roleId", newRole)}
+                                            loadProject={loadProject}
                                         />
                                     </td>
 
@@ -167,6 +205,7 @@ export default function ProjectTable({ project }) {
                                             selectedStatus={project?.statuses.find(s => s._id === task.statusId)}
                                             onChange={(newStatus) => handleChange(task._id, "statusId", newStatus)}
                                             statusOptions={project.statuses}
+                                            loadProject={loadProject}
                                         />
                                     </td>
 
@@ -181,6 +220,12 @@ export default function ProjectTable({ project }) {
                                         <AirDatepickerComponent
                                             selectedDate={task.dueDate}
                                             onChange={(newDate) => handleChange(task._id, "dueDate", newDate)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <TrashButton 
+                                            taskId={task._id}
+                                            loadProject={loadProject}
                                         />
                                     </td>
                                 </tr>
@@ -213,3 +258,30 @@ const emptyTable = () => (
         <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-r-0"></td>
     </tr>
 );
+
+const TrashButton = ({ taskId, loadProject }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleDeleteTask = async (taskId) => {
+        try {
+            await deleteTask(taskId);
+            loadProject();
+        } catch (error) {
+            console.error("❌ Failed to delete task:", error);
+        }
+    }
+
+    return (
+        <button
+            className="w-[26px] h-[26px] flex justify-center items-center bg-[#F1F1F1] rounded-full"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteTask(taskId);
+            }}
+        >
+            <TrashIcon w={12} h={12} color={isHovered ? "#FF6200" : "#D9D9D9"} />
+        </button>
+    )
+}
