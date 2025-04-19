@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { PlusIcon, TrashIcon, TrashSolidIcon } from "@/app/home/component/icon/GlobalIcon";
 import { AirDatepickerComponent, PrjRolePicker, StdStatusPicker, PrjPriorityPicker } from "@/app/component/GlobalComponent";
 // import { updateAssignment, createAssignment } from "@/api/course"
@@ -10,7 +10,6 @@ import { deleteTask } from "@/api/task";
 
 export default function ProjectTable({ project, loadProject }) {
     const [taskPayload, setTaskPayload] = useState([]);
-    const updateTimerRef = useRef(null);
 
     useEffect(() => {
         if (project?.tasks) {
@@ -43,6 +42,7 @@ export default function ProjectTable({ project, loadProject }) {
                 task._id,
                 updatedTask
             );
+            await loadProject();
         } catch (error) {
             console.error("❌ Failed to update task:", error);
         }
@@ -50,32 +50,11 @@ export default function ProjectTable({ project, loadProject }) {
 
     // ✅ ใช้ useEffect ให้ API อัปเดตทุกครั้งที่ค่าเปลี่ยน
     useEffect(() => {
-        // ยกเลิก timer เก่าถ้ามี
-        if (updateTimerRef.current) {
-            clearTimeout(updateTimerRef.current);
-        }
+        const delay = setTimeout(() => {
+            taskPayload.forEach(updateTaskData);
+        }, 500);
 
-        // สร้าง timer ใหม่
-        updateTimerRef.current = setTimeout(() => {
-            const updateAllTasks = async () => {
-                try {
-                    // ทำ update ทีละตัวแทนการใช้ forEach
-                    for (const task of taskPayload) {
-                        await updateTaskData(task);
-                    }
-                } catch (error) {
-                    console.error("❌ Error updating tasks:", error);
-                }
-            };
-
-            updateAllTasks();
-        }, 1000); // เพิ่มเวลา delay เป็น 1 วินาที
-
-        return () => {
-            if (updateTimerRef.current) {
-                clearTimeout(updateTimerRef.current);
-            }
-        };
+        return () => clearTimeout(delay);
     }, [taskPayload, updateTaskData]);
 
     const newTask = async () => {
@@ -112,9 +91,7 @@ export default function ProjectTable({ project, loadProject }) {
                 assignees: [],
             });
 
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            await loadProject();
+            loadProject();
         } catch (error) {
             console.error("❌ Failed to create task:", error);
         }
@@ -247,7 +224,7 @@ export default function ProjectTable({ project, loadProject }) {
                                         />
                                     </td>
                                     <td className="">
-                                        <TrashButton
+                                        <TrashButton 
                                             taskId={task._id}
                                             loadProject={loadProject}
                                         />
