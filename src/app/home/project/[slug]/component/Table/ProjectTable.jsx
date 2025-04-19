@@ -112,7 +112,9 @@ export default function ProjectTable({ project, loadProject }) {
                 assignees: [],
             });
 
-            loadProject();
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            await loadProject();
         } catch (error) {
             console.error("❌ Failed to create task:", error);
         }
