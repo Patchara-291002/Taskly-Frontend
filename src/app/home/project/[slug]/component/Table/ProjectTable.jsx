@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { PlusIcon, TrashIcon, TrashSolidIcon } from "@/app/home/component/icon/GlobalIcon";
 import { AirDatepickerComponent, PrjRolePicker, StdStatusPicker, PrjPriorityPicker } from "@/app/component/GlobalComponent";
 // import { updateAssignment, createAssignment } from "@/api/course"
@@ -10,6 +10,7 @@ import { deleteTask } from "@/api/task";
 
 export default function ProjectTable({ project, loadProject }) {
     const [taskPayload, setTaskPayload] = useState([]);
+    const updateTimerRef = useRef(null);
 
     useEffect(() => {
         if (project?.tasks) {
