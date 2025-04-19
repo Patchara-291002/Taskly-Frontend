@@ -1,10 +1,8 @@
-import axios from "axios";
+import api from '@/utils/api';
 
 export const getClassToday = async () => {
     try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/course/class-today`, {
-            withCredentials: true,
-        });
+        const response = await api.get('/course/class-today');
         return response.data.courses;
     } catch (error) {
         console.error("❌ Error fetching class today:", error);
@@ -12,12 +10,9 @@ export const getClassToday = async () => {
     }
 }
 
-// Assignment Overview
 export const getAssignmentToday = async () => {
     try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/assignment/incomplete`, {
-            withCredentials: true,
-        });
+        const response = await api.get('/assignment/incomplete');
         return response.data.assignments;
     } catch (error) {
         console.error("❌ Error fetching assignment today:", error);
@@ -27,10 +22,8 @@ export const getAssignmentToday = async () => {
 
 export const makeDoneAssignment = async (assignmentId) => {
     try {
-        const response = await axios.put(`${process.env.NEXT_PUBLIC_API_BASE_URL}/assignment/update/${assignmentId}`, {
+        const response = await api.put(`/assignment/update/${assignmentId}`, {
             status: "Done"
-        }, {
-            withCredentials: true,
         });
         return response.data.assignment;
     } catch (error) {
@@ -41,9 +34,7 @@ export const makeDoneAssignment = async (assignmentId) => {
 
 export const getTaskToday = async () => {
     try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/task/incomplete`, {
-            withCredentials: true,
-        });
+        const response = await api.get('/task/incomplete');
         return response.data.tasks;
     } catch (error) {
         console.error("❌ Error fetching task today:", error);
@@ -53,9 +44,7 @@ export const getTaskToday = async () => {
 
 export const getProjectIdByTaskId = async (taskId) => {
     try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/task/project/${taskId}`, {
-            withCredentials: true,
-        });
+        const response = await api.get(`/task/project/${taskId}`);
         return response.data.projectId;
     } catch (error) {
         console.error("❌ Error fetching project ID by task ID:", error);
@@ -65,10 +54,8 @@ export const getProjectIdByTaskId = async (taskId) => {
 
 export const makeDoneTask = async (taskId, projectId) => {
     try {
-        const response = await axios.put(`${process.env.NEXT_PUBLIC_API_BASE_URL}/task/done/${taskId}`, {
-            projectId: projectId,
-        }, {
-            withCredentials: true,
+        const response = await api.put(`/task/done/${taskId}`, {
+            projectId: projectId
         });
         return response.data.task;
     } catch (error) {
@@ -79,9 +66,7 @@ export const makeDoneTask = async (taskId, projectId) => {
 
 export const getNotification = async () => {
     try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/notification/`, {
-            withCredentials: true,
-        });
+        const response = await api.get('/notification/');
         return response.data;
     } catch (error) {
         console.error("❌ Error fetching notifications:", error);
@@ -91,11 +76,8 @@ export const getNotification = async () => {
 
 export const searchItems = async (query) => {
     try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/search`, {
-            params: {
-                query: query
-            },
-            withCredentials: true,
+        const response = await api.get('/search', {
+            params: { query },
             timeout: 5000,
             headers: {
                 'Cache-Control': 'no-cache'

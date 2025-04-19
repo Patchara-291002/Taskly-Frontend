@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, Suspense } from "react";
 import { useAuth } from "@/context/AuthContext";
-import axios from "axios";
 import Cookies from 'js-cookie';
 import styles from "@/app/component/Loading.module.css";
+import api from '@/utils/api'; // Import the API instance
 
 function LineCallbackContent() {
     const router = useRouter();
@@ -18,7 +18,7 @@ function LineCallbackContent() {
             console.log("Received token:", token);
 
             if (token) {
-                // บันทึก token ไว้ใน cookie
+                // Set token in cookie
                 Cookies.set('token', token, {
                     path: '/',
                     secure: true,
@@ -26,25 +26,15 @@ function LineCallbackContent() {
                 });
                 
                 try {
-                    // เรียกข้อมูลผู้ใช้โดยใช้ token ที่ได้รับ
-                    const response = await axios.get(
-                        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/me`, 
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`
-                            }
-                        }
-                    );
-                    
+                    const response = await api.get('/auth/me');
                     setUser(response.data.user);
-                    console.log("User data retrieved:", response.data.user);
                     router.push("/home/dashboard");
                 } catch (error) {
-                    console.error("Failed to fetch user data:", error);
-                    router.push("/login?error=auth_failed");
+                    console.error("LINE authentication failed:", error.response?.data || error.message);
+                    router.push("/login?error=line_auth_failed");
                 }
             } else {
-                console.error("No token received in callback");
+                console.error("No token in URL params");
                 router.push("/login?error=no_token");
             }
         };

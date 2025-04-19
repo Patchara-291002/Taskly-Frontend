@@ -1,42 +1,45 @@
-import axios from "axios";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+import api from '@/utils/api';
 
 // ✅ ดึงโปรเจคทั้งหมดของผู้ใช้
 export const fetchProjectsByUser = async () => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/project/`, {
-            withCredentials: true
-        });
+        const response = await api.get('/project/');
         return response.data;
     } catch (error) {
         console.error("❌ Error fetching projects:", error);
         throw error;
     }
 };
+
 // ✅ สร้างโปรเจคใหม่
 export const createProject = async (projectName, startDate, dueDate) => {
-    return axios.post(`${API_BASE_URL}/project/create`, { projectName, startDate, dueDate }, { withCredentials: true })
-        .then(response => response.data)
-        .catch(error => {
-            console.error("❌ Error creating project:", error);
-            throw error;
+    try {
+        const response = await api.post('/project/create', { 
+            projectName, 
+            startDate, 
+            dueDate 
         });
+        return response.data;
+    } catch (error) {
+        console.error("❌ Error creating project:", error);
+        throw error;
+    }
 };
 
 export const deleteProject = async (projectId) => {
-    return axios.delete(`${API_BASE_URL}/project/delete/${projectId}`, { withCredentials: true })
-        .then(response => response.data)
-        .catch(error => {
-            console.error("❌ Error deleting project:", error);
-            throw error;
-        });
-}
+    try {
+        const response = await api.delete(`/project/delete/${projectId}`);
+        return response.data;
+    } catch (error) {
+        console.error("❌ Error deleting project:", error);
+        throw error;
+    }
+};
 
 // ✅ ดึงข้อมูลโปรเจคโดยใช้ projectId
 export const fetchProjectByProjectId = async (projectId) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/project/${projectId}`, { withCredentials: true });
+        const response = await api.get(`/project/${projectId}`);
         return response.data;
     } catch (error) {
         console.error("❌ Error fetching project by ID:", error);
@@ -46,21 +49,18 @@ export const fetchProjectByProjectId = async (projectId) => {
 
 // ✅ เพิ่ม User เข้าไปในโปรเจค
 export const addUserToProject = async (projectId, role) => {
-    return axios.post(`${API_BASE_URL}/project/${projectId}/add-user`, { role }, { withCredentials: true })
-        .then(response => response.data)
-        .catch(error => {
-            console.error("❌ Error adding user to project:", error);
-            throw error;
-        });
+    try {
+        const response = await api.post(`/project/${projectId}/add-user`, { role });
+        return response.data;
+    } catch (error) {
+        console.error("❌ Error adding user to project:", error);
+        throw error;
+    }
 };
 
 export const createContent = async (projectId) => {
     try {
-        const response = await axios.post(
-            `${API_BASE_URL}/project/create-content/${projectId}`,
-            {},
-            { withCredentials: true } // 👈 config Axios ให้ใส่ Cookie
-        );
+        const response = await api.post(`/project/create-content/${projectId}`);
         console.log("✅ Content created:", response.data);
         return response.data;
     } catch (error) {
@@ -71,25 +71,18 @@ export const createContent = async (projectId) => {
 
 export const deleteContent = async (projectId, contentId) => {
     try {
-        const response = await axios.delete(
-            `${API_BASE_URL}/project/delete-content/${projectId}/${contentId}`,
-            { withCredentials: true } 
-        );
+        const response = await api.delete(`/project/delete-content/${projectId}/${contentId}`);
         console.log("✅ Content deleted:", response.data);
         return response.data;
     } catch (error) {
         console.error('❌ Error deleting content:', error.response?.data || error.message);
         throw error;
     }
-}
+};
 
 export const updateProjectById = async (projectId, updatedData) => {
     try {
-        const response = await axios.put(
-            `${API_BASE_URL}/project/update/${projectId}`,
-            updatedData,
-            { withCredentials: true }
-        );
+        const response = await api.put(`/project/update/${projectId}`, updatedData);
         return response.data;
     } catch (error) {
         console.error("❌ Error updating project:", error.response?.data || error.message);
@@ -101,15 +94,15 @@ export const uploadFileToProject = async (projectId, file) => {
     try {
         const formData = new FormData();
         formData.append("file", file);
-        const response = await axios.post(`${API_BASE_URL}/project/upload-file/${projectId}`,
+        const response = await api.post(
+            `/project/upload-file/${projectId}`,
             formData,
             {
                 headers: {
                     "Content-Type": "multipart/form-data",
-                },
-                withCredentials: true,
+                }
             }
-        )
+        );
         return response.data;
     } catch (error) {
         console.error("❌ Error uploading file:", error);
@@ -119,76 +112,66 @@ export const uploadFileToProject = async (projectId, file) => {
 
 export const deleteFileFromProject = async (projectId, fileId) => {
     try {
-        const response = await axios.delete(`${API_BASE_URL}/project/delete-file/${projectId}/${fileId}`, { withCredentials: true })
+        const response = await api.delete(`/project/delete-file/${projectId}/${fileId}`);
         return response.data;
     } catch (error) {
         console.error("❌ Error deleting file:", error);
         throw error;
     }
-}
+};
 
 export const createRoleToProject = async (projectId) => {
     try {
-        const response = await axios.post(`${API_BASE_URL}/project/create-role/${projectId}`,
-            {
-                name: "None",
-                color: "#D6D6D6"
-            },
-            {
-                withCredentials: true
-            }
-        )
-        return response.data
+        const response = await api.post(`/project/create-role/${projectId}`, {
+            name: "None",
+            color: "#D6D6D6"
+        });
+        return response.data;
     } catch (error) {
         console.error("❌ Error created role:", error);
         throw error;
     }
-}
+};
 
 export const updateRole = async (projectId, roleId, name, color) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/project/update-role/${projectId}/${roleId}`,
-            {
-                name,
-                color
-            },
-            {
-                withCredentials: true
-            }
-        )
-        return response.data
+        const response = await api.put(`/project/update-role/${projectId}/${roleId}`, {
+            name,
+            color
+        });
+        return response.data;
     } catch (error) {
         console.error("❌ Error updated role:", error);
         throw error;
     }
-}
+};
 
 export const deleteRole = async (projectId, roleId) => {
     try {
-        const response = await axios.delete(`${API_BASE_URL}/project/delete-role/${projectId}/${roleId}`, { withCredentials: true })
-        return response.data
+        const response = await api.delete(`/project/delete-role/${projectId}/${roleId}`);
+        return response.data;
     } catch (error) {
         console.error("❌ Error deleted role:", error);
         throw error;
     }
-}
+};
 
 export const addPeopleToProject = async (projectId) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/project/add/${projectId}`, {}, { withCredentials: true })
-        return response.data
+        const response = await api.put(`/project/add/${projectId}`, {});
+        return response.data;
     } catch (error) {
         console.error("❌ Error added people:", error);
         throw error;
     }
-}
+};
 
 export const updateUserRole = async (projectId, userId, roleId) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/project/user-role/${projectId}/${userId}`, { roleId }, { withCredentials: true })
-        return response.data
+        const response = await api.put(`/project/user-role/${projectId}/${userId}`, { roleId });
+        return response.data;
     } catch (error) {
         console.error("❌ Error updated user role:", error);
         throw error;
     }
-}
+};

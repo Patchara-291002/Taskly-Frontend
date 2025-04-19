@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from "react";
+import api from '@/utils/api';
 import LeftSideOverview from "../component/dashboarOverview/LeftSideOverview";
 import RightSideOverview from "../component/dashboarOverview/RightSideOverview";
 import ProtectedRoute from '../component/ProtectedRoute';
@@ -21,18 +22,18 @@ function DashboardContent() {
   const isMobile = width < 1440;
 
   useEffect(() => {
-    if (userId) {
-      axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/${userId}`, {
-        withCredentials: true
-      })
-        .then(response => {
-          const data = response.data;
-          localStorage.setItem('user', JSON.stringify(data));
-        })
-        .catch(error => {
-          console.error('Error fetching user data:', error);
-        });
-    }
+    const fetchUserData = async () => {
+      if (userId) {
+        try {
+          const response = await api.get(`/user/${userId}`);
+          localStorage.setItem('user', JSON.stringify(response.data));
+        } catch (error) {
+          console.error('❌ Error fetching user data:', error);
+        }
+      }
+    };
+
+    fetchUserData();
   }, [userId]);
 
   return (
@@ -66,7 +67,7 @@ const MobileLayout = () => {
 // Main component wrapped with Suspense
 export default function Page() {
   return (
-    <Suspense 
+    <Suspense
       fallback={
         <div className="w-full h-screen flex justify-center items-center">
           <div className="w-8 h-8 border-4 border-primaryOrange border-t-transparent rounded-full animate-spin" />

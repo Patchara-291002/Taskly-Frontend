@@ -1,11 +1,12 @@
-import axios from "axios";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+import api from '@/utils/api';
 
 // ✅ อัปเดตสถานะของ Task
 export const updateTaskStatus = async (taskId, statusId) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/task/update/status/${taskId}`, { statusId }, { withCredentials: true });
+        const response = await api.put(
+            `/task/update/status/${taskId}`, 
+            { statusId }
+        );
         return response.data;
     } catch (error) {
         console.error("❌ Error updating task status:", error);
@@ -24,23 +25,18 @@ export const createTask = async ({
     assignees
 }) => {
     try {
-        const response = await axios.post(`${API_BASE_URL}/task/create`,
-            {
-                projectId,
-                statusId,
-                taskName: "Empty",
-                detail: "Empty",
-                priority: 1,
-                startDate,
-                dueDate,
-                startTime,
-                dueTime,
-                assignees
-            },
-            {
-                withCredentials: true
-            }
-        );
+        const response = await api.post('/task/create', {
+            projectId,
+            statusId,
+            taskName: "Empty",
+            detail: "Empty",
+            priority: 1,
+            startDate,
+            dueDate,
+            startTime,
+            dueTime,
+            assignees
+        });
         return response.data;
     } catch (error) {
         console.error("❌ Error creating task:", error);
@@ -51,9 +47,7 @@ export const createTask = async ({
 // ✅ อัปเดตข้อมูล Task
 export const updateTask = async (taskId, updatedData) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/task/update/${taskId}`, updatedData, {
-            withCredentials: true
-        });
+        const response = await api.put(`/task/update/${taskId}`, updatedData);
         return response.data;
     } catch (error) {
         console.error("❌ Error updating task:", error);
@@ -63,24 +57,20 @@ export const updateTask = async (taskId, updatedData) => {
 
 export const getTaskById = async (taskId) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/task/${taskId}`,
-            {
-                withCredentials:true
-            }
-        )
-        return response.data
+        const response = await api.get(`/task/${taskId}`);
+        return response.data;
     } catch (error) {
         console.error("❌ Error fetching task:", error);
         throw error;
     }
-}
+};
 
 export const deleteTask = async (taskId) => {
     try {
-        const response = await axios.delete(`${API_BASE_URL}/task/delete/${taskId}`, { withCredentials: true });
+        const response = await api.delete(`/task/delete/${taskId}`);
         return response.data;
     } catch (error) {
         console.error("❌ Error deleting task:", error);
         throw error;
     }
-}
+};

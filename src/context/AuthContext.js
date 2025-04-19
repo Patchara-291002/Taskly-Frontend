@@ -1,10 +1,10 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { logout } from "@/api/auth";
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
+import api from '@/utils/api';
+import { logout } from "@/api/auth";
 
 const AuthContext = createContext(null);
 
@@ -25,22 +25,15 @@ export const AuthProvider = ({ children }) => {
                     return;
                 }
 
-                const response = await axios.get(
-                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/me`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
-
+                const response = await api.get('/auth/me');
+                
                 if (response.data.user) {
                     setUser(response.data.user);
                 } else {
                     setUser(null);
                 }
             } catch (error) {
-                console.error("Auth check failed:", error);
+                console.error("❌ Auth check failed:", error);
                 Cookies.remove('token');
                 setUser(null);
             } finally {
@@ -48,15 +41,16 @@ export const AuthProvider = ({ children }) => {
             }
         };
         checkAuth();
-    }, [])
+    }, []);
 
     const handleLogout = async () => {
         try {
             await logout();
+            Cookies.remove('token');
             setUser(null);
-            router.push("/login"); // แทนที่ redirect
+            router.push("/login");
         } catch (error) {
-            console.error("Logout failed:", error);
+            console.error("❌ Logout failed:", error);
         }
     };
 
@@ -64,7 +58,7 @@ export const AuthProvider = ({ children }) => {
         <AuthContext.Provider value={{ user, setUser, loading, handleLogout }}>
             {children}
         </AuthContext.Provider>
-    )
-}
+    );
+};
 
 export const useAuth = () => useContext(AuthContext);
