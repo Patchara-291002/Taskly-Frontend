@@ -14,46 +14,38 @@ function LineCallbackContent() {
 
     useEffect(() => {
         const handleLineCallback = async () => {
-            const code = searchParams.get("code");
-            const state = searchParams.get("state");
-            console.log("Received code:", code);
+            const token = searchParams.get("token");
+            console.log("Received token:", token);
 
-            if (code) {
+            if (token) {
+                // บันทึก token ไว้ใน cookie
+                Cookies.set('token', token, {
+                    path: '/',
+                    secure: true,
+                    sameSite: 'none'
+                });
+                
                 try {
-                    // ส่ง code ไป backend เพื่อแลกเป็น token
-                    const authResponse = await axios.get(
-                        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/line/callback`,
+                    // เรียกข้อมูลผู้ใช้โดยใช้ token ที่ได้รับ
+                    const response = await axios.get(
+                        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/me`, 
                         {
-                            params: { code, state },
-                            withCredentials: true,
                             headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
+                                Authorization: `Bearer ${token}`
                             }
-                        },
-
+                        }
                     );
-
-                    const { token, user } = authResponse.data;
-
-                    if (token) {
-                        Cookies.set('token', token, {
-                            path: '/',
-                            secure: true,
-                            sameSite: 'none'
-                        });
-
-                        setUser(user);
-                        console.log("LINE login successful:", user);
-                        router.push("/home/dashboard");
-                    }
+                    
+                    setUser(response.data.user);
+                    console.log("User data retrieved:", response.data.user);
+                    router.push("/home/dashboard");
                 } catch (error) {
-                    console.error("LINE authentication failed:", error.response?.data || error.message);
-                    router.push("/login?error=line_auth_failed");
+                    console.error("Failed to fetch user data:", error);
+                    router.push("/login?error=auth_failed");
                 }
             } else {
-                console.error("No code in URL params");
-                router.push("/login?error=no_code");
+                console.error("No token received in callback");
+                router.push("/login?error=no_token");
             }
         };
 
@@ -70,7 +62,7 @@ function LineCallbackContent() {
 // Main component wrapped with Suspense
 export default function LineCallback() {
     return (
-        <Suspense
+        <Suspense 
             fallback={
                 <div className="w-full h-screen flex justify-center items-center bg-white">
                     <div className={styles.loader} />
