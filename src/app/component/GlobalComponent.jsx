@@ -2,8 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import AirDatepicker from "air-datepicker";
 import "air-datepicker/air-datepicker.css";
 import en from "air-datepicker/locale/en";
-import axios from "axios";
-import Link from "next/link";
+
 
 export const TimePicker = ({ time = "00:00", onChange }) => {
     const [hour, setHour] = useState(time.split(":")[0]);

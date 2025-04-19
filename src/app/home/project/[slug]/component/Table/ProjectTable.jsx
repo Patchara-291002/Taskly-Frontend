@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { PlusIcon, TrashIcon, TrashSolidIcon } from "@/app/home/component/icon/GlobalIcon";
 import { AirDatepickerComponent, PrjRolePicker, StdStatusPicker, PrjPriorityPicker } from "@/app/component/GlobalComponent";
 // import { updateAssignment, createAssignment } from "@/api/course"
@@ -7,9 +7,12 @@ import { createStatus } from "@/api/status";
 import PrjStatusPicker from "@/app/component/GlobalComponent/PrjStatusPicker";
 import { Aa, Calendar, Priority, Role, Status } from "@/app/component/GlobalIcon";
 import { deleteTask } from "@/api/task";
+import { set } from "date-fns";
 
 export default function ProjectTable({ project, loadProject }) {
     const [taskPayload, setTaskPayload] = useState([]);
+    const [isUpdating, setIsUpdating] = useState(false);
+    const taskNameUpdateTimer = useRef(null);
 
     useEffect(() => {
         if (project?.tasks) {
@@ -17,61 +20,54 @@ export default function ProjectTable({ project, loadProject }) {
         }
     }, [project]);
 
-    const handleChange = (id, key, value) => {
-        setTaskPayload((prev) =>
+    const handleTaskNameChange = (id, value) => {
+        setTaskPayload(prev =>
             prev.map(task =>
-                task._id === id ? { ...task, [key]: value } : task
+                task._id === id ? { ...task, taskName: value } : task
             )
         );
+
+        if (taskNameUpdateTimer.current) {
+            clearTimeout(taskNameUpdateTimer.current);
+        }
+
+        taskNameUpdateTimer.current = setTimeout(async () => {
+            try {
+                await updateTask(id, { taskName: value });
+            } catch (error) {
+                console.error("❌ Failed to update task name:", error);
+            }
+        }, 1000);
     };
 
-    // Code จาก Component ตัวอย่าง
-    // ✅ ใช้ useCallback เพื่ออัปเดต API อัตโนมัติ
-    const updateTaskData = useCallback(async (task) => {
-        const updatedTask = {
-            taskName: task.taskName,
-            startDate: task.startDate,
-            dueDate: task.dueDate,
-            statusId: task.statusId,
-            roleId: task.roleId,
-            priority: task.priority
-        };
-
+    const handleImmediateChange = async (id, key, value) => {
         try {
-            await updateTask(
-                task._id,
-                updatedTask
+            setIsUpdating(true);
+            setTaskPayload(prev =>
+                prev.map(task =>
+                    task._id === id ? { ...task, [key]: value } : task
+                )
             );
+
+            await updateTask(id, { [key]: value });
             await loadProject();
         } catch (error) {
-            console.error("❌ Failed to update task:", error);
+            console.error(`❌ Failed to update task ${key}:`, error);
+        } finally {
+            setIsUpdating(false);
         }
-    }, []);
-
-    // ✅ ใช้ useEffect ให้ API อัปเดตทุกครั้งที่ค่าเปลี่ยน
-    useEffect(() => {
-        const delay = setTimeout(() => {
-            taskPayload.forEach(updateTaskData);
-        }, 500);
-
-        return () => clearTimeout(delay);
-    }, [taskPayload, updateTaskData]);
+    };
 
     const newTask = async () => {
         try {
+            setIsUpdating(true);
             let statusId = project.statuses?.[0]?._id;
 
             if (!statusId) {
-                console.log("⚠ No status found, creating a new status...");
-
-                // ✅ สร้าง Status ใหม่ชื่อ "New status"
                 const newStatus = await createStatus(project._id, "New status", "#D6D6D6");
-
                 if (!newStatus?._id) {
-                    console.error("❌ Failed to create a new status");
-                    return;
+                    throw new Error("Failed to create status");
                 }
-
                 statusId = newStatus._id;
             }
 
@@ -91,15 +87,32 @@ export default function ProjectTable({ project, loadProject }) {
                 assignees: [],
             });
 
-            loadProject();
+            // Add delay before reloading
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await loadProject();
         } catch (error) {
             console.error("❌ Failed to create task:", error);
+        } finally {
+            setIsUpdating(false);
         }
     };
 
+    useEffect(() => {
+        return () => {
+            if (taskNameUpdateTimer.current) {
+                clearTimeout(taskNameUpdateTimer.current);
+            }
+        };
+    }, []);
+
 
     return (
-        <div className="w-full max-h-[400px] bg-white border border-grayBorder overflow-x-scroll p-[10px] rounded-[15px]">
+        <div className="relative w-full max-h-[400px] bg-white border border-grayBorder overflow-x-scroll p-[10px] rounded-[15px]">
+            {isUpdating && (
+                <div className="absolute top-2 right-2 text-xs text-orange-500">
+                    Saving changes...
+                </div>
+            )}
             <div className="w-full min-w-[1024px] ">
                 <table className="table-fixed w-full border-collapse">
                     <colgroup>
@@ -179,7 +192,7 @@ export default function ProjectTable({ project, loadProject }) {
                                                 type="text"
                                                 className="w-full bg-transparent outline-none"
                                                 value={task.taskName}
-                                                onChange={(e) => handleChange(task._id, "taskName", e.target.value)}
+                                                onChange={(e) => handleTaskNameChange(task._id, e.target.value)}
                                             />
                                         </div>
                                     </td>
@@ -189,7 +202,7 @@ export default function ProjectTable({ project, loadProject }) {
                                         <PrjRolePicker
                                             selectedRole={project?.roles.find(r => r.roleId === task.roleId)}
                                             roleOptions={project.roles}
-                                            onChange={(newRole) => handleChange(task._id, "roleId", newRole)}
+                                            onChange={(newRole) => handleImmediateChange(task._id, "roleId", newRole)}
                                             loadProject={loadProject}
                                         />
                                     </td>
@@ -198,13 +211,13 @@ export default function ProjectTable({ project, loadProject }) {
                                     <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
                                         <PrjPriorityPicker
                                             selectedPriority={task.priority}
-                                            onChange={(priorityValue) => handleChange(task._id, "priority", priorityValue)}
+                                            onChange={(newRole) => handleImmediateChange(task._id, "priority", newRole)}
                                         />
                                     </td>
                                     <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
                                         <PrjStatusPicker
                                             selectedStatus={project?.statuses.find(s => s._id === task.statusId)}
-                                            onChange={(newStatus) => handleChange(task._id, "statusId", newStatus)}
+                                            onChange={(newRole) => handleImmediateChange(task._id, "statusId", newRole)}
                                             statusOptions={project.statuses}
                                             loadProject={loadProject}
                                         />
@@ -214,17 +227,17 @@ export default function ProjectTable({ project, loadProject }) {
                                     <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
                                         <AirDatepickerComponent
                                             selectedDate={task.startDate}
-                                            onChange={(newDate) => handleChange(task._id, "startDate", newDate)}
+                                            onChange={(newRole) => handleImmediateChange(task._id, "startDate", newRole)}
                                         />
                                     </td>
                                     <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-r-0">
                                         <AirDatepickerComponent
                                             selectedDate={task.dueDate}
-                                            onChange={(newDate) => handleChange(task._id, "dueDate", newDate)}
+                                            onChange={(newRole) => handleImmediateChange(task._id, "dueDate", newRole)}
                                         />
                                     </td>
                                     <td className="">
-                                        <TrashButton 
+                                        <TrashButton
                                             taskId={task._id}
                                             loadProject={loadProject}
                                         />
