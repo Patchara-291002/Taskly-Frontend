@@ -7,7 +7,7 @@ import { createStatus } from "@/api/status";
 import PrjStatusPicker from "@/app/component/GlobalComponent/PrjStatusPicker";
 import { Aa, Calendar, Priority, Role, Status } from "@/app/component/GlobalIcon";
 import { deleteTask } from "@/api/task";
-import { set } from "date-fns";
+import style from "@/app/component/Loading.module.css"
 
 export default function ProjectTable({ project, loadProject }) {
     const [taskPayload, setTaskPayload] = useState([]);
@@ -108,156 +108,157 @@ export default function ProjectTable({ project, loadProject }) {
 
     return (
         <div className="relative w-full max-h-[400px] bg-white border border-grayBorder overflow-x-scroll p-[10px] rounded-[15px]">
-            {isUpdating && (
-                <div className="absolute top-2 right-2 text-xs text-orange-500">
-                    Saving changes...
+            {isUpdating ? (
+                <div className="absolute w-full h-full flex justify-center items-center bg-white">
+                   <div className="loader" />
+                </div>
+            ) : (
+                <div className="w-full min-w-[1024px] ">
+                    <table className="table-fixed w-full border-collapse">
+                        <colgroup>
+                            <col className="w-auto" />
+                            <col className="max-w-[70px]" />
+                            <col className="max-w-[70px]" />
+                            <col className="max-w-[70px]" />
+                            <col className="w-[180px]" />
+                            <col className="w-[180px]" />
+                            <col className="w-[40px]" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th className="py-[12px] px-[10px] border-r-[1px] border-grayBorder">
+                                    <div
+                                        className="flex items-end gap-[3px] "
+                                    >
+                                        <Aa w={22} h={22} color={"#FF6200"} />
+                                        <p className="font-normal text-[14px] text-[#5F5F5F]">name of task</p>
+                                    </div>
+                                </th>
+                                <th className="py-[12px] px-[10px] border-r-[1px] border-grayBorder">
+                                    <div
+                                        className="flex items-end gap-[3px] "
+                                    >
+                                        <Role w={19} h={19} color={"#FF6200"} />
+                                        <p className="font-normal text-[14px] text-[#5F5F5F]">role</p>
+                                    </div>
+                                </th>
+                                <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
+                                    <div
+                                        className="flex items-end gap-[3px] "
+                                    >
+                                        <Priority w={19} h={19} color={"#FF6200"} />
+                                        <p className="font-normal text-[14px] text-[#5F5F5F]">priorty</p>
+                                    </div>
+                                </th>
+                                <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
+                                    <div
+                                        className="flex items-end gap-[3px] "
+                                    >
+                                        <Status w={20} h={20} color={"#FF6200"} />
+                                        <p className="font-normal text-[14px] text-[#5F5F5F]">status</p>
+                                    </div>
+                                </th>
+                                <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
+                                    <div
+                                        className="flex items-center gap-[3px] "
+                                    >
+                                        <Calendar w={17} h={17} color={"#FF6200"} />
+                                        <p className="font-normal text-[14px] text-[#5F5F5F]">start date</p>
+                                    </div>
+                                </th>
+                                <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-grayBorder">
+                                    <div
+                                        className="flex items-center gap-[3px] "
+                                    >
+                                        <Calendar w={17} h={17} color={"#FF6200"} />
+                                        <p className="font-normal text-[14px] text-[#5F5F5F]">due date</p>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {taskPayload.length === 0 ? (
+                                emptyTable()
+                            ) : (
+                                taskPayload.map((task, index) => (
+                                    <tr key={index}>
+                                        {/* Name of Assignment */}
+                                        <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-l-0">
+                                            <div
+                                                className="flex items-center gap-[5px]"
+                                            >
+                                                <p className="font-normal">{index + 1}.</p>
+                                                <input
+                                                    type="text"
+                                                    className="w-full bg-transparent outline-none"
+                                                    value={task.taskName}
+                                                    onChange={(e) => handleTaskNameChange(task._id, e.target.value)}
+                                                />
+                                            </div>
+                                        </td>
+
+                                        {/* Description */}
+                                        <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
+                                            <PrjRolePicker
+                                                selectedRole={project?.roles.find(r => r.roleId === task.roleId)}
+                                                roleOptions={project.roles}
+                                                onChange={(newRole) => handleImmediateChange(task._id, "roleId", newRole)}
+                                                loadProject={loadProject}
+                                            />
+                                        </td>
+
+                                        {/* Status (Dropdown) */}
+                                        <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
+                                            <PrjPriorityPicker
+                                                selectedPriority={task.priority}
+                                                onChange={(newRole) => handleImmediateChange(task._id, "priority", newRole)}
+                                            />
+                                        </td>
+                                        <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
+                                            <PrjStatusPicker
+                                                selectedStatus={project?.statuses.find(s => s._id === task.statusId)}
+                                                onChange={(newRole) => handleImmediateChange(task._id, "statusId", newRole)}
+                                                statusOptions={project.statuses}
+                                                loadProject={loadProject}
+                                            />
+                                        </td>
+
+                                        {/* Due Date (Air Datepicker) */}
+                                        <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
+                                            <AirDatepickerComponent
+                                                selectedDate={task.startDate}
+                                                onChange={(newRole) => handleImmediateChange(task._id, "startDate", newRole)}
+                                            />
+                                        </td>
+                                        <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-r-0">
+                                            <AirDatepickerComponent
+                                                selectedDate={task.dueDate}
+                                                onChange={(newRole) => handleImmediateChange(task._id, "dueDate", newRole)}
+                                            />
+                                        </td>
+                                        <td className="">
+                                            <TrashButton
+                                                taskId={task._id}
+                                                loadProject={loadProject}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                            <tr>
+                                <td
+                                    colSpan={4}
+                                    className="flex items-center gap-[5px] py-[12px] px-[10px] cursor-pointer"
+                                    onClick={newTask}
+                                >
+                                    <PlusIcon w={12} h={12} color={"#FF6200"} />
+                                    <p className="font-normal text-[12px] text-[#5F5F5F]">New Task</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             )}
-            <div className="w-full min-w-[1024px] ">
-                <table className="table-fixed w-full border-collapse">
-                    <colgroup>
-                        <col className="w-auto" />
-                        <col className="max-w-[70px]" />
-                        <col className="max-w-[70px]" />
-                        <col className="max-w-[70px]" />
-                        <col className="w-[180px]" />
-                        <col className="w-[180px]" />
-                        <col className="w-[40px]" />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th className="py-[12px] px-[10px] border-r-[1px] border-grayBorder">
-                                <div
-                                    className="flex items-end gap-[3px] "
-                                >
-                                    <Aa w={22} h={22} color={"#FF6200"} />
-                                    <p className="font-normal text-[14px] text-[#5F5F5F]">name of task</p>
-                                </div>
-                            </th>
-                            <th className="py-[12px] px-[10px] border-r-[1px] border-grayBorder">
-                                <div
-                                    className="flex items-end gap-[3px] "
-                                >
-                                    <Role w={19} h={19} color={"#FF6200"} />
-                                    <p className="font-normal text-[14px] text-[#5F5F5F]">role</p>
-                                </div>
-                            </th>
-                            <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
-                                <div
-                                    className="flex items-end gap-[3px] "
-                                >
-                                    <Priority w={19} h={19} color={"#FF6200"} />
-                                    <p className="font-normal text-[14px] text-[#5F5F5F]">priorty</p>
-                                </div>
-                            </th>
-                            <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
-                                <div
-                                    className="flex items-end gap-[3px] "
-                                >
-                                    <Status w={20} h={20} color={"#FF6200"} />
-                                    <p className="font-normal text-[14px] text-[#5F5F5F]">status</p>
-                                </div>
-                            </th>
-                            <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
-                                <div
-                                    className="flex items-center gap-[3px] "
-                                >
-                                    <Calendar w={17} h={17} color={"#FF6200"} />
-                                    <p className="font-normal text-[14px] text-[#5F5F5F]">start date</p>
-                                </div>
-                            </th>
-                            <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-grayBorder">
-                                <div
-                                    className="flex items-center gap-[3px] "
-                                >
-                                    <Calendar w={17} h={17} color={"#FF6200"} />
-                                    <p className="font-normal text-[14px] text-[#5F5F5F]">due date</p>
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {taskPayload.length === 0 ? (
-                            emptyTable()
-                        ) : (
-                            taskPayload.map((task, index) => (
-                                <tr key={index}>
-                                    {/* Name of Assignment */}
-                                    <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-l-0">
-                                        <div
-                                            className="flex items-center gap-[5px]"
-                                        >
-                                            <p className="font-normal">{index + 1}.</p>
-                                            <input
-                                                type="text"
-                                                className="w-full bg-transparent outline-none"
-                                                value={task.taskName}
-                                                onChange={(e) => handleTaskNameChange(task._id, e.target.value)}
-                                            />
-                                        </div>
-                                    </td>
-
-                                    {/* Description */}
-                                    <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
-                                        <PrjRolePicker
-                                            selectedRole={project?.roles.find(r => r.roleId === task.roleId)}
-                                            roleOptions={project.roles}
-                                            onChange={(newRole) => handleImmediateChange(task._id, "roleId", newRole)}
-                                            loadProject={loadProject}
-                                        />
-                                    </td>
-
-                                    {/* Status (Dropdown) */}
-                                    <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
-                                        <PrjPriorityPicker
-                                            selectedPriority={task.priority}
-                                            onChange={(newRole) => handleImmediateChange(task._id, "priority", newRole)}
-                                        />
-                                    </td>
-                                    <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
-                                        <PrjStatusPicker
-                                            selectedStatus={project?.statuses.find(s => s._id === task.statusId)}
-                                            onChange={(newRole) => handleImmediateChange(task._id, "statusId", newRole)}
-                                            statusOptions={project.statuses}
-                                            loadProject={loadProject}
-                                        />
-                                    </td>
-
-                                    {/* Due Date (Air Datepicker) */}
-                                    <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
-                                        <AirDatepickerComponent
-                                            selectedDate={task.startDate}
-                                            onChange={(newRole) => handleImmediateChange(task._id, "startDate", newRole)}
-                                        />
-                                    </td>
-                                    <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-r-0">
-                                        <AirDatepickerComponent
-                                            selectedDate={task.dueDate}
-                                            onChange={(newRole) => handleImmediateChange(task._id, "dueDate", newRole)}
-                                        />
-                                    </td>
-                                    <td className="">
-                                        <TrashButton
-                                            taskId={task._id}
-                                            loadProject={loadProject}
-                                        />
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                        <tr>
-                            <td
-                                colSpan={4}
-                                className="flex items-center gap-[5px] py-[12px] px-[10px] cursor-pointer"
-                                onClick={newTask}
-                            >
-                                <PlusIcon w={12} h={12} color={"#FF6200"} />
-                                <p className="font-normal text-[12px] text-[#5F5F5F]">New Task</p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
     );
 }
