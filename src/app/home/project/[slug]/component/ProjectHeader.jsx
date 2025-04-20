@@ -44,6 +44,11 @@ export default function ProjectHeader({ project, loadProject }) {
         }));
     };
 
+    const handleOpenMemberCard = () => {
+        loadProject();
+        setIsMemberOpen(true);
+    }
+
     return (
         <>
             <div className='w-full flex items-center justify-between'>
@@ -63,7 +68,7 @@ export default function ProjectHeader({ project, loadProject }) {
                         style={{ background: isUserHover ? '#FF6200' : 'none' }}
                         onMouseEnter={() => setIsUserHover(true)}
                         onMouseLeave={() => setIsUserHover(false)}
-                        onClick={() => setIsMemberOpen(true)}
+                        onClick={handleOpenMemberCard}
                     >
                         <AddUserIcon
                             w={14}
@@ -92,7 +97,7 @@ export default function ProjectHeader({ project, loadProject }) {
             >
                 <div className="flex items-center gap-[10px] mt-[20px]">
                     <div className="relative">
-                        <span className="text-[#727272] text-[14px] absolute top-[-20px]">start</span>
+                        <span className="text-[#5F5F5F] text-[12px] absolute top-[-20px]">start</span>
                         <AirDatepickerComponent
                             selectedDate={projectData.startDate}
                             onChange={(value) => handleChange('startDate', value)}
@@ -100,7 +105,7 @@ export default function ProjectHeader({ project, loadProject }) {
                     </div>
 
                     <div className="relative">
-                        <span className="text-[#727272] text-[14px] absolute top-[-20px]">due</span>
+                        <span className="text-[#5F5F5F] text-[12px] absolute top-[-20px]">due</span>
                         <AirDatepickerComponent
                             selectedDate={projectData.dueDate}
                             onChange={(value) => handleChange('dueDate', value)}

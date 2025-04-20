@@ -4,7 +4,7 @@ import AirDatepicker from 'air-datepicker';
 import localeEn from 'air-datepicker/locale/en.js';
 import 'air-datepicker/air-datepicker.css';
 
-export default function NewProject({ isOpen, setIsOpen, projectName, setProjectName, startDate, setStartDate, dueDate, setDueDate, onSubmit }) {
+export default function NewProject({ isOpen, setIsOpen, projectName, setProjectName, startDate, setStartDate, dueDate, setDueDate, onSubmit, isCreating }) {
     const [startDatePicker, setStartDatePicker] = useState(null);
     const [endDatePicker, setEndDatePicker] = useState(null);
 
@@ -61,17 +61,25 @@ export default function NewProject({ isOpen, setIsOpen, projectName, setProjectN
                         type="text"
                         placeholder="Select Date"
                         readOnly
-                        
+
                         className='w-full h-[35px] bg-[#F2F2F2] rounded-[5px] px-[10px] text-[14px] outline-none'
                     />
                 </div>
-                <button 
-                    className="w-full h-[35px] bg-primaryOrange text-white font-semibold rounded-[5px] active:bg-primaryOrange/80" 
-                    onClick={onSubmit}
-                >
-                    Create Project
-                </button>
+                {isCreating ? (
+                    <button
+                        className='w-full h-[35px] bg-primaryOrange text-white font-semibold rounded-[5px] active:bg-primaryOrange/80'
+                    >
+                        Creating....
+                    </button>
+                ) : (
+                    <button
+                        className="w-full h-[35px] bg-primaryOrange text-white font-semibold rounded-[5px] active:bg-primaryOrange/80"
+                        onClick={onSubmit}
+                    >
+                        Create Project
+                    </button>
+                )}
             </div>
-        </BlurBackground>
+        </BlurBackground >
     );
 }

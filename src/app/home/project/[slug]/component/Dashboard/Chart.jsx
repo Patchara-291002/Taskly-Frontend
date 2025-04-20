@@ -316,6 +316,7 @@ const TaskOverdue = ({ project }) => {
         today.setHours(0, 0, 0, 0); // ตั้งเวลาเป็น 00:00:00
 
         return tasks.filter(task => {
+            if (!task.dueDate) return false;
             const dueDate = new Date(task.dueDate);
             dueDate.setHours(0, 0, 0, 0);
             return dueDate < today;

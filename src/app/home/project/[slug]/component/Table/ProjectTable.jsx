@@ -107,10 +107,10 @@ export default function ProjectTable({ project, loadProject }) {
 
 
     return (
-        <div className="relative w-full max-h-[400px] bg-white border border-grayBorder overflow-x-scroll p-[10px] rounded-[15px]">
+        <div className="relative w-full h-[400px] bg-white border border-grayBorder overflow-x-scroll p-[10px] rounded-[15px]">
             {isUpdating ? (
                 <div className="absolute w-full h-full flex justify-center items-center bg-white">
-                   <div className="loader" />
+                    <div className={style.loader} />
                 </div>
             ) : (
                 <div className="w-full min-w-[1024px] ">
@@ -176,7 +176,9 @@ export default function ProjectTable({ project, loadProject }) {
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody
+                            className="border-b-[1px] border-grayBorder"
+                        >
                             {taskPayload.length === 0 ? (
                                 emptyTable()
                             ) : (
@@ -236,7 +238,7 @@ export default function ProjectTable({ project, loadProject }) {
                                                 onChange={(newRole) => handleImmediateChange(task._id, "dueDate", newRole)}
                                             />
                                         </td>
-                                        <td className="">
+                                        <td className="border-b-[1px] border-grayBorder">
                                             <TrashButton
                                                 taskId={task._id}
                                                 loadProject={loadProject}

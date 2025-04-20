@@ -9,6 +9,7 @@ import CourseHeader from './component/CourseHeader';
 import CourseTable from './component/CourseTable';
 import useWindowSize from '@/hooks/useWindow';
 import Chart from './component/Chart';
+import Loading from '@/app/component/GlobalComponent/Loading';
 
 export default function Page() {
 
@@ -18,27 +19,37 @@ export default function Page() {
     const pathname = usePathname();
     const courseId = pathname.split('/').pop();
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [course, setCourse] = useState(null);
 
     const getCourseById = async () => {
-        setLoading(true);
         try {
             const data = await fetchCourseById(courseId);
             setCourse(data);
         } catch (err) {
             setError(err);
-        } finally {
-            setLoading(false);
         }
     };
 
     useEffect(() => {
         if (!courseId) return;
-        getCourseById()
-    }, [courseId])
+        const getCourse = async () => {
+            setLoading(true);
+            try {
+                await getCourseById();
+            } catch (err) {
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        }
+        getCourse()
+    }, [])
 
+    if (loading) {
+        return <Loading />
+    }
 
     return (
         <>

@@ -3,9 +3,11 @@ import { PlusIcon, TrashIcon, TrashSolidIcon } from "@/app/home/component/icon/G
 import { AirDatepickerComponent, StdStatusPicker } from "@/app/component/GlobalComponent";
 import { updateAssignment, createAssignment, deleteAssignment } from "@/api/course"
 import { tr } from "date-fns/locale";
+import style from "@/app/component/Loading.module.css";
 
 export default function CourseTable({ course, getCourseById }) {
     const [assignmentPayload, setAssignmentPayload] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (course?.Assignments) {
@@ -47,113 +49,125 @@ export default function CourseTable({ course, getCourseById }) {
 
     const newAssignment = async () => {
         try {
+            setIsLoading(true);
             await createAssignment(course._id)
-            getCourseById()
+            await getCourseById()
         } catch (error) {
             console.error("❌ Failed to create assignment:", error)
+        } finally {
+            setIsLoading(false);
         }
     }
 
     return (
         <div className="w-full overflow-x-auto pt-[40px]">
             <p className="font-medium text-[16px] pb-[15px]">Assignments</p>
-            <div className="w-full max-h-[500px]  min-w-[650px] overflow-y-auto border-[1px] border-grayBorder bg-white p-[10px] rounded-[15px]">
-                <table className="table-fixed w-full border-collapse overflow-x-auto">
-                    <colgroup>
-                        <col className="w-auto" />
-                        <col className="w-auto" />
-                        <col className="w-[100px]" />
-                        <col className="w-[200px]" />
-                        <col className="w-[40px]" />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
-                                Name of Assignment
-                            </th>
-                            <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
-                                Description
-                            </th>
-                            <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
-                                Status
-                            </th>
-                            <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-grayBorder">
-                                Due Date
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {assignmentPayload.length === 0 ? (
-                            emptyTable()
-                        ) : (
-                            assignmentPayload.map((assignment, index) => (
-                                <tr key={index}>
-                                    {/* Name of Assignment */}
-                                    <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-l-0">
-                                        <div
-                                            className="flex items-center gap-[5px]"
-                                        >
-                                            <p className="font-normal">{index + 1}.</p>
-                                            <input
+            <div className="w-full h-[400px]  min-w-[650px] overflow-y-auto border-[1px] border-grayBorder bg-white p-[10px] rounded-[15px]">
+                {isLoading ? (
+                    <div
+                        className="w-full h-full flex justify-center items-center"
+                    >
+                        <div className={style.loader} />
+                    </div>
+                ) : (
+                    <table className="table-fixed w-full border-collapse overflow-x-auto">
+                        <colgroup>
+                            <col className="w-auto" />
+                            <col className="w-auto" />
+                            <col className="w-[160px]" />
+                            <col className="w-[200px]" />
+                            <col className="w-[40px]" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
+                                    Name of Assignment
+                                </th>
+                                <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
+                                    Description
+                                </th>
+                                <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-r-[1px] border-grayBorder">
+                                    Status
+                                </th>
+                                <th className="text-[14px] font-normal text-left py-[12px] px-[10px] border-grayBorder">
+                                    Due Date
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {assignmentPayload.length === 0 ? (
+                                emptyTable()
+                            ) : (
+                                assignmentPayload.map((assignment, index) => (
+                                    <tr key={index}>
+                                        {/* Name of Assignment */}
+                                        <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-l-0">
+                                            <div
+                                                className="flex items-center gap-[5px]"
+                                            >
+                                                <p className="font-normal">{index + 1}.</p>
+                                                <input
+                                                    type="text"
+                                                    className="w-full bg-transparent outline-none"
+                                                    value={assignment.assignmentName}
+                                                    onChange={(e) => handleChange(index, "assignmentName", e.target.value)}
+                                                />
+                                            </div>
+                                        </td>
+
+                                        {/* Description */}
+                                        <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
+                                            <textarea
                                                 type="text"
-                                                className="w-full bg-transparent outline-none"
-                                                value={assignment.assignmentName}
-                                                onChange={(e) => handleChange(index, "assignmentName", e.target.value)}
+                                                className="w-full bg-transparent outline-none resize-none overflow-hidden min-h-[24px]"
+                                                value={assignment.description}
+                                                onChange={(e) => {
+                                                    e.target.style.height = 'inherit';
+                                                    e.target.style.height = `${e.target.scrollHeight}px`;
+                                                    handleChange(index, "description", e.target.value);
+                                                }}
+                                                rows={1}
                                             />
-                                        </div>
-                                    </td>
+                                        </td>
 
-                                    {/* Description */}
-                                    <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
-                                        <textarea
-                                            type="text"
-                                            className="w-full bg-transparent outline-none resize-none overflow-hidden min-h-[24px]"
-                                            value={assignment.description}
-                                            onChange={(e) => {
-                                                e.target.style.height = 'inherit';
-                                                e.target.style.height = `${e.target.scrollHeight}px`;
-                                                handleChange(index, "description", e.target.value);
-                                            }}
-                                            rows={1}
-                                        />
-                                    </td>
+                                        {/* Status (Dropdown) */}
+                                        <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
+                                            <StdStatusPicker
+                                                selectedStatus={assignment.status}
+                                                onChange={(newStatus) => handleChange(index, "status", newStatus)}
+                                            />
+                                        </td>
 
-                                    {/* Status (Dropdown) */}
-                                    <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder">
-                                        <StdStatusPicker
-                                            selectedStatus={assignment.status}
-                                            onChange={(newStatus) => handleChange(index, "status", newStatus)}
-                                        />
-                                    </td>
-
-                                    {/* Due Date (Air Datepicker) */}
-                                    <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-r-0">
-                                        <AirDatepickerComponent
-                                            selectedDate={assignment.endDate}
-                                            onChange={(newDate) => handleChange(index, "endDate", newDate)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <TrashButton
-                                            assignmentId={assignment._id}
-                                            getCourseById={getCourseById}
-                                        />
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                        <tr>
-                            <td
-                                colSpan={4}
-                                className="flex items-center gap-[5px] py-[12px] px-[10px] cursor-pointer"
-                                onClick={newAssignment}
-                            >
-                                <PlusIcon w={12} h={12} color={"#FF6200"} />
-                                <p className="font-normal text-[12px] text-[#5F5F5F]">New Assignment</p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                        {/* Due Date (Air Datepicker) */}
+                                        <td className="font-normal text-[12px] text-[#5F5F5F] py-[12px] px-[10px] border-[1px] border-grayBorder border-r-0">
+                                            <AirDatepickerComponent
+                                                selectedDate={assignment.endDate}
+                                                onChange={(newDate) => handleChange(index, "endDate", newDate)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <TrashButton
+                                                assignmentId={assignment._id}
+                                                getCourseById={getCourseById}
+                                                setIsLoading={setIsLoading}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                            <tr>
+                                <td
+                                    colSpan={4}
+                                    className="flex items-center gap-[5px] py-[12px] px-[10px] cursor-pointer"
+                                    onClick={newAssignment}
+                                >
+                                    <PlusIcon w={12} h={12} color={"#FF6200"} />
+                                    <p className="font-normal text-[12px] text-[#5F5F5F]">New Assignment</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                )}
             </div>
         </div>
     );
@@ -169,28 +183,31 @@ const emptyTable = () => (
     </tr>
 );
 
-const TrashButton = ({ assignmentId, getCourseById }) => {
+const TrashButton = ({ assignmentId, getCourseById, setIsLoading }) => {
     const [isHovered, setIsHovered] = useState(false);
 
     const handleDeleteAssignment = async (assignmentId) => {
         try {
+            setIsLoading(true)
             await deleteAssignment(assignmentId)
-            getCourseById()
+            await getCourseById()
         } catch (error) {
             console.error("❌ Failed to delete assignment:", error)
+        } finally {
+            setIsLoading(false)
         }
     }
-        return (
-            <button
-                className=""
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteAssignment(assignmentId);
-                }}
-            >
-                <TrashSolidIcon w={16} h={16} color={isHovered ? "#FF6200" : "#D9D9D9"} />
-            </button>
-        )
-    }
+    return (
+        <button
+            className=""
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteAssignment(assignmentId);
+            }}
+        >
+            <TrashSolidIcon w={16} h={16} color={isHovered ? "#FF6200" : "#D9D9D9"} />
+        </button>
+    )
+}

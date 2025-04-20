@@ -3,8 +3,12 @@ import { DayPicker, TimePicker } from '@/app/component/GlobalComponent';
 import { LinkIcon, PlusIcon, TrashSolidIcon } from '@/app/home/component/icon/GlobalIcon';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { deleteContentInCourse } from '@/api/course';
+import style from '@/app/component/Loading.module.css';
 
 export default function CourseInfo({ course, getCourseById }) {
+
+    const [isLoading, setIsLoading] = useState(false);
+
     const [coursePayload, setCoursePayload] = useState(course || []);
     useEffect(() => {
         if (course) {
@@ -29,11 +33,11 @@ export default function CourseInfo({ course, getCourseById }) {
 
     const updateCourse = useCallback(async () => {
         if (!coursePayload._id) return;
-        try {
+        try {;
             await updateCourseById(coursePayload._id, coursePayload);
         } catch (error) {
             console.error("❌ Failed to update course:", error);
-        }
+        } 
     }, [coursePayload]);
 
     useEffect(() => {
@@ -45,21 +49,29 @@ export default function CourseInfo({ course, getCourseById }) {
 
     return (
         <div className='w-full h-[300px]  z-10 bg-white p-[10px] rounded-[15px] border-[1px] border-grayBorder overflow-y-auto overflow-x-auto'>
-            <table className="table-auto w-full">
-                <colgroup>
-                    <col className='w-[200px]' />
-                    <col className='w-auto' />
-                    <col className='w-[50px]' />
-                </colgroup>
-                <tbody>
-                    <TableSchedule label="Schedule" day={coursePayload.day} startTime={coursePayload.startTime} endTime={coursePayload.endTime} onChange={handleChange} />
-                    <TableRow label="Subject Code" value={coursePayload.courseCode || ""} onChange={(val) => handleChange("courseCode", val)} />
-                    <TableRow label="Instructor" value={coursePayload.instructorName || ""} onChange={(val) => handleChange("instructorName", val)} />
-                    <TableRow label="Location" value={coursePayload.location || ""} onChange={(val) => handleChange("location", val)} />
-                    <TableContent loadCourse={getCourseById} courseId={coursePayload._id} contents={coursePayload.contents || []} onContentChange={handleContentChange} />
-                    <NewLink courseId={coursePayload._id} getCourseById={getCourseById} />
-                </tbody>
-            </table>
+            {isLoading ? (
+                <div
+                    className='w-full h-full flex justify-center items-center'
+                >
+                    <div className={style.loader} />
+                </div>
+            ) : (
+                <table className="table-auto w-full">
+                    <colgroup>
+                        <col className='w-[160px]' />
+                        <col className='w-auto' />
+                        <col className='w-[50px]' />
+                    </colgroup>
+                    <tbody>
+                        <TableSchedule label="Schedule" day={coursePayload.day} startTime={coursePayload.startTime} endTime={coursePayload.endTime} onChange={handleChange} />
+                        <TableRow label="Subject Code" value={coursePayload.courseCode || ""} onChange={(val) => handleChange("courseCode", val)} />
+                        <TableRow label="Instructor" value={coursePayload.instructorName || ""} onChange={(val) => handleChange("instructorName", val)} />
+                        <TableRow label="Location" value={coursePayload.location || ""} onChange={(val) => handleChange("location", val)} />
+                        <TableContent getCourseById={getCourseById} courseId={coursePayload._id} contents={coursePayload.contents || []} onContentChange={handleContentChange} setIsLoading={setIsLoading} />
+                        <NewLink courseId={coursePayload._id} getCourseById={getCourseById} setIsLoading={setIsLoading} />
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 }
@@ -115,7 +127,7 @@ function TableSchedule({ label, day, startTime, endTime, onChange }) {
     );
 }
 
-function TableContent({ contents, onContentChange, courseId, loadCourse }) {
+function TableContent({ contents, onContentChange, courseId, getCourseById, setIsLoading }) {
     const titleRefs = useRef([]);
     const contentRefs = useRef([]);
 
@@ -143,11 +155,13 @@ function TableContent({ contents, onContentChange, courseId, loadCourse }) {
 
     const handleDeleteContent = async (courseId, contentId) => {
         try {
+            setIsLoading(true);
             await deleteContentInCourse(courseId, contentId);
-            console.log("✅ Content deleted successfully");
-            loadCourse();
+            await getCourseById();
         } catch (error) {
             console.error("❌ Failed to delete assignment:", error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -203,14 +217,17 @@ function TableContent({ contents, onContentChange, courseId, loadCourse }) {
     );
 }
 
-function NewLink({ courseId, getCourseById }) {
+function NewLink({ courseId, getCourseById, setIsLoading }) {
 
     const handleCreateContent = async () => {
         try {
+            setIsLoading(true);
             await createContent(courseId)
-            getCourseById();
+            await getCourseById();
         } catch (error) {
             console.error("❌ Failed to create content:", error);
+        } finally {
+            setIsLoading(false);
         }
     }
 

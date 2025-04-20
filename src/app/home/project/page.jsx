@@ -7,10 +7,17 @@ import NewProject from './component/NewProject';
 import { fetchProjectsByUser, createProject } from '@/api/project';
 import Link from 'next/link';
 import useWindowSize from '@/hooks/useWindow';
-import { is } from 'date-fns/locale';
-import { redirect } from 'next/dist/server/api-utils';
+import Loading from '@/app/component/GlobalComponent/Loading';
 
 export default function Page() {
+  const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCreating, setIsCreating] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [onDelete, setOnDelete] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [projectName, setProjectName] = useState("");
 
   const { width } = useWindowSize();
 
@@ -30,46 +37,52 @@ export default function Page() {
     return 'repeat(5, 1fr)';
   };
 
-  const [projects, setProjects] = useState([])
+  const getProjects = async () => {
+    try {
+      setIsLoading(true);
+      const data = await fetchProjectsByUser();
+      setProjects(data);
+    } catch (error) {
+      console.error('Error loading projects:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  // สำหรับโหลดข้อมูลใหม่ (เช่น หลังจากสร้างหรือลบโปรเจค)
+  const loadProjects = async () => {
+    try {
+      const data = await fetchProjectsByUser();
+      setProjects(data);
+    } catch (error) {
+      console.error('Error reloading projects:', error);
+    }
+  };
 
   useEffect(() => {
-
-    const getProjects = async () => {
-      try {
-        const data = await fetchProjectsByUser()
-        setProjects(data)
-      } catch (error) {
-        console.error('Error loading projects:', error);
-      }
-    }
-
     getProjects();
-  }, [])
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [onDelete, setOnDelete] = useState(false);
-
-  const [startDate, setStartDate] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [projectName, setProjectName] = useState("")
+  }, []);
 
   const handleCreateProject = async () => {
     try {
+      setIsCreating(true);
       const newProject = await createProject(projectName, startDate, dueDate);
       setIsOpen(false);
-      window.location.href = `/home/project/${newProject._id}`
+      window.location.href = `/home/project/${newProject._id}`;
     } catch (error) {
       console.error('Error creating project:', error);
+    } finally {
+      setIsCreating(false);
     }
+  };
+
+  if (isLoading) {
+    return <Loading />;
   }
+
   return (
-    <div
-      className='relative w-full z-0'
-    >
-      <div
-        className='w-full flex justify-between items-center'
-      >
+    <div className='relative w-full z-0'>
+      <div className='w-full flex justify-between items-center'>
         <NewButton
           onClick={() => setIsOpen(true)}
           buttonText='New'
@@ -79,6 +92,7 @@ export default function Page() {
           setOnDelete={setOnDelete}
         />
       </div>
+      
       {projects && projects.length > 0 ? (
         <div
           className='grid gap-[15px] mt-[20px] z-10'
@@ -104,6 +118,7 @@ export default function Page() {
           <p className="text-[14px] font-medium text-[#D4D4D4]">Create your first team project</p>
         </div>
       )}
+      
       <>
         {isOpen && (
           <NewProject
@@ -116,9 +131,10 @@ export default function Page() {
             projectName={projectName}
             setProjectName={setProjectName}
             onSubmit={handleCreateProject}
+            isCreating={isCreating}
           />
         )}
       </>
     </div>
-  )
+  );
 }

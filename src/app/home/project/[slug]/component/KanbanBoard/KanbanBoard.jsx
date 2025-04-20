@@ -16,6 +16,7 @@ export default function KanbanBoard({
     loadProject
 }) {
     const [isDelete, setIsDelete] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
 
     return (
@@ -38,7 +39,6 @@ export default function KanbanBoard({
                 <div
                     className="h-[50px]"
                 >
-
                 </div>
             </div>
         </div>

@@ -10,24 +10,29 @@ import { useEffect, useState } from "react";
 import { getAssignmentToday, makeDoneAssignment } from "@/api/home";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import style from "@/app/component/Loading.module.css"
 
 export default function AssignmentOverview() {
     const router = useRouter();
 
     const [assignments, setAssignments] = useState([])
+    const [loading, setLoading] = useState(false)
 
     const fetchAssignments = async () => {
         try {
+            setLoading(true)
             const response = await getAssignmentToday();
             setAssignments(response);
         } catch (error) {
             console.error("Error fetching assignments:", error);
+        } finally {
+            setLoading(false)
         }
     };
 
     useEffect(() => {
         fetchAssignments();
-    }, [assignments])
+    }, [])
 
     // const assignments = [
     //     {
@@ -76,45 +81,51 @@ export default function AssignmentOverview() {
             className="w-full h-[300px] flex flex-col gap-[15px]"
         >
             <p className="font-medium" >Assignment Overview</p>
-            {assignments.length > 0 ? (
-                <Swiper
-                    slidesPerView={2}
-                    direction='vertical'
-                    spaceBetween={10}
-                    mousewheel={true}
-                    modules={[Mousewheel]}
-                    className="mySwiper w-full h-full"
-                >
-                    {assignments.map((assignment, index) => (
-                        <SwiperSlide key={index}>
-                            <AssignmentCard
-                                assignment={assignment}
-                                fetchAssignments={fetchAssignments}
-                            />
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
-            ) : (
-                <div
-                    className='w-full h-full flex flex-col justify-center items-center bg-white border border-grayBorder rounded-[15px]'
-                >
-                    <img
-                        src={"https://my-image-uploader-bucket.s3.ap-southeast-2.amazonaws.com/P1/undraw_project-completed_fwjq.png"}
-                        alt="No project"
-                        className='w-[130px] mb-[10px]'
-                    />
-                    <p
-                        className='font-medium text-[14px] text-[#707070]'
-                    >
-                        Create assignment for your study plan
-                    </p>
-                    <button
-                        className='px-[16px] py-[4px] bg-primaryOrange rounded-[5px] text-[14px] text-white font-medium mt-[10px]'
-                        onClick={() => router.push('/home/study')}
-                    >
-                        go
-                    </button>
+            {loading ? (
+                <div className="w-full h-full flex justify-center items-center">
+                    <div className={style.loader} />
                 </div>
+            ) : (
+                assignments.length > 0 ? (
+                    <Swiper
+                        slidesPerView={2}
+                        direction='vertical'
+                        spaceBetween={10}
+                        mousewheel={true}
+                        modules={[Mousewheel]}
+                        className="mySwiper w-full h-full"
+                    >
+                        {assignments.map((assignment, index) => (
+                            <SwiperSlide key={index}>
+                                <AssignmentCard
+                                    assignment={assignment}
+                                    fetchAssignments={fetchAssignments}
+                                />
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                ) : (
+                    <div
+                        className='w-full h-full flex flex-col justify-center items-center bg-white border border-grayBorder rounded-[15px]'
+                    >
+                        <img
+                            src={"https://my-image-uploader-bucket.s3.ap-southeast-2.amazonaws.com/P1/undraw_project-completed_fwjq.png"}
+                            alt="No project"
+                            className='w-[130px] mb-[10px]'
+                        />
+                        <p
+                            className='font-medium text-[14px] text-[#D4D4D4]'
+                        >
+                            Create your assignment
+                        </p>
+                        <button
+                            className='px-[16px] py-[4px] bg-primaryOrange rounded-[5px] text-[14px] text-white font-medium mt-[10px]'
+                            onClick={() => router.push('/home/study')}
+                        >
+                            go
+                        </button>
+                    </div>
+                )
             )}
         </div>
     )

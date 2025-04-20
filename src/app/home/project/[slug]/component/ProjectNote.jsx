@@ -2,12 +2,14 @@ import { LinkIcon, PlusIcon, PlusIcon2, TrashSolidIcon } from '@/app/home/compon
 import { updateProjectById } from '@/api/project'
 import React, { useState, useEffect, useRef } from 'react'
 import { createContent, deleteContent } from '@/api/project'
+import style from '@/app/component/Loading.module.css'
 
 export default function ProjectNote({ project, loadProject }) {
   const [projectPayload, setProjectPayload] = useState({
     ...project,
     contents: project?.contents ?? [],
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (project) {
@@ -45,17 +47,26 @@ export default function ProjectNote({ project, loadProject }) {
 
   const handleCreateContent = async () => {
     try {
+      setIsLoading(true);
       await createContent(projectPayload._id);
-      loadProject();
+      await loadProject();
     } catch (error) {
       console.error("❌ Failed to create content:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className='relative w-full max-h-[300px] overflow-hidden'>
       <div className='w-full h-[300px] z-10 bg-white rounded-[15px] p-[10px] border-[1px] border-grayBorder overflow-y-auto no-scrollbar'>
-        {
+        {isLoading ? (
+          <div
+            className='w-full h-full flex justify-center items-center'
+          >
+            <div className={style.loader}/>
+          </div>
+        ) : (
           projectPayload.contents && projectPayload.contents.length > 0 ? (
             <div className='w-full flex flex-col gap-[10px]'>
               {projectPayload?.contents?.map((content, index) => (
@@ -65,6 +76,7 @@ export default function ProjectNote({ project, loadProject }) {
                   onUpdate={(updates) => handleContentUpdate(index, updates)}
                   projectId={projectPayload._id}
                   loadProject={loadProject}
+                  setIsLoading={setIsLoading}
                 />
               ))}
             </div>
@@ -73,7 +85,7 @@ export default function ProjectNote({ project, loadProject }) {
               Create your Note or Link for this project
             </div>
           )
-        }
+        )}
         <button
           className='absolute bottom-2 right-2 w-[40px] h-[40px] bg-primaryOrange rounded-full flex justify-center items-center cursor-pointer'
           onClick={handleCreateContent}
@@ -85,7 +97,7 @@ export default function ProjectNote({ project, loadProject }) {
   )
 }
 
-const NoteCard = ({ projectId, loadProject, content, onUpdate }) => {
+const NoteCard = ({ projectId, loadProject, content, onUpdate, setIsLoading }) => {
   const [isLink, setIsLink] = useState(content.isLink || false);
   const textareaRef = useRef(null);
 
@@ -95,10 +107,13 @@ const NoteCard = ({ projectId, loadProject, content, onUpdate }) => {
 
   const handleDeleteContent = async () => {
     try {
+      setIsLoading(true);
       await deleteContent(projectId, content._id);
-      loadProject();
+      await loadProject();
     } catch (error) {
       console.error("❌ Failed to create content:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

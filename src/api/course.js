@@ -98,7 +98,7 @@ export const createAssignment = async (courseId) => {
             courseId,
             assignmentName: "New assignment",
             description: "Empty",
-            status: "Todo",
+            status: "Not started",
             startDate: "",
             endDate: ""
         });

@@ -14,6 +14,7 @@ import KanbanCard from "./KanbanCard";
 import { updateTaskStatus } from "@/api/task";
 import { updateStatusPosition } from "@/api/status";
 import { fetchProjectByProjectId } from "@/api/project";
+import style from "@/app/component/Loading.module.css";
 
 /* --------------------------------------------------
    ไฟล์นี้แทนของเดิม, แต่ tasks แยกใน projectData.tasks
@@ -125,11 +126,12 @@ export default function Board({
   setStatusId,
   handleOpenNewTask,
   handleTask,
-  loadProject
+  loadProject,
 }) {
   const [projectData, setProjectData] = useState(initialProjectData);
   const [activeId, setActiveId] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // โหลดข้อมูลล่าสุดจาก Backend
   const loadProjectData = async () => {
@@ -139,7 +141,7 @@ export default function Board({
       setProjectData(latestData);
     } catch (error) {
       console.error("Failed to load project:", error);
-    }
+    } 
   };
 
   useEffect(() => {
@@ -216,11 +218,16 @@ export default function Board({
 
       // Call updateTaskStatus
       try {
+        setIsLoading(true);
         await updateTaskStatus(movedTask._id, movedTask.statusId);
         loadProject();
       } catch (error) {
         console.error("Failed to move task", error);
-        await loadProjectData(); // revert
+        await loadProjectData();
+      } finally {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
       }
 
     }
@@ -263,6 +270,14 @@ export default function Board({
       }
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-[400px] flex justify-center items-center">
+        <div className={style.loader} />
+      </div>
+    );
+  }
 
   return (
     <DndContext

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import AirDatepicker from "air-datepicker";
 import "air-datepicker/air-datepicker.css";
 import en from "air-datepicker/locale/en";
+import PriorityBar from "./GlobalComponent/PriorityBar";
 
 
 export const TimePicker = ({ time = "00:00", onChange }) => {
@@ -231,9 +232,9 @@ export const StdStatusPicker = ({ selectedStatus, onChange }) => {
     const dropdownRef = useRef(null);
 
     const statusOptions = [
-        { name: "Todo", color: "#FEB146" },
-        { name: "Doing", color: "#1F86FF" },
-        { name: "Done", color: "#18A900" },
+        { name: "Not started", color: "#5F5F5F" },
+        { name: "In progress", color: "#1F86FF" },
+        { name: "Completed", color: "#18A900" },
     ];
 
     // ฟังก์ชันเปิด dropdown และคำนวณตำแหน่ง
@@ -271,7 +272,7 @@ export const StdStatusPicker = ({ selectedStatus, onChange }) => {
                 onClick={toggleDropdown}
                 style={{ background: statusOptions.find(s => s.name === selectedStatus)?.color || "black" }}
             >
-                <div className="w-[7px] h-[7px] bg-white rounded-full"/>
+                <div className="w-[7px] h-[7px] bg-white rounded-full" />
                 {selectedStatus}
             </button>
 
@@ -437,8 +438,7 @@ export const PrjPriorityPicker = ({ selectedPriority, onChange }) => {
         <>
             <button
                 ref={buttonRef}
-                className="font-medium text-[12px] text-white bg-white px-[20px] py-[6px] min-h-0 rounded-full cursor-pointer"
-                style={getPriorityStyle(selectedPriority)}
+                className="font-medium text-[12px] text-[#5F5F5F] bg-[#F1F1F1] px-[20px] py-[6px] min-h-0 rounded-full cursor-pointer"
                 onClick={toggleDropdown}
             >
                 {priorityOptions.find(p => p.value === selectedPriority)?.label || "Normal"}
@@ -452,14 +452,19 @@ export const PrjPriorityPicker = ({ selectedPriority, onChange }) => {
                     {priorityOptions.map((priority) => (
                         <li
                             key={priority.value}
-                            className="px-4 py-2 cursor-pointer rounded-md"
-                            style={getPriorityStyle(priority.value)}
+                            className="font-medium text-black px-4 py-2 cursor-pointer rounded-md hover:bg-[#F2F2F2]"
+                            // style={getPriorityStyle(priority.value)}
                             onClick={() => {
                                 onChange(priority.value);
                                 setOpenPriority(false);
                             }}
                         >
-                            {priority.label}
+                            <div
+                                className="flex justify-between items-center gap-2"
+                            >
+                                {priority.label}
+                                <PriorityBar priority={priority.value} />
+                            </div>
                         </li>
                     ))}
                 </ul>
@@ -509,7 +514,7 @@ export const AirDatepickerComponent = ({ selectedDate, onChange }) => {
         <input
             ref={datepickerRef}
             type="text"
-            className="max-w-[150px] bg-white focus:outline-none border-[1px] border-grayBorder px-[10px] py-[6px] rounded-md cursor-pointer"
+            className="max-w-[120px] text-[12px] text-[#5F5F5F] bg-white focus:outline-none border-[1px] border-grayBorder px-[10px] py-[6px] rounded-md cursor-pointer"
             readOnly
             value={formattedDate}
         />

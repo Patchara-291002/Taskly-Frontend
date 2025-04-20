@@ -35,14 +35,14 @@ export default function Chart({ course, getCourseById }) {
 
 export const StatusDoughnut = ({ course }) => {
     const formatStatusData = (assignments) => {
-        // Initialize counters for each status
+        // ใช้ค่า enum ใหม่โดยตรง
         const statusCounts = {
-            'Todo': 0,
-            'Doing': 0,
-            'Done': 0
+            'Not started': 0,
+            'Inprogress': 0,
+            'Completed': 0
         };
 
-        // Count assignments by status
+        // นับงานตามสถานะใหม่
         assignments.forEach(assignment => {
             if (statusCounts.hasOwnProperty(assignment.status)) {
                 statusCounts[assignment.status]++;
@@ -50,17 +50,17 @@ export const StatusDoughnut = ({ course }) => {
         });
 
         return {
-            labels: ['Todo', 'Doing', 'Done'],
+            labels: ['Not started', 'Inprogress', 'Completed'],
             datasets: [{
                 data: [
-                    statusCounts['Todo'],
-                    statusCounts['Doing'],
-                    statusCounts['Done']
+                    statusCounts['Not started'],
+                    statusCounts['Inprogress'],
+                    statusCounts['Completed']
                 ],
                 backgroundColor: [
-                    '#FEB146', // Todo - Orange
-                    '#1F86FF', // Doing - Blue
-                    '#18A900', // Done - Green
+                    '#FEB146', // Not started - Orange
+                    '#1F86FF', // Inprogress - Blue
+                    '#18A900', // Completed - Green
                 ],
                 borderWidth: 0
             }]
@@ -83,7 +83,7 @@ export const StatusDoughnut = ({ course }) => {
             },
             title: {
                 display: true,
-                text: 'Tasks by Priority',
+                text: 'Assignments by Status',
                 font: {
                     size: 14,
                     weight: 'bold'
@@ -117,84 +117,41 @@ export const StatusDoughnut = ({ course }) => {
 }
 
 export const OverdueAssignmentBar = ({ course }) => {
-    const formatAssignmentData = (assignments) => {
+    const countOverdueAssignments = (assignments) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        let overdueCount = 0;
-        let totalCount = assignments.length;
+        return assignments.filter(assignment => {
+            // ถ้าไม่มีวันสิ้นสุด หรือสถานะเป็น Done แล้ว ไม่นับเป็น overdue
+            if (!assignment.endDate || assignment.status === 'Done') return false;
 
-        assignments.forEach(assignment => {
             const dueDate = new Date(assignment.endDate);
             dueDate.setHours(0, 0, 0, 0);
-
-            if (assignment.status !== 'Done' && dueDate < today) {
-                overdueCount++;
-            }
-        });
-
-        return {
-            labels: ['Overdue', 'On Track'],
-            datasets: [{
-                data: [
-                    overdueCount,
-                    totalCount - overdueCount
-                ],
-                backgroundColor: [
-                    '#FF4646',  // Overdue - Red
-                    '#F1F1F1',  // On Track - Gray
-                ],
-                borderWidth: 0
-            }]
-        };
+            return dueDate < today;
+        }).length;
     };
 
-    const options = {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: {
-            legend: {
-                position: 'bottom',
-                labels: {
-                    font: {
-                        size: 12,
-                    },
-                    usePointStyle: true,
-                    padding: 10
-                }
-            },
-            title: {
-                display: true,
-                text: 'Overdue Assignments',
-                font: {
-                    size: 14,
-                    weight: 'bold'
-                },
-                color: '#FF6200',
-                padding: {
-                    bottom: 20
-                }
-            }
-        },
-        cutout: '60%',
-        spacing: 10,
-    };
-
-    const data = formatAssignmentData(course.Assignments);
-    const hasOverdue = data.datasets[0].data[0] > 0;
+    const overdueCount = countOverdueAssignments(course.Assignments);
 
     return (
-        <div className='w-full h-[400px] bg-white rounded-[15px] p-[15px] border border-grayBorder'>
-            {hasOverdue ? (
-                <Doughnut data={data} options={options} />
-            ) : (
+        <div className='w-full min-h-[160px] bg-white rounded-[15px] px-[15px] py-[25px] border border-grayBorder'>
+            <div className='w-full h-full flex flex-col gap-[8px]'>
+                <p className='text-center font-semibold text-[14px] text-primaryOrange'>
+                    You have {overdueCount === 0 ? 'no' : ''} overdue assignment{overdueCount !== 1 ? 's' : ''}
+                </p>
                 <div
                     className='w-full h-full flex flex-col justify-center items-center'
                 >
-                    <p className='text-center text-[#D5D5D5]'>You have no overdue assignment.</p>
-                    <p className='text-center text-[#D5D5D5]'>Keep it up.</p>
+                    <p className='font-medium text-[128px] text-primaryOrange'>
+                        {overdueCount}
+                    </p>
+                    {overdueCount === 0 && (
+                        <p className='text-center text-primaryOrange text-[16px]'>
+                            Keep it up!
+                        </p>
+                    )}
                 </div>
-            )}
+            </div>
         </div>
     );
 };

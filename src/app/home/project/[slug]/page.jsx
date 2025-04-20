@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef,useCallback } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import GranttChart from './component/Dashboard/Granttchart'
 import { useRouter, usePathname } from 'next/navigation';
 import NewStatus from './component/NewStatus'
@@ -20,16 +20,11 @@ import ProjectTable from './component/Table/ProjectTable';
 import StatusAndRolePicker from './component/StatusAndRolePicker';
 import TaskCard from '../component/TaskCard';
 import useWindowSize from '@/hooks/useWindow';
-import { tr } from 'date-fns/locale';
-import { add } from 'date-fns';
 import Chart from './component/Dashboard/Chart';
+import Loading from '@/app/component/GlobalComponent/Loading';
 
 export default function Page() {
-
-    // const { width } = useWindowSize();
     const router = useRouter();
-
-
     const [project, setProject] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -43,10 +38,6 @@ export default function Page() {
         setOpenTask(!opendTask)
         setSelectedTask(taskId)
     }
-
-    useEffect(() => {
-        console.log("task status: ", opendTask)
-    }, [opendTask])
 
     const [isOpenNewStatus, setIsOpenNewStatus] = useState(false)
     const [statusName, setStatusName] = useState("");
@@ -116,6 +107,11 @@ export default function Page() {
     useEffect(() => {
         loadProject();
     }, [activeTab])
+
+    // เพิ่ม condition สำหรับ loading state
+    if (isLoading) {
+        return <Loading />;
+    }
 
     return (
         <div
@@ -189,7 +185,7 @@ export default function Page() {
                                     </div>
                                 )
                             default:
-                                return
+                                return null;
                         }
                     })()}
                 </div>
@@ -199,7 +195,3 @@ export default function Page() {
         </div>
     )
 }
-
-
-
-
