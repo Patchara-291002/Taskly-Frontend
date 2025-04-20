@@ -47,7 +47,7 @@ export default function Navbar() {
                 <>
                 </>
                 :
-                <div className="w-[260px] h-full bg-[#FF6200] rounded-r-[20px] min-h-screen">
+                <div className="fixed w-[260px] h-full bg-[#FF6200] rounded-r-[20px] min-h-screen">
                     <div className='pt-[30px] mb-[40px] flex flex-cols justify-center items-center'>
                         <h2
                             className='font-black text-[36px] leading-[36px] text-white'

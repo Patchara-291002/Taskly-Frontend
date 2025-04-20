@@ -79,9 +79,6 @@ export const searchItems = async (query) => {
         const response = await api.get('/search', {
             params: { query },
             timeout: 5000,
-            headers: {
-                'Cache-Control': 'no-cache'
-            }
         });
         return response.data;
     } catch (error) {

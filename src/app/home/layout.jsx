@@ -25,10 +25,10 @@ const DesktopLayout = ({children}) => {
     return (
         <>
             <div className='flex flex-row w-full'>
-                <div className="w-[260px]">
+                <div className="w-[260px] pr-[260px]">
                     <Navbar />
                 </div>
-                <div className="w-full px-[30px] overflow-hidden pb-[20px]">
+                <div className="w-full min-h-screen px-[30px] overflow-hidden pb-[20px]">
                     <Header />
                     {children}
                 </div>

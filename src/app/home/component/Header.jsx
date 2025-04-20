@@ -130,13 +130,30 @@ const SearchBar = () => {
           className={`
             input w-[300px] h-[40px] bg-white 
             focus:outline-none rounded-[15px] px-4
-            transition-all duration-300 ease
+            transition-all duration-300 ease relative
+            outline-none
             ${isSearchActive
               ? "opacity-100 translate-x-[0px] scale-100"
               : "opacity-0 translate-x-[100px] scale-x-0 pointer-events-none"
             }
           `}
         />
+        {isSearchActive && (
+          <div className="absolute top-1/2 right-5 -translate-y-1/2">
+            {showResults ? (
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setShowResults(false);
+                }}
+              >
+                <CrossIcon w={12} h={12} color={"#FF6200"} />
+              </button>
+            ) : (
+              <SearchIcon w={16} h={16} color={"#FF6200"} />
+            )}
+          </div>
+        )}
 
         {/* Search Results Dropdown */}
         {showResults && isSearchActive && (
@@ -310,6 +327,8 @@ const SearchBarMobile = () => {
 const NotificationButton = ({ width, height }) => {
 
   const [notification, setNotification] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
   const fetchNotification = async () => {
     try {
@@ -322,9 +341,9 @@ const NotificationButton = ({ width, height }) => {
 
   useEffect(() => {
     fetchNotification();
-  }, []);
+  }, [isNotificationOpen]);
 
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+
 
   return (
     <>
@@ -412,21 +431,19 @@ const MobileLayout = () => {
   return (
     <>
       <div className="fixed top-0 left-0 right-0 z-50">
-        <div className="w-full h-[106px] flex flex-col justify-end bg-primaryOrange drop-shadow-lg">
-          <div className="w-full h-[44px] flex justify-between pb-[8px] px-[13px]">
-            <Link href="/home/dashboard">
-              <p className="text-white font-bold text-[24px]">
-                Taskly
-              </p>
-            </Link>
-            <div
-              className="flex items-center gap-[15px]"
-            >
-              <NotificationButton width={17} height={18} />
-              <button onClick={() => setIsSideBarOpen(!isSideBarOpen)}>
-                <BurgerIcon w={25} h={25} color="#FFFFFF" />
-              </button>
-            </div>
+        <div className="fixed w-full h-[65px] flex justify-between items-center px-[13px] bg-primaryOrange drop-shadow-lg">
+          <Link href="/home/dashboard">
+            <p className="text-white font-bold text-[24px]">
+              Taskly
+            </p>
+          </Link>
+          <div
+            className="flex items-center gap-[15px]"
+          >
+            <NotificationButton width={17} height={18} />
+            <button onClick={() => setIsSideBarOpen(!isSideBarOpen)}>
+              <BurgerIcon w={25} h={25} color="#FFFFFF" />
+            </button>
           </div>
         </div>
       </div>
@@ -435,7 +452,7 @@ const MobileLayout = () => {
           ${isSideBarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={() => setIsSideBarOpen(false)}
       />
-      <div className="pt-[106px]">
+      <div className="pt-[65px]">
         <Sidebar isSideBarOpen={isSideBarOpen} setIsSideBarOpen={setIsSideBarOpen} />
       </div>
     </>
@@ -488,7 +505,7 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
 
   return (
     <div
-      className={`fixed top-[106px] right-0 w-[80%] h-[calc(100vh)] 
+      className={`fixed top-[65px] right-0 w-[80%] h-[calc(100vh)] 
         bg-white shadow-lg overflow-y-auto z-50
         transform transition-transform duration-300 ease-in-out
         ${isSideBarOpen ? "translate-x-0" : "translate-x-full"}`}
@@ -527,7 +544,7 @@ const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
                 onClick={() => handleItemClick(page.link)}
                 className="cursor-pointer mt-[20px]"
               >
-                <div 
+                <div
                   className="w-full flex items-center gap-[10px] rounded-[15px] px-[20px] py-[20px] font-bold"
                   style={{ backgroundColor: isActive ? "#FF6200" : "transparent" }}
                 >

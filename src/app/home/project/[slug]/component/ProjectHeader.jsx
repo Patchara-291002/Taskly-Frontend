@@ -77,7 +77,7 @@ export default function ProjectHeader({ project, loadProject }) {
                         />
                     </button>
                     <div className='flex -space-x-3'>
-                        {project?.users?.map((user, index) => (
+                        {project?.users?.slice(0, 10).map((user, index) => (
                             <div
                                 key={user.userId._id || index}
                                 className='w-[26px] h-[26px] rounded-full overflow-hidden border-2 border-white'

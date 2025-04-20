@@ -81,7 +81,7 @@ export default function ProjectCard({ project, maxWidth, onDelete }) {
         </div>
         <div className='w-full'>
           <div className='flex -space-x-2.5'>
-            {usersProfile.map((profile, index) => (
+            {usersProfile.slice(0, 4).map((profile, index) => (
               <div key={index} className='w-[20px] h-[20px] rounded-full overflow-hidden'>
                 <Image width={20} height={20} src={profile} alt={`User ${index}`} />
               </div>
