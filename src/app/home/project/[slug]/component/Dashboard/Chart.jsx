@@ -20,7 +20,7 @@ ChartJS.register(
     BarElement,
     Title
 );
-
+  
 export default function Chart({ project }) {
 
     const { width } = useWindowSize();

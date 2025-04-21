@@ -343,8 +343,6 @@ const NotificationButton = ({ width, height }) => {
     fetchNotification();
   }, [isNotificationOpen]);
 
-
-
   return (
     <>
       <div className="relative">
@@ -356,7 +354,7 @@ const NotificationButton = ({ width, height }) => {
         </button>
         {isNotificationOpen && (
           <div
-            className="w-[400px] h-[620px] overflow-y-auto bg-white rounded-[15px] absolute top-[45px] right-[0px] p-[25px] shadow-lg  z-50"
+            className="w-[340px] md:w-[400px] h-[620px] overflow-y-auto bg-white rounded-[15px] absolute top-[55px] right-[-40px] p-[25px] shadow-lg  z-50"
           >
             <div
               className="w-full flex  justify-between items-baseline"
