@@ -10,6 +10,7 @@ import CourseTable from './component/CourseTable';
 import useWindowSize from '@/hooks/useWindow';
 import Chart from './component/Chart';
 import Loading from '@/app/component/GlobalComponent/Loading';
+import { RefreshIcon } from '@/app/component/GlobalIcon';
 
 export default function Page() {
 
@@ -22,6 +23,7 @@ export default function Page() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [course, setCourse] = useState(null);
+    const [loadingRefresh, setLoadingRefresh] = useState(false);
 
     const getCourseById = async () => {
         try {
@@ -49,6 +51,18 @@ export default function Page() {
 
     if (loading) {
         return <Loading />
+    }
+
+    const handleRefresh = async () => {
+        setLoadingRefresh(true);
+        try {
+            await getCourseById();  
+        } catch (err) {
+            setError(err);
+        }
+        finally {
+            setLoadingRefresh(false);
+        }
     }
 
     return (
@@ -79,6 +93,14 @@ export default function Page() {
                         </div>
                     }
                     <CourseTable course={course} getCourseById={getCourseById} />
+                    <div className='w-full flex justify-end pt-[20px]'>
+                        <button 
+                            className='p-[8px] rounded-full bg-white border border-grayBorder'
+                            onClick={getCourseById}
+                        >
+                            <RefreshIcon w={16} h={16} color={'#FF6200'} />
+                        </button>
+                    </div>
                     <Chart course={course} getCourseById={getCourseById} />
                 </div>}
         </>

@@ -48,7 +48,7 @@ const CourseCard = ({ course, deleteActive, courseId,
           style={{ backgroundColor: `${course.courseColor || "#D6D6D6"}` }}
         >
           <p
-            className='font-bold text-[24px] text-white'
+            className='font-bold text-[24px] text-white text-center'
           >
             {course.courseName}
           </p>

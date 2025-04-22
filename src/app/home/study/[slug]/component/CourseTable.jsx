@@ -33,6 +33,7 @@ export default function CourseTable({ course, getCourseById }) {
                 assignment.endDate
             );
             console.log(`✅ Updated assignment: ${assignment.assignmentName}`);
+            
         } catch (error) {
             console.error("❌ Failed to update assignment:", error);
         }

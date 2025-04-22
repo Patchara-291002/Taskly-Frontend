@@ -16,12 +16,6 @@ import { updateStatusPosition } from "@/api/status";
 import { fetchProjectByProjectId } from "@/api/project";
 import style from "@/app/component/Loading.module.css";
 
-/* --------------------------------------------------
-   ไฟล์นี้แทนของเดิม, แต่ tasks แยกใน projectData.tasks
-   columns = projectData.statuses
-   tasks   = projectData.tasks
--------------------------------------------------- */
-
 // Render Task
 function SortableTask({ task, projectData, handleTask }) {
   const {
@@ -81,7 +75,7 @@ function SortableColumn({ column, tasksInColumn, handleOpenNewTask, projectData,
     <div
       ref={setNodeRef}
       style={style}
-      className="min-w-[260px] min-h-[400px] w-full flex-1 border-r-2 px-[30px] relative"
+      className="min-w-[310px] min-h-[400px] w-full flex-1 border-r-2 px-[30px] relative"
     >
       <div
         {...attributes}
@@ -141,7 +135,7 @@ export default function Board({
       setProjectData(latestData);
     } catch (error) {
       console.error("Failed to load project:", error);
-    } 
+    }
   };
 
   useEffect(() => {
@@ -260,12 +254,16 @@ export default function Board({
           const statusId = columnId;
           const projectId = initialProjectData._id;
           const position = newIndex + 1;
-
+          setIsLoading(true);
           await updateStatusPosition(statusId, projectId, position);
           console.log("Position updated for column:", statusId, " => ", position);
         } catch (error) {
           console.error("Failed to update column position", error);
           await loadProjectData(); // revert
+        } finally {
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 1500);
         }
       }
     }

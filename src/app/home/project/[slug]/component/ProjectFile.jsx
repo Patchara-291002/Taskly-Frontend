@@ -139,7 +139,7 @@ const FileItem = ({ file, onDelete }) => {
     return (
         <div className="w-full h-[70px] flex justify-between items-center p-[10px] border-grayBorder border-[1px] rounded-[15px]">
             <Link href={file.fileAddress} className="max-w-[250px]" target="_blank" rel="noopener noreferrer">
-                <p className="line-clamp-2">{file.fileName}</p>
+                <p className="line-clamp-2 text-[14px]">{file.fileName}</p>
             </Link>
             <button
                 className={`p-2 rounded-full transition-colors hover:bg-red-100`}

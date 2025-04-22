@@ -496,8 +496,9 @@ export const AirDatepickerComponent = ({ selectedDate, onChange }) => {
             selectedDates: selectedDate ? [new Date(selectedDate)] : [],
             autoClose: true,
             dateFormat: "dd MMMM yyyy", // แสดงผลเป็น 15 March 2025
+            position: "bottom right",
             onSelect({ date }) {
-                if (!date) return;
+                if (!date) return;s
 
                 const isoDate = date.toISOString(); // ✅ แปลงเป็น ISO format
                 setFormattedDate(date.toLocaleDateString("en-GB", {

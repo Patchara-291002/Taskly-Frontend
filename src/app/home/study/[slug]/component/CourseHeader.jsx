@@ -28,14 +28,14 @@ export default function CourseHeader({ course, getCourseById }) {
   return (
     <div className="w-full overflow-hidden flex justify-between items-center pb-[40px]">
       <div
-        className="flex items-center gap-[5px]"
+        className="w-full flex items-center gap-[5px]"
       >
         <EditIcon w={14} h={14} color={"#FF6200"} />
         <input
           type="text"
           value={selectedName}
           onChange={(e) => setSelectedName(e.target.value)}
-          className="font-semibold text-[24px] text-primaryOrange bg-[#F7F7F7] focus:outline-none"
+          className="w-full font-semibold text-[24px] text-primaryOrange bg-[#F7F7F7] focus:outline-none"
         />
       </div>
     </div>

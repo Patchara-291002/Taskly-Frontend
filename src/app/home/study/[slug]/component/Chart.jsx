@@ -8,6 +8,7 @@ import {
     BarElement,
     Title
 } from 'chart.js';
+import { useEffect } from 'react';
 import { Doughnut, Bar } from 'react-chartjs-2';
 
 ChartJS.register(
@@ -25,7 +26,7 @@ export default function Chart({ course, getCourseById }) {
 
     return (
         <div
-            className='w-ful mt-[20px] mb-[200px] overflow-hidden flex flex-col md:grid md:grid-flow-col md:grid-cols-2 gap-[15px]'
+            className='w-ful mt-[10px] mb-[200px] overflow-hidden flex flex-col md:grid md:grid-flow-col md:grid-cols-2 gap-[15px]'
         >
             <StatusDoughnut course={course} />
             <OverdueAssignmentBar course={course} />
@@ -38,7 +39,7 @@ export const StatusDoughnut = ({ course }) => {
         // ใช้ค่า enum ใหม่โดยตรง
         const statusCounts = {
             'Not started': 0,
-            'Inprogress': 0,
+            'In progress': 0,
             'Completed': 0
         };
 
@@ -54,11 +55,11 @@ export const StatusDoughnut = ({ course }) => {
             datasets: [{
                 data: [
                     statusCounts['Not started'],
-                    statusCounts['Inprogress'],
+                    statusCounts['In progress'],
                     statusCounts['Completed']
                 ],
                 backgroundColor: [
-                    '#FEB146', // Not started - Orange
+                    '#5F5F5F', // Not started - Orange
                     '#1F86FF', // Inprogress - Blue
                     '#18A900', // Completed - Green
                 ],
@@ -102,7 +103,7 @@ export const StatusDoughnut = ({ course }) => {
     const hasAssignments = course.Assignments.length > 0;
 
     return (
-        <div className='w-full max-h-[400px] flex justify-center bg-white rounded-[15px] p-[15px] border border-grayBorder'>
+        <div className='w-full max-h-[300px] flex justify-center bg-white rounded-[15px] p-[15px] border border-grayBorder'>
             {hasAssignments ? (
                 <Doughnut data={data} options={options} />
             ) : (

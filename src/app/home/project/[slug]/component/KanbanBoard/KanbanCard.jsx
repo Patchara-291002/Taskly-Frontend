@@ -31,11 +31,11 @@ export default function KanbanCard({
   ).map(user => user.userId);
 
   return (
-    <div className="min-w-[200px] min-h-[100px] rounded-[15px] bg-white p-[15px] border-[1px] border-grayBorder flex flex-col gap-[5px]">
+    <div className="min-w-[250px] min-h-[120px] rounded-[15px] bg-white p-[15px] border-[1px] border-grayBorder flex flex-col gap-[5px]">
       <div className="w-full flex justify-between items-center">
-        <div className="flex items-center gap-[8px]">
-          <p className="text-[14px] font-medium">
-            {task.taskName.length > 13 ? task.taskName.slice(0, 13) + "..." : task.taskName}
+        <div className="w-[130px] flex items-center gap-[8px]">
+          <p className="text-[14px] text-wrap line-clamp-2 font-medium">
+            {task.taskName}
           </p>
         </div>
         <div

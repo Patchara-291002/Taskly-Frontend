@@ -246,7 +246,7 @@ const StatusBar = ({ project }) => {
     const data = formatStatusData(project.statuses, project.tasks);
 
     return (
-        <div className='w-full h-full flex justify-center bg-white rounded-[15px] p-[15px] border border-grayBorder'>
+        <div className='w-full h-full min-h-[200px] flex justify-center bg-white rounded-[15px] p-[15px] border border-grayBorder'>
             <Bar data={data} options={options} />
         </div>
     );
@@ -304,7 +304,7 @@ const RoleBar = ({ project }) => {
     const data = formatRoleData(project.roles, project.tasks);
 
     return (
-        <div className='w-full h-full flex justify-center bg-white rounded-[15px] p-[15px] border border-grayBorder'>
+        <div className='w-full h-full min-h-[200px] flex justify-center bg-white rounded-[15px] p-[15px] border border-grayBorder'>
             <Bar data={data} options={options} />
         </div>
     );

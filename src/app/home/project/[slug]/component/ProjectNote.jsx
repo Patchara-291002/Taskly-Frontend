@@ -177,7 +177,7 @@ const NoteCard = ({ projectId, loadProject, content, onUpdate, setIsLoading }) =
             href={content.content}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-500 underline block truncate hover:text-blue-600"
+            className="font-normal text-[14px] text-blue-500 underline block truncate hover:text-blue-600"
             title={content.content}
           >
             {content.content}

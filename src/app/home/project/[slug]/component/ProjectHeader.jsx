@@ -3,6 +3,7 @@ import { AddUserIcon, EditIcon, LinkIcon } from "@/app/home/component/icon/Globa
 import { updateProjectById, updateUserRole } from "@/api/project";
 import { AirDatepickerComponent } from "@/app/component/GlobalComponent";
 import Image from "next/image";
+import useWindowSize from "@/hooks/useWindow";
 
 export default function ProjectHeader({ project, loadProject }) {
     const [projectData, setProjectData] = useState({
@@ -13,6 +14,8 @@ export default function ProjectHeader({ project, loadProject }) {
     const [isUserHover, setIsUserHover] = useState(false);
 
     const [isMemberOpen, setIsMemberOpen] = useState(false);
+
+    const { width } = useWindowSize();
 
     // Sync with project props
     useEffect(() => {
@@ -76,20 +79,24 @@ export default function ProjectHeader({ project, loadProject }) {
                             color={isUserHover ? 'white' : '#FF6200'}
                         />
                     </button>
-                    <div className='flex -space-x-3'>
-                        {project?.users?.slice(0, 10).map((user, index) => (
-                            <div
-                                key={user.userId._id || index}
-                                className='w-[26px] h-[26px] rounded-full overflow-hidden border-2 border-white'
-                            >
-                                <img
-                                    src={user.userId.profile}
-                                    alt={user.userId.name}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                        ))}
-                    </div>
+                    {width > 460 ? (
+                        <div className='flex -space-x-3'>
+                            {project?.users?.slice(0, 10).map((user, index) => (
+                                <div
+                                    key={user.userId._id || index}
+                                    className='w-[26px] h-[26px] rounded-full overflow-hidden border-2 border-white'
+                                >
+                                    <img
+                                        src={user.userId.profile}
+                                        alt={user.userId.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <></>
+                    )}
                 </div>
             </div>
             <div
@@ -231,8 +238,8 @@ const MemberCard = ({ users, project, setIsMemberOpen, loadProject }) => {
                                 <button
                                     onClick={() => setOpenRoleMenu(openRoleMenu === user.userId._id ? null : user.userId._id)}
                                     className={`px-3 py-1 text-[12px] rounded-md ${findProjectRole(user)
-                                            ? 'text-white'
-                                            : 'text-[#5F5F5F] border border-[#D6D6D6]'
+                                        ? 'text-white'
+                                        : 'text-[#5F5F5F] border border-[#D6D6D6]'
                                         }`}
                                     style={{
                                         backgroundColor: findProjectRole(user)?.color || 'transparent'
