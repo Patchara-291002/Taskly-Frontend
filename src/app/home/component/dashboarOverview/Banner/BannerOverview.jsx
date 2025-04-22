@@ -26,7 +26,7 @@ export default function BannerOverview() {
                         </div>
                         <div className='absolute -top-4 -right-6'>
                             <Image
-                                src='https://my-image-uploader-bucket.s3.ap-southeast-2.amazonaws.com/1730785237689-dashboard.png'
+                                src='https://my-image-uploader-bucket.s3.ap-southeast-2.amazonaws.com/P1/8196374.png'
                                 alt='Banner'
                                 width={190}
                                 height={133}
