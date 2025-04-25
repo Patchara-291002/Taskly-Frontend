@@ -13,11 +13,14 @@ import { useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import style from '@/app/component/Loading.module.css'
+import useWindowSize from '@/hooks/useWindow';
 
 export default function ProjectOverview() {
     const router = useRouter()
     const [projects, setProjects] = useState([])
     const [loading, setLoading] = useState(false)
+
+    const { width } = useWindowSize()
 
     useEffect(() => {
 
@@ -47,6 +50,14 @@ export default function ProjectOverview() {
     const handleNext = () => {
         swiperRef.current?.slideNext();
     };
+
+    const projectCardItems = () => {
+        if (width < 630) {
+            return 2
+        } else {
+            return 3
+        }
+    }
 
     return (
         <div
@@ -87,7 +98,7 @@ export default function ProjectOverview() {
                     {projects.length > 0 ? (
                         <Swiper
                             onSwiper={(swiper) => (swiperRef.current = swiper)}
-                            slidesPerView={3}
+                            slidesPerView={projectCardItems()}
                             spaceBetween={15}
                             className="mySwiper"
                         >
