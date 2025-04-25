@@ -6,7 +6,7 @@ import { TrashSolidIcon } from '@/app/home/component/icon/GlobalIcon'
 import { deleteProject } from '@/api/project'
 import Link from 'next/link'
 
-export default function ProjectCard({ project, maxWidth, onDelete }) {
+export default function ProjectCard({ project, maxWidth, minWidth=194,  onDelete }) {
 
   const handleDeleteProject = (e) => {
     e.preventDefault();
@@ -51,7 +51,7 @@ export default function ProjectCard({ project, maxWidth, onDelete }) {
       href={`/home/project/${project._id}`}
     >
       <div
-        className='w-full min-w-[194px] h-[160px] bg-white rounded-[15px] p-[15px] flex flex-col justify-between border border-grayBorder'
+        className={`w-full min-w-[${minWidth}] h-[160px] bg-white rounded-[15px] p-[15px] flex flex-col justify-between border border-grayBorder`}
         // style={{ maxWidth: `${maxWidth}px` }}
       >
         <div className='w-full'>

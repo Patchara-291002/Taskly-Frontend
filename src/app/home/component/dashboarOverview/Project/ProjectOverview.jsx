@@ -108,6 +108,7 @@ export default function ProjectOverview() {
                                         <ProjectCard
                                             project={project}
                                             maxWidth={"none"}
+                                            minWidth={188}
                                         />
                                     </Link>
                                 </SwiperSlide>
