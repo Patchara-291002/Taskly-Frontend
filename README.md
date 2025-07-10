@@ -1,3 +1,10 @@
+⚙️ Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+NEXT_PUBLIC_API_BASE_URL=https://your-backend-api.com
+NEXT_PUBLIC_FRONTEND_URL=https://your-frontend-app.com
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
